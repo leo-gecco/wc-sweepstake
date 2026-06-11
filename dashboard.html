@@ -523,21 +523,23 @@ const DATA = {
 const ALLOC = [
   ["Leo",[["England","L",4],["Colombia","K",13],["Japan","F",18],["Ecuador","E",23],["Qatar","B",57]]],
   ["Callum",[["Brazil","C",6],["Canada","B",30],["Scotland","C",42],["South Africa","A",60],["Ghana","L",73]]],
-  ["Jamie",[["Portugal","K",5],["Austria","J",24],["Tunisia","F",45],["Jordan","J",63]]],
+  ["Jamie",[["Portugal","K",5],["Austria","J",24],["Tunisia","F",45],["Jordan","J",63],["Curacao","E",82]]],
   ["Aaron",[["Germany","E",10],["Algeria","J",28],["Panama","L",34],["Czech Republic","A",40],["Cape Verde","H",67]]],
   ["Aidan",[["Netherlands","F",8],["Switzerland","B",19],["Turkey","D",22],["South Korea","A",25],["Iraq","I",56]]],
   ["Harry",[["Argentina","J",1],["Uruguay","H",16],["Australia","D",27],["DR Congo","K",46],["Saudi Arabia","H",61]]],
-  ["Tom",[["Belgium","G",9],["Mexico","A",14],["Egypt","G",29],["Ivory Coast","E",33]]],
+  ["Tom",[["Belgium","G",9],["Mexico","A",14],["Japan","F",18],["Egypt","G",29],["Ivory Coast","E",33]]],
   ["Adam B",[["Morocco","C",7],["Paraguay","D",41],["Bosnia-Herzegovina","B",64],["Curacao","E",82],["Haiti","C",83]]],
   ["Alex",[["France","I",3],["Croatia","L",11],["Senegal","I",15],["Norway","I",31],["Uzbekistan","K",50]]],
   ["Adam R",[["Spain","H",2],["United States","D",17],["Iran","G",20],["Sweden","F",38],["New Zealand","G",85]]]
 ];
 
-/* helper: look up team -> owner from ALLOC */
-const TEAM_OWNER = {};
-ALLOC.forEach(([nm,teams])=>teams.forEach(([t])=>{ TEAM_OWNER[t.toLowerCase()] = nm; }));
-TEAM_OWNER["usa"] = TEAM_OWNER["united states"];
-function ownerOf(team){ return TEAM_OWNER[(team||"").toLowerCase()] || null; }
+/* helper: look up team -> owner(s) from ALLOC. A team can be co-owned (shared bonus pick). */
+const TEAM_OWNERS = {};
+ALLOC.forEach(([nm,teams])=>teams.forEach(([t])=>{ const k=t.toLowerCase(); (TEAM_OWNERS[k]=TEAM_OWNERS[k]||[]).push(nm); }));
+TEAM_OWNERS["usa"] = TEAM_OWNERS["united states"];
+function ownersOf(team){ return TEAM_OWNERS[(team||"").toLowerCase()] || []; }
+function ownerOf(team){ const o=ownersOf(team); return o.length? o[0] : null; }
+function ownLabel(team){ const o=ownersOf(team); return o.length? o.join(" & ") : ""; }
 
 /* team -> flag emoji */
 const FLAG = {
@@ -667,12 +669,12 @@ document.getElementById("bets").innerHTML = DATA.sideBets.map(b=>{
   let teamLine, ownerLine;
   if(tied){
     teamLine = tied.map(t=>`${flagOf(t)}${t}`).join(", ");
-    const owners = [...new Set(tied.map(t=>ownerOf(t)).filter(Boolean))];
-    ownerLine = owners.length? `Split between <b>${owners.join(", ")}</b>` : 'awaiting results';
+    const owners = [...new Set(tied.flatMap(t=>ownersOf(t)))];
+    ownerLine = owners.length? (owners.length>1?`Split between <b>${owners.join(", ")}</b>`:`<b>${owners[0]}</b>`) : 'awaiting results';
   } else {
     teamLine = `${flagOf(team)}${team}`;
-    const own = auto? ownerOf(auto.team) : b.owner;
-    ownerLine = own?`<b>${own}</b>`:'awaiting results';
+    const owners = auto? ownersOf(auto.team) : (b.owner?[b.owner]:[]);
+    ownerLine = owners.length? (owners.length>1?`Split between <b>${owners.join(", ")}</b>`:`<b>${owners[0]}</b>`) : 'awaiting results';
   }
   const gameLine = (auto&&auto.game)? `<div class="bet-game">${auto.game}</div>` : '';
   return `
@@ -704,7 +706,7 @@ if(DATA.recentScores.length){
       </div>
       <div class="scores">
         ${md.list.map(s=>{
-          const hOwn=ownerOf(s.home),aOwn=ownerOf(s.away);
+          const hOwn=ownLabel(s.home),aOwn=ownLabel(s.away);
           const hWin=s.hs>s.as,aWin=s.as>s.hs,drw=s.hs===s.as;
           const tag = hOwn||aOwn ? `<div class="owner-tag">${hOwn?`<b>${hOwn}</b> · ${s.home}`:''}${hOwn&&aOwn?' vs ':''}${aOwn?`<b>${aOwn}</b> · ${s.away}`:''}</div>` : '';
           const ev=[];
@@ -743,7 +745,7 @@ if(upcoming.length){
       </div>
       <div class="scores">
         ${md.list.map(f=>{
-          const hOwn=ownerOf(f.home),aOwn=ownerOf(f.away);
+          const hOwn=ownLabel(f.home),aOwn=ownLabel(f.away);
           const tag = hOwn||aOwn ? `<div class="owner-tag">${hOwn?`<b>${hOwn}</b> · ${f.home}`:''}${hOwn&&aOwn?' vs ':''}${aOwn?`<b>${aOwn}</b> · ${f.away}`:''}</div>` : '';
           return `
           <div class="score fixture">
@@ -950,8 +952,8 @@ DATES.forEach(d=>{
   PUNTERS.forEach(p=>{ punterMoney[p]=0; punterBets[p]=[]; });
   Object.entries(leaders).forEach(([bet,teams])=>{
     if(!teams||!teams.length) return;
-    const share = BET_VAL/teams.length;   // ties split the £10 across tied teams' owners
-    teams.forEach(tm=>{ const own=ownerOf(tm); if(own){ punterMoney[own]+=share; if(!punterBets[own].includes(bet)) punterBets[own].push(bet); } });
+    const perTeam = BET_VAL/teams.length;   // split £10 across tied teams
+    teams.forEach(tm=>{ const owners=ownersOf(tm); if(!owners.length) return; const per=perTeam/owners.length; owners.forEach(own=>{ punterMoney[own]+=per; if(!punterBets[own].includes(bet)) punterBets[own].push(bet); }); });
   });
   PUNTERS.forEach(p=>{ SERIES[p].push(punterMoney[p]); BETS_AT_CUT[p].push(punterBets[p]); });
 });
