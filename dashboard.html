@@ -308,8 +308,8 @@
 <div class="wrap">
   <nav class="tabs">
     <button class="tab active" data-tab="dash">Dashboard</button>
-    <button class="tab" data-tab="trk">Side-Bet Tracker</button>
     <button class="tab" data-tab="fix">Fixtures</button>
+    <button class="tab" data-tab="trk">Side-Bet Tracker</button>
     <button class="tab" data-tab="lb">Leaderboard Over Time</button>
   </nav>
   <div id="view-dash" class="view active">
@@ -564,7 +564,7 @@ function flagOf(team){ const f=FLAG[team]; return f? f+" " : ""; }
 
 /* render */
 document.getElementById("potChip").textContent = "POT £"+DATA.pot;
-document.getElementById("updChip").textContent = "UPDATED · "+DATA.lastUpdated;
+{ const _lu = String(DATA.lastUpdated).split(", "); document.getElementById("updChip").textContent = _lu.length===2 ? `UPDATED ${_lu[1]}  ${_lu[0]}` : "UPDATED "+DATA.lastUpdated; }
 
 /* compute leaders from match events */
 const teamAgg = {};
