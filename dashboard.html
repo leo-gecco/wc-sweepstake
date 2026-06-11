@@ -278,6 +278,11 @@
   @media(max-width:860px){
     .scroll-hint{display:block; font-size:11.5px; color:var(--muted); margin:6px 2px 0}
   }
+
+  .md-section{font-family:"Anton";letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-size:14px;margin:24px 2px 10px;border-top:1px dashed var(--line);padding-top:16px}
+  .score.fixture .sc .vs{color:var(--muted);font-family:"Hanken Grotesk";font-weight:800;font-size:14px}
+  .score.fixture{opacity:.97}
+  .md-pill.up{background:rgba(19,217,122,.16);color:#13d97a;border-color:rgba(19,217,122,.3)}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
@@ -323,7 +328,7 @@
     <div class="bets" id="bets"></div>
   </section>
   <section class="sec rise" style="animation-delay:.2s">
-    <div class="sec-h"><h2>Latest Scores</h2><div class="ln"></div><div class="tag" id="scoreTag">Kick-off 11 June</div></div>
+    <div class="sec-h"><h2>Results &amp; Fixtures</h2><div class="ln"></div><div class="tag" id="scoreTag">Kick-off 11 June</div></div>
     <div id="scoresHost"></div>
   </section>
   <section class="sec rise" style="animation-delay:.24s">
@@ -407,7 +412,7 @@
    - recentScores: prepend each day's new batch at the top
    ============================================================ */
 const DATA = {
-  lastUpdated: "15 Jun 2026",
+  lastUpdated: "11 Jun 2026",
   pot: 200,
   mainPrizes: [],
   sideBets: [
@@ -436,80 +441,81 @@ const DATA = {
   // ch/ca=corners, foh/foa=fouls, poh/poa=possession %, hgh/hga=headed goals, sgh/sga=substitute goals, shh/sha=total shots
   // fg={m,t}=earliest goal (min, team), lw={m,t}=90'+ decisive goal, cb={t,d}=comeback (team, goals down)
   // Schedule prepends each day's matches to the top of this array. Newest batch first.
-  recentScores: [
-    // Match results, newest batch first.
-    { date:"27 Jun 2026", group:"Group K", home:"Portugal", hs:3, away:"DR Congo", as:1, yh:2, ya:0, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:6, ca:7, foh:18, foa:11, poh:52, poa:48, hgh:3, hga:1, sgh:1, sga:1, shh:21, sha:7, fg:{m:33,t:"Portugal"} },
-    { date:"27 Jun 2026", group:"Group K", home:"Uzbekistan", hs:1, away:"Colombia", as:1, yh:3, ya:2, rh:1, ra:0, oh:0, oa:0, ph:0, pa:0, ch:6, ca:4, foh:16, foa:12, poh:38, poa:62, hgh:0, hga:0, sgh:0, sga:0, shh:10, sha:7, fg:{m:8,t:"Uzbekistan"} },
-    { date:"27 Jun 2026", group:"Group L", home:"Panama", hs:4, away:"Ghana", as:2, yh:4, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:2, ca:1, foh:11, foa:14, poh:67, poa:33, hgh:0, hga:0, sgh:1, sga:0, shh:18, sha:18, fg:{m:50,t:"Ghana"} },
-    { date:"27 Jun 2026", group:"Group L", home:"Croatia", hs:4, away:"England", as:2, yh:1, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:8, foh:14, foa:10, poh:56, poa:44, hgh:2, hga:0, sgh:0, sga:1, shh:17, sha:5, fg:{m:53,t:"Croatia"} },
-    { date:"26 Jun 2026", group:"Group I", home:"France", hs:1, away:"Senegal", as:3, yh:3, ya:2, rh:0, ra:0, oh:0, oa:0, ph:1, pa:1, ch:8, ca:6, foh:16, foa:11, poh:41, poa:59, hgh:0, hga:0, sgh:1, sga:0, shh:6, sha:12, fg:{m:76,t:"France"} },
-    { date:"26 Jun 2026", group:"Group I", home:"Iraq", hs:3, away:"Norway", as:4, yh:3, ya:2, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:7, ca:6, foh:17, foa:8, poh:58, poa:42, hgh:1, hga:2, sgh:0, sga:0, shh:18, sha:5, fg:{m:61,t:"Iraq"}, cb:{t:"Norway",d:2} },
-    { date:"26 Jun 2026", group:"Group J", home:"Algeria", hs:4, away:"Jordan", as:1, yh:0, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:1, ch:6, ca:8, foh:9, foa:14, poh:65, poa:35, hgh:4, hga:1, sgh:1, sga:0, shh:18, sha:18, fg:{m:44,t:"Jordan"} },
-    { date:"26 Jun 2026", group:"Group J", home:"Argentina", hs:1, away:"Austria", as:2, yh:3, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:8, foh:7, foa:9, poh:45, poa:55, hgh:1, hga:0, sgh:0, sga:0, shh:22, sha:18, fg:{m:4,t:"Austria"} },
-    { date:"25 Jun 2026", group:"Group G", home:"Egypt", hs:1, away:"New Zealand", as:0, yh:1, ya:2, rh:0, ra:1, oh:0, oa:0, ph:0, pa:0, ch:5, ca:2, foh:16, foa:18, poh:62, poa:38, hgh:0, hga:0, sgh:1, sga:0, shh:15, sha:7, fg:{m:75,t:"Egypt"} },
-    { date:"25 Jun 2026", group:"Group G", home:"Belgium", hs:2, away:"Iran", as:2, yh:4, ya:2, rh:1, ra:0, oh:0, oa:0, ph:0, pa:0, ch:9, ca:3, foh:13, foa:9, poh:40, poa:60, hgh:2, hga:2, sgh:0, sga:1, shh:21, sha:18, fg:{m:58,t:"Iran"} },
-    { date:"25 Jun 2026", group:"Group H", home:"Cape Verde", hs:1, away:"Spain", as:2, yh:4, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:3, ca:4, foh:11, foa:10, poh:41, poa:59, hgh:1, hga:0, sgh:1, sga:0, shh:10, sha:12, fg:{m:8,t:"Spain"} },
-    { date:"25 Jun 2026", group:"Group H", home:"Uruguay", hs:1, away:"Saudi Arabia", as:3, yh:0, ya:4, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:3, ca:2, foh:13, foa:14, poh:41, poa:59, hgh:0, hga:0, sgh:1, sga:0, shh:15, sha:6, fg:{m:34,t:"Uruguay"} },
-    { date:"24 Jun 2026", group:"Group E", home:"Ecuador", hs:4, away:"Ivory Coast", as:1, yh:3, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:10, ca:5, foh:17, foa:13, poh:49, poa:51, hgh:2, hga:1, sgh:0, sga:0, shh:12, sha:17, fg:{m:51,t:"Ivory Coast"} },
-    { date:"24 Jun 2026", group:"Group E", home:"Curacao", hs:1, away:"Germany", as:2, yh:0, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:9, foh:14, foa:18, poh:55, poa:45, hgh:0, hga:2, sgh:1, sga:0, shh:16, sha:6, fg:{m:33,t:"Germany"} },
-    { date:"24 Jun 2026", group:"Group F", home:"Japan", hs:4, away:"Tunisia", as:3, yh:1, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:1, ch:4, ca:4, foh:13, foa:18, poh:58, poa:42, hgh:1, hga:1, sgh:1, sga:0, shh:20, sha:17, fg:{m:10,t:"Japan"} },
-    { date:"24 Jun 2026", group:"Group F", home:"Netherlands", hs:0, away:"Sweden", as:2, yh:0, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:8, foh:10, foa:11, poh:53, poa:47, hgh:0, hga:1, sgh:0, sga:0, shh:18, sha:14, fg:{m:54,t:"Sweden"} },
-    { date:"23 Jun 2026", group:"Group C", home:"Scotland", hs:3, away:"Haiti", as:1, yh:3, ya:0, rh:0, ra:1, oh:0, oa:0, ph:0, pa:0, ch:10, ca:8, foh:9, foa:10, poh:65, poa:35, hgh:2, hga:0, sgh:0, sga:0, shh:7, sha:14, fg:{m:10,t:"Scotland"} },
-    { date:"23 Jun 2026", group:"Group C", home:"Morocco", hs:4, away:"Brazil", as:1, yh:4, ya:0, rh:0, ra:1, oh:0, oa:0, ph:0, pa:0, ch:5, ca:1, foh:16, foa:8, poh:39, poa:61, hgh:3, hga:1, sgh:0, sga:1, shh:16, sha:11, fg:{m:36,t:"Morocco"} },
-    { date:"23 Jun 2026", group:"Group D", home:"Paraguay", hs:1, away:"Turkey", as:1, yh:3, ya:4, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:2, ca:6, foh:16, foa:15, poh:61, poa:39, hgh:0, hga:1, sgh:1, sga:1, shh:7, sha:15, fg:{m:29,t:"Turkey"} },
-    { date:"23 Jun 2026", group:"Group D", home:"Australia", hs:0, away:"United States", as:2, yh:4, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:7, foh:7, foa:9, poh:62, poa:38, hgh:0, hga:2, sgh:0, sga:0, shh:19, sha:11, fg:{m:37,t:"United States"} },
-    { date:"22 Jun 2026", group:"Group A", home:"Mexico", hs:2, away:"South Africa", as:0, yh:2, ya:4, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:3, ca:4, foh:8, foa:13, poh:55, poa:45, hgh:1, hga:0, sgh:0, sga:0, shh:17, sha:9, fg:{m:50,t:"Mexico"} },
-    { date:"22 Jun 2026", group:"Group A", home:"South Korea", hs:1, away:"Czech Republic", as:0, yh:1, ya:4, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:7, ca:1, foh:10, foa:7, poh:57, poa:43, hgh:1, hga:0, sgh:0, sga:0, shh:8, sha:10, fg:{m:75,t:"South Korea"} },
-    { date:"22 Jun 2026", group:"Group B", home:"Bosnia-Herzegovina", hs:2, away:"Qatar", as:1, yh:4, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:1, foh:10, foa:16, poh:55, poa:45, hgh:0, hga:0, sgh:0, sga:0, shh:10, sha:8, fg:{m:63,t:"Qatar"}, lw:{m:94,t:"Bosnia-Herzegovina"} },
-    { date:"22 Jun 2026", group:"Group B", home:"Switzerland", hs:2, away:"Canada", as:1, yh:4, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:4, foh:8, foa:12, poh:67, poa:33, hgh:0, hga:0, sgh:0, sga:1, shh:7, sha:11, fg:{m:11,t:"Canada"}, cb:{t:"Switzerland",d:2} },
-    { date:"21 Jun 2026", group:"Group K", home:"Portugal", hs:1, away:"Colombia", as:0, yh:2, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:7, ca:8, foh:15, foa:7, poh:53, poa:47, hgh:0, hga:0, sgh:1, sga:0, shh:15, sha:11, fg:{m:14,t:"Portugal"}, cb:{t:"Portugal",d:2} },
-    { date:"21 Jun 2026", group:"Group K", home:"Uzbekistan", hs:0, away:"DR Congo", as:3, yh:2, ya:0, rh:1, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:3, foh:9, foa:8, poh:43, poa:57, hgh:0, hga:3, sgh:0, sga:0, shh:13, sha:19, fg:{m:77,t:"DR Congo"}, cb:{t:"DR Congo",d:2} },
-    { date:"21 Jun 2026", group:"Group L", home:"Panama", hs:3, away:"England", as:0, yh:2, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:7, ca:9, foh:15, foa:11, poh:56, poa:44, hgh:1, hga:0, sgh:1, sga:0, shh:21, sha:13, fg:{m:46,t:"Panama"} },
-    { date:"21 Jun 2026", group:"Group L", home:"Croatia", hs:3, away:"Ghana", as:0, yh:1, ya:3, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:9, ca:6, foh:17, foa:18, poh:42, poa:58, hgh:2, hga:0, sgh:0, sga:0, shh:17, sha:7, fg:{m:32,t:"Croatia"} },
-    { date:"20 Jun 2026", group:"Group I", home:"France", hs:1, away:"Norway", as:4, yh:3, ya:3, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:3, ca:4, foh:17, foa:10, poh:50, poa:50, hgh:1, hga:0, sgh:1, sga:1, shh:8, sha:9, fg:{m:3,t:"France"} },
-    { date:"20 Jun 2026", group:"Group I", home:"Iraq", hs:3, away:"Senegal", as:1, yh:1, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:7, foh:8, foa:15, poh:39, poa:61, hgh:1, hga:0, sgh:0, sga:0, shh:8, sha:5, fg:{m:24,t:"Senegal"} },
-    { date:"20 Jun 2026", group:"Group J", home:"Algeria", hs:2, away:"Austria", as:4, yh:0, ya:4, rh:0, ra:1, oh:0, oa:0, ph:0, pa:0, ch:2, ca:4, foh:11, foa:15, poh:64, poa:36, hgh:0, hga:2, sgh:0, sga:0, shh:9, sha:4, fg:{m:80,t:"Austria"} },
-    { date:"20 Jun 2026", group:"Group J", home:"Argentina", hs:1, away:"Jordan", as:4, yh:4, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:9, ca:5, foh:15, foa:18, poh:38, poa:62, hgh:1, hga:3, sgh:0, sga:0, shh:13, sha:18, fg:{m:73,t:"Argentina"} },
-    { date:"19 Jun 2026", group:"Group G", home:"Egypt", hs:3, away:"Iran", as:1, yh:4, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:1, foh:11, foa:13, poh:57, poa:43, hgh:2, hga:0, sgh:0, sga:1, shh:18, sha:12, fg:{m:56,t:"Egypt"}, cb:{t:"Egypt",d:2} },
-    { date:"19 Jun 2026", group:"Group G", home:"Belgium", hs:0, away:"New Zealand", as:4, yh:2, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:2, ca:3, foh:10, foa:9, poh:39, poa:61, hgh:0, hga:3, sgh:0, sga:0, shh:12, sha:18, fg:{m:35,t:"New Zealand"} },
-    { date:"19 Jun 2026", group:"Group H", home:"Cape Verde", hs:1, away:"Saudi Arabia", as:2, yh:1, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:9, ca:6, foh:9, foa:14, poh:65, poa:35, hgh:0, hga:1, sgh:0, sga:1, shh:14, sha:4, fg:{m:69,t:"Saudi Arabia"}, lw:{m:95,t:"Saudi Arabia"} },
-    { date:"19 Jun 2026", group:"Group H", home:"Uruguay", hs:4, away:"Spain", as:1, yh:3, ya:3, rh:0, ra:1, oh:0, oa:0, ph:0, pa:0, ch:7, ca:8, foh:15, foa:15, poh:60, poa:40, hgh:2, hga:1, sgh:0, sga:0, shh:17, sha:18, fg:{m:37,t:"Uruguay"} },
-    { date:"18 Jun 2026", group:"Group E", home:"Ecuador", hs:0, away:"Germany", as:2, yh:0, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:2, ca:4, foh:13, foa:12, poh:65, poa:35, hgh:0, hga:1, sgh:0, sga:0, shh:14, sha:15, fg:{m:68,t:"Germany"} },
-    { date:"18 Jun 2026", group:"Group E", home:"Curacao", hs:4, away:"Ivory Coast", as:2, yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:7, ca:6, foh:13, foa:16, poh:68, poa:32, hgh:4, hga:0, sgh:1, sga:0, shh:14, sha:5, fg:{m:58,t:"Curacao"} },
-    { date:"18 Jun 2026", group:"Group F", home:"Japan", hs:0, away:"Sweden", as:0, yh:3, ya:4, rh:0, ra:1, oh:0, oa:0, ph:0, pa:0, ch:9, ca:7, foh:10, foa:9, poh:45, poa:55, hgh:0, hga:0, sgh:0, sga:0, shh:6, sha:7 },
-    { date:"18 Jun 2026", group:"Group F", home:"Netherlands", hs:2, away:"Tunisia", as:1, yh:4, ya:3, rh:1, ra:0, oh:0, oa:0, ph:0, pa:0, ch:10, ca:6, foh:14, foa:16, poh:43, poa:57, hgh:2, hga:1, sgh:0, sga:0, shh:11, sha:19, fg:{m:60,t:"Netherlands"} },
-    { date:"17 Jun 2026", group:"Group C", home:"Scotland", hs:1, away:"Brazil", as:1, yh:3, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:8, ca:4, foh:8, foa:8, poh:59, poa:41, hgh:1, hga:1, sgh:0, sga:0, shh:7, sha:7, fg:{m:10,t:"Scotland"} },
-    { date:"17 Jun 2026", group:"Group C", home:"Morocco", hs:2, away:"Haiti", as:0, yh:1, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:1, ch:10, ca:2, foh:7, foa:17, poh:45, poa:55, hgh:2, hga:0, sgh:0, sga:0, shh:8, sha:11, fg:{m:24,t:"Morocco"} },
-    { date:"17 Jun 2026", group:"Group D", home:"Paraguay", hs:1, away:"United States", as:3, yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:7, ca:2, foh:10, foa:12, poh:48, poa:52, hgh:1, hga:1, sgh:0, sga:0, shh:15, sha:20, fg:{m:4,t:"United States"} },
-    { date:"17 Jun 2026", group:"Group D", home:"Australia", hs:0, away:"Turkey", as:1, yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:6, ca:9, foh:14, foa:11, poh:46, poa:54, hgh:0, hga:0, sgh:0, sga:1, shh:19, sha:12, fg:{m:8,t:"Turkey"}, lw:{m:91,t:"Turkey"} },
-    { date:"16 Jun 2026", group:"Group A", home:"Mexico", hs:0, away:"Czech Republic", as:0, yh:2, ya:1, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:2, ca:2, foh:10, foa:10, poh:61, poa:39, hgh:0, hga:0, sgh:0, sga:0, shh:22, sha:4 },
-    { date:"16 Jun 2026", group:"Group A", home:"South Korea", hs:4, away:"South Africa", as:1, yh:4, ya:3, rh:0, ra:0, oh:0, oa:1, ph:0, pa:0, ch:7, ca:5, foh:9, foa:10, poh:60, poa:40, hgh:2, hga:0, sgh:1, sga:1, shh:17, sha:12, fg:{m:8,t:"South Africa"} },
-    { date:"16 Jun 2026", group:"Group B", home:"Bosnia-Herzegovina", hs:3, away:"Canada", as:2, yh:3, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:8, ca:6, foh:10, foa:9, poh:66, poa:34, hgh:3, hga:0, sgh:0, sga:0, shh:10, sha:9, fg:{m:57,t:"Canada"} },
-    { date:"16 Jun 2026", group:"Group B", home:"Switzerland", hs:3, away:"Qatar", as:4, yh:4, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:6, ca:7, foh:9, foa:14, poh:46, poa:54, hgh:0, hga:2, sgh:0, sga:0, shh:22, sha:7, fg:{m:41,t:"Qatar"} },
-    { date:"15 Jun 2026", group:"Group J", home:"Argentina", hs:3, away:"Jordan", as:0, yh:1, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:7, ca:2, foh:9, foa:14, poh:62, poa:38, hgh:1, hga:0, sgh:1, sga:0, shh:16, sha:5, fg:{m:12,t:"Argentina"} },
-    { date:"15 Jun 2026", group:"Group J", home:"Austria", hs:1, away:"Algeria", as:2, yh:2, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:5, foh:12, foa:13, poh:48, poa:52, hgh:0, hga:1, sgh:0, sga:1, shh:12, sha:13, fg:{m:23,t:"Austria"}, cb:{t:"Algeria",d:1} },
-    { date:"15 Jun 2026", group:"Group K", home:"Portugal", hs:2, away:"DR Congo", as:1, yh:1, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:6, ca:3, foh:10, foa:12, poh:58, poa:42, hgh:1, hga:0, sgh:0, sga:1, shh:15, sha:8, fg:{m:18,t:"Portugal"}, lw:{m:90,t:"Portugal"} },
-    { date:"15 Jun 2026", group:"Group K", home:"Colombia", hs:1, away:"Uzbekistan", as:0, yh:2, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:2, foh:11, foa:14, poh:60, poa:40, hgh:0, hga:0, sgh:1, sga:0, shh:14, sha:6, fg:{m:67,t:"Colombia"} },
-    { date:"15 Jun 2026", group:"Group L", home:"England", hs:2, away:"Panama", as:0, yh:1, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:8, ca:1, foh:8, foa:13, poh:66, poa:34, hgh:1, hga:0, sgh:0, sga:0, shh:18, sha:4, fg:{m:15,t:"England"} },
-    { date:"15 Jun 2026", group:"Group L", home:"Croatia", hs:1, away:"Ghana", as:1, yh:2, ya:2, rh:0, ra:0, oh:1, oa:0, ph:0, pa:0, ch:5, ca:4, foh:12, foa:12, poh:55, poa:45, hgh:0, hga:1, sgh:0, sga:0, shh:13, sha:11, fg:{m:34,t:"Croatia"} },
-    { date:"14 Jun 2026", group:"Group G", home:"Belgium", hs:5, away:"New Zealand", as:1, yh:1, ya:2, rh:0, ra:0, oh:0, oa:1, ph:0, pa:0, ch:9, ca:2, foh:7, foa:15, poh:64, poa:36, hgh:2, hga:0, sgh:1, sga:0, shh:20, sha:6, fg:{m:6,t:"Belgium"} },
-    { date:"14 Jun 2026", group:"Group G", home:"Iran", hs:0, away:"Egypt", as:0, yh:4, ya:2, rh:1, ra:0, oh:0, oa:0, ph:1, pa:1, ch:3, ca:4, foh:18, foa:14, poh:46, poa:54, hgh:0, hga:0, sgh:0, sga:0, shh:9, sha:8 },
-    { date:"14 Jun 2026", group:"Group H", home:"Spain", hs:2, away:"Cape Verde", as:1, yh:1, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:7, ca:3, foh:9, foa:13, poh:68, poa:32, hgh:1, hga:0, sgh:0, sga:1, shh:17, sha:9, fg:{m:21,t:"Spain"} },
-    { date:"14 Jun 2026", group:"Group H", home:"Uruguay", hs:3, away:"Saudi Arabia", as:1, yh:2, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:6, ca:4, foh:12, foa:14, poh:57, poa:43, hgh:1, hga:1, sgh:1, sga:0, shh:15, sha:10, fg:{m:9,t:"Uruguay"} },
-    { date:"14 Jun 2026", group:"Group I", home:"France", hs:2, away:"Iraq", as:0, yh:1, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:8, ca:2, foh:8, foa:12, poh:70, poa:30, hgh:0, hga:0, sgh:1, sga:0, shh:19, sha:3, fg:{m:28,t:"France"} },
-    { date:"14 Jun 2026", group:"Group I", home:"Norway", hs:1, away:"Senegal", as:1, yh:2, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:5, foh:13, foa:11, poh:49, poa:51, hgh:1, hga:0, sgh:0, sga:0, shh:11, sha:12, fg:{m:40,t:"Norway"} },
-    { date:"13 Jun 2026", group:"Group D", home:"United States", hs:2, away:"Turkey", as:2, yh:2, ya:2, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:5, ca:6, foh:13, foa:12, poh:50, poa:50, hgh:0, hga:1, sgh:1, sga:0, shh:13, sha:14, fg:{m:30,t:"Turkey"}, cb:{t:"United States",d:2} },
-    { date:"13 Jun 2026", group:"Group D", home:"Australia", hs:0, away:"Paraguay", as:1, yh:1, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:3, ca:6, foh:14, foa:10, poh:44, poa:56, hgh:0, hga:1, sgh:0, sga:0, shh:8, sha:12, fg:{m:71,t:"Paraguay"} },
-    { date:"13 Jun 2026", group:"Group E", home:"Germany", hs:3, away:"Curacao", as:0, yh:1, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:9, ca:1, foh:9, foa:13, poh:69, poa:31, hgh:1, hga:0, sgh:0, sga:0, shh:22, sha:3, fg:{m:14,t:"Germany"} },
-    { date:"13 Jun 2026", group:"Group E", home:"Ivory Coast", hs:1, away:"Ecuador", as:1, yh:2, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:5, foh:12, foa:12, poh:52, poa:48, hgh:0, hga:0, sgh:1, sga:0, shh:12, sha:12, fg:{m:38,t:"Ivory Coast"} },
-    { date:"13 Jun 2026", group:"Group F", home:"Netherlands", hs:2, away:"Tunisia", as:0, yh:0, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:7, ca:2, foh:7, foa:14, poh:67, poa:33, hgh:1, hga:0, sgh:0, sga:0, shh:18, sha:5, fg:{m:25,t:"Netherlands"} },
-    { date:"13 Jun 2026", group:"Group F", home:"Japan", hs:1, away:"Sweden", as:1, yh:1, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:4, foh:10, foa:11, poh:54, poa:46, hgh:0, hga:1, sgh:1, sga:0, shh:12, sha:11, fg:{m:33,t:"Japan"} },
-    { date:"12 Jun 2026", group:"Group A", home:"Mexico", hs:2, away:"South Korea", as:1, yh:1, ya:3, rh:0, ra:1, oh:0, oa:0, ph:0, pa:1, ch:6, ca:3, foh:12, foa:13, poh:56, poa:44, hgh:1, hga:0, sgh:1, sga:0, shh:14, sha:10, fg:{m:19,t:"Mexico"} },
-    { date:"12 Jun 2026", group:"Group A", home:"Czech Republic", hs:0, away:"South Africa", as:0, yh:2, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:4, foh:11, foa:12, poh:51, poa:49, hgh:0, hga:0, sgh:0, sga:0, shh:10, sha:9 },
-    { date:"12 Jun 2026", group:"Group B", home:"Switzerland", hs:3, away:"Qatar", as:1, yh:2, ya:2, rh:0, ra:0, oh:0, oa:1, ph:0, pa:0, ch:8, ca:3, foh:9, foa:13, poh:63, poa:37, hgh:1, hga:0, sgh:0, sga:1, shh:16, sha:8, fg:{m:11,t:"Switzerland"} },
-    { date:"12 Jun 2026", group:"Group B", home:"Canada", hs:1, away:"Bosnia-Herzegovina", as:1, yh:1, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:5, foh:12, foa:12, poh:50, poa:50, hgh:0, hga:0, sgh:1, sga:0, shh:11, sha:11, fg:{m:44,t:"Canada"} },
-    { date:"12 Jun 2026", group:"Group C", home:"Brazil", hs:4, away:"Haiti", as:0, yh:0, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:10, ca:1, foh:8, foa:16, poh:72, poa:28, hgh:1, hga:0, sgh:1, sga:0, shh:24, sha:4, fg:{m:3,t:"Brazil"} },
-    { date:"12 Jun 2026", group:"Group C", home:"Scotland", hs:1, away:"Morocco", as:2, yh:3, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:6, foh:13, foa:10, poh:45, poa:55, hgh:0, hga:1, sgh:0, sga:1, shh:10, sha:14, fg:{m:27,t:"Scotland"} }
+  recentScores: [],
+  // Full group-stage schedule. Routine moves a match out of fixtures into recentScores once played.
+  fixtures: [
+    {date:"11 Jun 2026", group:"A", home:"Mexico", away:"South Africa"},
+    {date:"11 Jun 2026", group:"A", home:"South Korea", away:"Czech Republic"},
+    {date:"12 Jun 2026", group:"B", home:"Canada", away:"Bosnia-Herzegovina"},
+    {date:"12 Jun 2026", group:"D", home:"United States", away:"Paraguay"},
+    {date:"13 Jun 2026", group:"B", home:"Qatar", away:"Switzerland"},
+    {date:"13 Jun 2026", group:"C", home:"Brazil", away:"Morocco"},
+    {date:"13 Jun 2026", group:"C", home:"Haiti", away:"Scotland"},
+    {date:"13 Jun 2026", group:"D", home:"Australia", away:"Turkey"},
+    {date:"14 Jun 2026", group:"E", home:"Germany", away:"Curacao"},
+    {date:"14 Jun 2026", group:"F", home:"Netherlands", away:"Japan"},
+    {date:"14 Jun 2026", group:"E", home:"Ivory Coast", away:"Ecuador"},
+    {date:"14 Jun 2026", group:"F", home:"Sweden", away:"Tunisia"},
+    {date:"15 Jun 2026", group:"H", home:"Spain", away:"Cape Verde"},
+    {date:"15 Jun 2026", group:"G", home:"Belgium", away:"Egypt"},
+    {date:"15 Jun 2026", group:"H", home:"Saudi Arabia", away:"Uruguay"},
+    {date:"15 Jun 2026", group:"G", home:"Iran", away:"New Zealand"},
+    {date:"16 Jun 2026", group:"I", home:"France", away:"Senegal"},
+    {date:"16 Jun 2026", group:"I", home:"Iraq", away:"Norway"},
+    {date:"16 Jun 2026", group:"J", home:"Argentina", away:"Algeria"},
+    {date:"16 Jun 2026", group:"J", home:"Austria", away:"Jordan"},
+    {date:"17 Jun 2026", group:"K", home:"Portugal", away:"DR Congo"},
+    {date:"17 Jun 2026", group:"L", home:"England", away:"Croatia"},
+    {date:"17 Jun 2026", group:"L", home:"Ghana", away:"Panama"},
+    {date:"17 Jun 2026", group:"K", home:"Uzbekistan", away:"Colombia"},
+    {date:"18 Jun 2026", group:"A", home:"Czech Republic", away:"South Africa"},
+    {date:"18 Jun 2026", group:"B", home:"Switzerland", away:"Bosnia-Herzegovina"},
+    {date:"18 Jun 2026", group:"B", home:"Canada", away:"Qatar"},
+    {date:"18 Jun 2026", group:"A", home:"Mexico", away:"South Korea"},
+    {date:"19 Jun 2026", group:"C", home:"Scotland", away:"Morocco"},
+    {date:"19 Jun 2026", group:"D", home:"United States", away:"Australia"},
+    {date:"19 Jun 2026", group:"C", home:"Brazil", away:"Haiti"},
+    {date:"19 Jun 2026", group:"D", home:"Turkey", away:"Paraguay"},
+    {date:"20 Jun 2026", group:"F", home:"Netherlands", away:"Sweden"},
+    {date:"20 Jun 2026", group:"E", home:"Germany", away:"Ivory Coast"},
+    {date:"20 Jun 2026", group:"E", home:"Ecuador", away:"Curacao"},
+    {date:"20 Jun 2026", group:"F", home:"Tunisia", away:"Japan"},
+    {date:"21 Jun 2026", group:"H", home:"Spain", away:"Saudi Arabia"},
+    {date:"21 Jun 2026", group:"G", home:"Belgium", away:"Iran"},
+    {date:"21 Jun 2026", group:"H", home:"Uruguay", away:"Cape Verde"},
+    {date:"21 Jun 2026", group:"G", home:"New Zealand", away:"Egypt"},
+    {date:"22 Jun 2026", group:"J", home:"Argentina", away:"Austria"},
+    {date:"22 Jun 2026", group:"I", home:"France", away:"Iraq"},
+    {date:"22 Jun 2026", group:"I", home:"Norway", away:"Senegal"},
+    {date:"22 Jun 2026", group:"J", home:"Jordan", away:"Algeria"},
+    {date:"23 Jun 2026", group:"K", home:"Portugal", away:"Uzbekistan"},
+    {date:"23 Jun 2026", group:"L", home:"England", away:"Ghana"},
+    {date:"23 Jun 2026", group:"L", home:"Panama", away:"Croatia"},
+    {date:"23 Jun 2026", group:"K", home:"Colombia", away:"DR Congo"},
+    {date:"24 Jun 2026", group:"B", home:"Switzerland", away:"Canada"},
+    {date:"24 Jun 2026", group:"B", home:"Bosnia-Herzegovina", away:"Qatar"},
+    {date:"24 Jun 2026", group:"C", home:"Scotland", away:"Brazil"},
+    {date:"24 Jun 2026", group:"C", home:"Morocco", away:"Haiti"},
+    {date:"24 Jun 2026", group:"A", home:"Czech Republic", away:"Mexico"},
+    {date:"24 Jun 2026", group:"A", home:"South Africa", away:"South Korea"},
+    {date:"25 Jun 2026", group:"E", home:"Ecuador", away:"Germany"},
+    {date:"25 Jun 2026", group:"E", home:"Curacao", away:"Ivory Coast"},
+    {date:"25 Jun 2026", group:"F", home:"Japan", away:"Sweden"},
+    {date:"25 Jun 2026", group:"F", home:"Tunisia", away:"Netherlands"},
+    {date:"25 Jun 2026", group:"D", home:"Turkey", away:"United States"},
+    {date:"25 Jun 2026", group:"D", home:"Paraguay", away:"Australia"},
+    {date:"26 Jun 2026", group:"I", home:"Norway", away:"France"},
+    {date:"26 Jun 2026", group:"I", home:"Senegal", away:"Iraq"},
+    {date:"26 Jun 2026", group:"H", home:"Cape Verde", away:"Saudi Arabia"},
+    {date:"26 Jun 2026", group:"H", home:"Uruguay", away:"Spain"},
+    {date:"26 Jun 2026", group:"G", home:"Egypt", away:"Iran"},
+    {date:"26 Jun 2026", group:"G", home:"New Zealand", away:"Belgium"},
+    {date:"27 Jun 2026", group:"L", home:"Panama", away:"England"},
+    {date:"27 Jun 2026", group:"L", home:"Croatia", away:"Ghana"},
+    {date:"27 Jun 2026", group:"K", home:"Colombia", away:"Portugal"},
+    {date:"27 Jun 2026", group:"K", home:"DR Congo", away:"Uzbekistan"},
+    {date:"27 Jun 2026", group:"J", home:"Algeria", away:"Austria"},
+    {date:"27 Jun 2026", group:"J", home:"Jordan", away:"Argentina"}
   ]
 };
 
@@ -682,16 +688,14 @@ document.getElementById("bets").innerHTML = DATA.sideBets.map(b=>{
 }).join("");
 
 const sh = document.getElementById("scoresHost");
+const scoreTag = document.getElementById("scoreTag");
+const playedKeys = new Set(DATA.recentScores.map(s=>s.home+"|"+s.away));
+const upcoming = (DATA.fixtures||[]).filter(f=>!playedKeys.has(f.home+"|"+f.away));
+let scHtml = "";
 if(DATA.recentScores.length){
-  document.getElementById("scoreTag").textContent = DATA.recentScores.length+" results";
-  const byDate = [];
-  const seen = {};
-  DATA.recentScores.forEach(s=>{
-    const k = s.date || "Unknown";
-    if(!(k in seen)){ seen[k]=byDate.length; byDate.push({date:k, list:[]}); }
-    byDate[seen[k]].list.push(s);
-  });
-  sh.innerHTML = byDate.map((md,i)=>`
+  const byDate = []; const seen = {};
+  DATA.recentScores.forEach(s=>{ const k=s.date||"Unknown"; if(!(k in seen)){ seen[k]=byDate.length; byDate.push({date:k,list:[]}); } byDate[seen[k]].list.push(s); });
+  scHtml += byDate.map((md,i)=>`
     <div class="matchday">
       <div class="md-head">
         <span class="md-date">${md.date}</span>
@@ -700,8 +704,8 @@ if(DATA.recentScores.length){
       </div>
       <div class="scores">
         ${md.list.map(s=>{
-          const hOwn = ownerOf(s.home), aOwn = ownerOf(s.away);
-          const hWin = s.hs>s.as, aWin = s.as>s.hs, drw = s.hs===s.as;
+          const hOwn=ownerOf(s.home),aOwn=ownerOf(s.away);
+          const hWin=s.hs>s.as,aWin=s.as>s.hs,drw=s.hs===s.as;
           const tag = hOwn||aOwn ? `<div class="owner-tag">${hOwn?`<b>${hOwn}</b> · ${s.home}`:''}${hOwn&&aOwn?' vs ':''}${aOwn?`<b>${aOwn}</b> · ${s.away}`:''}</div>` : '';
           const ev=[];
           if(s.yh)ev.push(`<span class="ev yc">YC <span class="dot">●</span><span class="nm">${s.home}</span> ${s.yh}</span>`);
@@ -725,9 +729,38 @@ if(DATA.recentScores.length){
         }).join("")}
       </div>
     </div>`).join("");
-}else{
-  sh.innerHTML = `<div class="empty">No games played yet. <b>The tournament kicks off on 11 June.</b><br>Scores will appear here once the balls start rolling.</div>`;
 }
+if(upcoming.length){
+  const byF = []; const seenF = {};
+  upcoming.forEach(f=>{ const k=f.date||"TBC"; if(!(k in seenF)){ seenF[k]=byF.length; byF.push({date:k,list:[]}); } byF[seenF[k]].list.push(f); });
+  scHtml += `<div class="md-section">Upcoming fixtures</div>`;
+  scHtml += byF.map((md,i)=>`
+    <div class="matchday">
+      <div class="md-head">
+        <span class="md-date">${md.date}</span>
+        <span class="md-meta">${md.list.length} matches</span>
+        ${i===0?'<span class="md-pill up">Next up</span>':''}
+      </div>
+      <div class="scores">
+        ${md.list.map(f=>{
+          const hOwn=ownerOf(f.home),aOwn=ownerOf(f.away);
+          const tag = hOwn||aOwn ? `<div class="owner-tag">${hOwn?`<b>${hOwn}</b> · ${f.home}`:''}${hOwn&&aOwn?' vs ':''}${aOwn?`<b>${aOwn}</b> · ${f.away}`:''}</div>` : '';
+          return `
+          <div class="score fixture">
+            ${tag}
+            <div class="gp">${f.group||''}</div>
+            <div class="home">${flagOf(f.home)}${f.home}</div>
+            <div class="sc"><span class="vs">v</span></div>
+            <div class="away">${flagOf(f.away)}${f.away}</div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>`).join("");
+}
+sh.innerHTML = scHtml || `<div class="empty">Fixtures to be confirmed.</div>`;
+scoreTag.textContent = DATA.recentScores.length
+  ? `${DATA.recentScores.length} results · ${upcoming.length} to play`
+  : `${upcoming.length} fixtures · kick-off 11 June`;
 
 const ps = document.getElementById("potstrip");
 const totalGames = DATA.recentScores.length;
