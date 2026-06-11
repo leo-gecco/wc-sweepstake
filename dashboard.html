@@ -515,16 +515,16 @@ const DATA = {
 
 /* Static draw - does not change */
 const ALLOC = [
-  ["Jack",[["France","I",1],["Croatia","L",11],["Austria","J",24],["DR Congo","K",46],["Cape Verde","H",69]]],
-  ["Priya",[["Spain","H",2],["Senegal","I",14],["Egypt","G",29],["Uzbekistan","K",50],["Haiti","C",83]]],
-  ["Sam",[["Argentina","J",3],["Mexico","A",15],["Canada","B",30],["Qatar","B",55],["New Zealand","G",85]]],
-  ["Chloe",[["England","L",4],["United States","D",16],["Norway","I",31],["Iraq","I",57],["Ghana","L",74]]],
-  ["Marcus",[["Portugal","K",5],["Uruguay","H",17],["Panama","L",33],["South Africa","A",60],["Curacao","E",82]]],
-  ["Aisha",[["Brazil","C",6],["Japan","F",18],["Ivory Coast","E",34],["Saudi Arabia","H",61],["Scotland","C",43]]],
-  ["Ben",[["Netherlands","F",7],["Switzerland","B",19],["Sweden","F",38],["Jordan","J",63],["Algeria","J",28]]],
-  ["Grace",[["Morocco","C",8],["Iran","G",21],["Paraguay","D",40],["Bosnia-Herzegovina","B",65],["Colombia","K",13]]],
-  ["Diego",[["Belgium","G",9],["Turkey","D",22],["Czech Republic","A",41],["Tunisia","F",44]]],
-  ["Noah",[["Germany","E",10],["Ecuador","E",23],["Australia","D",27],["South Korea","A",25]]]
+  ["Leo",[["England","L",4],["Colombia","K",13],["Japan","F",18],["Ecuador","E",23],["Qatar","B",57]]],
+  ["Callum",[["Brazil","C",6],["Canada","B",30],["Scotland","C",42],["South Africa","A",60],["Ghana","L",73]]],
+  ["Jamie",[["Portugal","K",5],["Austria","J",24],["Tunisia","F",45],["Jordan","J",63]]],
+  ["Aaron",[["Germany","E",10],["Algeria","J",28],["Panama","L",34],["Czech Republic","A",40],["Cape Verde","H",67]]],
+  ["Aidan",[["Netherlands","F",8],["Switzerland","B",19],["Turkey","D",22],["South Korea","A",25],["Iraq","I",56]]],
+  ["Harry",[["Argentina","J",1],["Uruguay","H",16],["Australia","D",27],["DR Congo","K",46],["Saudi Arabia","H",61]]],
+  ["Tom",[["Belgium","G",9],["Mexico","A",14],["Egypt","G",29],["Ivory Coast","E",33]]],
+  ["Adam B",[["Morocco","C",7],["Paraguay","D",41],["Bosnia-Herzegovina","B",64],["Curacao","E",82],["Haiti","C",83]]],
+  ["Alex",[["France","I",3],["Croatia","L",11],["Senegal","I",15],["Norway","I",31],["Uzbekistan","K",50]]],
+  ["Adam R",[["Spain","H",2],["United States","D",17],["Iran","G",20],["Sweden","F",38],["New Zealand","G",85]]]
 ];
 
 /* helper: look up team -> owner from ALLOC */
@@ -917,7 +917,7 @@ DATES.forEach(d=>{
   PUNTERS.forEach(p=>{ punterMoney[p]=0; punterBets[p]=[]; });
   Object.entries(leaders).forEach(([bet,teams])=>{
     if(!teams||!teams.length) return;
-    const share = BET_VAL/teams.length;
+    const share = BET_VAL/teams.length;   // ties split the £10 across tied teams' owners
     teams.forEach(tm=>{ const own=ownerOf(tm); if(own){ punterMoney[own]+=share; if(!punterBets[own].includes(bet)) punterBets[own].push(bet); } });
   });
   PUNTERS.forEach(p=>{ SERIES[p].push(punterMoney[p]); BETS_AT_CUT[p].push(punterBets[p]); });
@@ -1070,7 +1070,7 @@ function applyTheme(mode){
   document.documentElement.classList.toggle("light", mode==="light");
   themeBtn.setAttribute("aria-checked", mode==="light");
   try{ localStorage.setItem("wcSweepTheme", mode); }catch(e){}
-  if(lbChart) makeChart();
+  if(lbChart) makeChart();   // rebuild chart so its colours match the theme
 }
 let savedTheme = "dark";
 try{ savedTheme = localStorage.getItem("wcSweepTheme") || "dark"; }catch(e){}
