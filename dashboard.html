@@ -143,7 +143,9 @@
   .score .owner-tag{grid-column:1/-1; font-size:10.5px; font-weight:800; color:var(--muted);
     letter-spacing:.4px; text-transform:uppercase; margin-bottom:4px}
   .score .owner-tag b{color:var(--green)}
-  .events{grid-column:1/-1; display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; padding-top:8px; border-top:1px dashed rgba(29,58,48,.6)}
+  .events{grid-column:1/-1; display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-top:8px; padding-top:8px; border-top:1px dashed rgba(29,58,48,.6)}
+  .evside{display:flex; flex-wrap:wrap; gap:6px}
+  .evside.ar{justify-content:flex-end; text-align:right}
   .ev{font-size:10px; font-weight:800; padding:3px 7px; border-radius:5px; letter-spacing:.4px; text-transform:uppercase;
     display:inline-flex; align-items:center; gap:5px; line-height:1}
   .ev.yc{background:rgba(242,193,78,.12); color:#f7d572; border:1px solid rgba(242,193,78,.3)}
@@ -719,16 +721,16 @@ if(DATA.recentScores.length){
           const hOwn=ownLabel(s.home),aOwn=ownLabel(s.away);
           const hWin=s.hs>s.as,aWin=s.as>s.hs,drw=s.hs===s.as;
           const tag = hOwn||aOwn ? `<div class="owner-tag">${hOwn?`<b>${hOwn}</b> · ${s.home}`:''}${hOwn&&aOwn?' vs ':''}${aOwn?`<b>${aOwn}</b> · ${s.away}`:''}</div>` : '';
-          const ev=[];
-          if(s.yh)ev.push(`<span class="ev yc">YC <span class="dot">●</span><span class="nm">${s.home}</span> ${s.yh}</span>`);
-          if(s.ya)ev.push(`<span class="ev yc">YC <span class="dot">●</span><span class="nm">${s.away}</span> ${s.ya}</span>`);
-          if(s.rh)ev.push(`<span class="ev rc">RC <span class="dot">●</span><span class="nm">${s.home}</span> ${s.rh}</span>`);
-          if(s.ra)ev.push(`<span class="ev rc">RC <span class="dot">●</span><span class="nm">${s.away}</span> ${s.ra}</span>`);
-          if(s.oh)ev.push(`<span class="ev og">OG <span class="dot">●</span><span class="nm">${s.home}</span> ${s.oh}</span>`);
-          if(s.oa)ev.push(`<span class="ev og">OG <span class="dot">●</span><span class="nm">${s.away}</span> ${s.oa}</span>`);
-          if(s.ph)ev.push(`<span class="ev pen">PEN <span class="dot">●</span><span class="nm">${s.home}</span> ${s.ph}</span>`);
-          if(s.pa)ev.push(`<span class="ev pen">PEN <span class="dot">●</span><span class="nm">${s.away}</span> ${s.pa}</span>`);
-          const evStrip = ev.length? `<div class="events">${ev.join("")}</div>` : '';
+          const hEv=[], aEv=[];
+          if(s.yh)hEv.push(`<span class="ev yc">${s.yh} YC</span>`);
+          if(s.rh)hEv.push(`<span class="ev rc">${s.rh} RC</span>`);
+          if(s.oh)hEv.push(`<span class="ev og">${s.oh} OG</span>`);
+          if(s.ph)hEv.push(`<span class="ev pen">${s.ph} PEN</span>`);
+          if(s.ya)aEv.push(`<span class="ev yc">${s.ya} YC</span>`);
+          if(s.ra)aEv.push(`<span class="ev rc">${s.ra} RC</span>`);
+          if(s.oa)aEv.push(`<span class="ev og">${s.oa} OG</span>`);
+          if(s.pa)aEv.push(`<span class="ev pen">${s.pa} PEN</span>`);
+          const evStrip = (hEv.length||aEv.length)? `<div class="events"><span class="evside">${hEv.join("")}</span><span class="evside ar">${aEv.join("")}</span></div>` : '';
           return `
           <div class="score">
             ${tag}
