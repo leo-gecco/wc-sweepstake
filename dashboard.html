@@ -121,8 +121,8 @@
   .matchday{margin-top:22px}
   .matchday:first-child{margin-top:0}
   .md-head{display:flex; align-items:center; gap:12px; margin:0 2px 12px; padding-bottom:10px; border-bottom:1px dashed var(--line)}
-  .md-head .md-date{font-family:"Anton"; font-size:18px; letter-spacing:.5px; text-transform:uppercase; color:var(--ink)}
-  .md-head .md-meta{font-size:11px; color:var(--muted); font-weight:700; letter-spacing:1.2px; text-transform:uppercase}
+  .md-head .md-date{font-family:"Anton"; font-size:20px; letter-spacing:.5px; text-transform:uppercase; color:var(--ink)}
+  .md-head .md-meta{font-size:12px; color:var(--muted); font-weight:700; letter-spacing:1.2px; text-transform:uppercase}
   .md-head .md-pill{margin-left:auto; font-size:10px; font-weight:800; padding:4px 9px; border-radius:999px;
     background:rgba(19,217,122,.10); color:var(--green); border:1px solid var(--green-dim); letter-spacing:.8px}
   .scores{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
@@ -132,21 +132,22 @@
     transition:border-color .18s ease, transform .18s ease}
   .score:hover{border-color:var(--green-dim); transform:translateY(-2px)}
   .score::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--green-dim); opacity:.7}
-  .score .gp{grid-column:1/-1; text-align:center; font-size:10px; font-weight:800; color:var(--muted); letter-spacing:.8px; text-transform:uppercase}
-  .score .home{font-weight:800; font-size:15px; text-align:right}
-  .score .away{font-weight:800; font-size:15px; text-align:left}
-  .score .sc{font-family:"Anton"; font-size:26px; letter-spacing:1px; min-width:74px; text-align:center;
+  .score .gp{grid-column:1/-1; text-align:center; font-size:12px; font-weight:800; color:var(--muted); letter-spacing:.8px; text-transform:uppercase}
+  .score .home{font-weight:800; font-size:18px; text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:3px}
+  .score .away{font-weight:800; font-size:18px; text-align:left; display:flex; flex-direction:column; align-items:flex-start; gap:3px}
+  .score .sc{font-family:"Anton"; font-size:30px; letter-spacing:1px; min-width:82px; text-align:center;
     background:rgba(19,217,122,.06); border:1px solid var(--line); border-radius:8px; padding:4px 10px; white-space:nowrap}
   .score .sc .d{color:var(--muted); margin:0 6px}
   .score .winner{color:var(--green)}
   .score .draw{color:var(--gold)}
+  .score .own{font-size:12px; font-weight:700; color:var(--muted); text-transform:none; letter-spacing:0}
   .score .owner-tag{grid-column:1/-1; font-size:10.5px; font-weight:800; color:var(--muted);
     letter-spacing:.4px; text-transform:uppercase; margin-bottom:4px}
   .score .owner-tag b{color:var(--green)}
   .events{grid-column:1/-1; display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-top:8px; padding-top:8px; border-top:1px dashed rgba(29,58,48,.6)}
   .evside{display:flex; flex-wrap:wrap; gap:6px}
   .evside.ar{justify-content:flex-end; text-align:right}
-  .ev{font-size:10px; font-weight:800; padding:3px 7px; border-radius:5px; letter-spacing:.4px; text-transform:uppercase;
+  .ev{font-size:12px; font-weight:800; padding:3px 7px; border-radius:5px; letter-spacing:.4px; text-transform:uppercase;
     display:inline-flex; align-items:center; gap:5px; line-height:1}
   .ev.yc{background:rgba(242,193,78,.12); color:#f7d572; border:1px solid rgba(242,193,78,.3)}
   .ev.rc{background:rgba(255,92,92,.12); color:#ff8a8a; border:1px solid rgba(255,92,92,.3)}
@@ -273,8 +274,8 @@
     .wrap{padding-left:14px; padding-right:14px}
     .sec{margin-top:34px}
     .score{gap:8px}
-    .score .home,.score .away{font-size:16px}
-    .score .sc{font-size:24px; min-width:62px}
+    .score .home,.score .away{font-size:18px}
+    .score .sc{font-size:27px; min-width:70px}
     .bet .leadteam{font-size:22px}
     .team{font-size:15px}
   }
@@ -286,7 +287,7 @@
   .md-section{font-family:"Anton";letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-size:14px;margin:24px 2px 10px;border-top:1px dashed var(--line);padding-top:16px}
   .score.fixture .sc .vs{color:var(--muted);font-family:"Hanken Grotesk";font-weight:800;font-size:14px}
   .score.fixture{opacity:.97}
-  .score.fixture .sc .ko{color:var(--green);font-family:"Hanken Grotesk";font-weight:800;font-size:15px;letter-spacing:.5px}
+  .score.fixture .sc .ko{color:var(--green);font-family:"Hanken Grotesk";font-weight:800;font-size:17px;letter-spacing:.5px}
   .md-pill.up{background:rgba(19,217,122,.16);color:#13d97a;border-color:rgba(19,217,122,.3)}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -720,7 +721,6 @@ if(DATA.recentScores.length){
         ${md.list.map(s=>{
           const hOwn=ownLabel(s.home),aOwn=ownLabel(s.away);
           const hWin=s.hs>s.as,aWin=s.as>s.hs,drw=s.hs===s.as;
-          const tag = hOwn||aOwn ? `<div class="owner-tag">${hOwn?`<b>${hOwn}</b> · ${s.home}`:''}${hOwn&&aOwn?' vs ':''}${aOwn?`<b>${aOwn}</b> · ${s.away}`:''}</div>` : '';
           const hEv=[], aEv=[];
           if(s.yh)hEv.push(`<span class="ev yc">${s.yh} YC</span>`);
           if(s.rh)hEv.push(`<span class="ev rc">${s.rh} RC</span>`);
@@ -733,11 +733,10 @@ if(DATA.recentScores.length){
           const evStrip = (hEv.length||aEv.length)? `<div class="events"><span class="evside">${hEv.join("")}</span><span class="evside ar">${aEv.join("")}</span></div>` : '';
           return `
           <div class="score">
-            ${tag}
             <div class="gp">${s.group||''}</div>
-            <div class="home ${hWin?'winner':drw?'draw':''}">${flagOf(s.home)}${s.home}</div>
+            <div class="home ${hWin?'winner':drw?'draw':''}"><span class="tm">${flagOf(s.home)}${s.home}</span>${hOwn?`<span class="own">${hOwn}</span>`:''}</div>
             <div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">–</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div>
-            <div class="away ${aWin?'winner':drw?'draw':''}">${flagOf(s.away)}${s.away}</div>
+            <div class="away ${aWin?'winner':drw?'draw':''}"><span class="tm">${flagOf(s.away)}${s.away}</span>${aOwn?`<span class="own">${aOwn}</span>`:''}</div>
             ${evStrip}
           </div>`;
         }).join("")}
@@ -764,14 +763,12 @@ if(fh){
         <div class="scores">
           ${md.list.map(f=>{
             const hOwn=ownLabel(f.home),aOwn=ownLabel(f.away);
-            const tag = hOwn||aOwn ? `<div class="owner-tag">${hOwn?`<b>${hOwn}</b> · ${f.home}`:''}${hOwn&&aOwn?' vs ':''}${aOwn?`<b>${aOwn}</b> · ${f.away}`:''}</div>` : '';
             return `
             <div class="score fixture">
-              ${tag}
               <div class="gp">${f.group||''}</div>
-              <div class="home">${flagOf(f.home)}${f.home}</div>
+              <div class="home"><span class="tm">${flagOf(f.home)}${f.home}</span>${hOwn?`<span class="own">${hOwn}</span>`:''}</div>
               <div class="sc"><span class="ko">${f.time||'v'}</span></div>
-              <div class="away">${flagOf(f.away)}${f.away}</div>
+              <div class="away"><span class="tm">${flagOf(f.away)}${f.away}</span>${aOwn?`<span class="own">${aOwn}</span>`:''}</div>
             </div>`;
           }).join("")}
         </div>
