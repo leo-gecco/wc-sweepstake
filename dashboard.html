@@ -425,7 +425,7 @@
    - recentScores: prepend each day's new batch at the top
    ============================================================ */
 const DATA = {
-  lastUpdated: "11 Jun 2026, 22:55 BST",
+  lastUpdated: "12 Jun 2026, 05:06 BST",
   pot: 200,
   mainPrizes: [],
   sideBets: [
@@ -455,11 +455,11 @@ const DATA = {
   // fg={m,t}=earliest goal (min, team), lw={m,t}=90'+ decisive goal, cb={t,d}=comeback (team, goals down)
   // Schedule prepends each day's matches to the top of this array. Newest batch first.
   recentScores: [
+    { date:"12 Jun 2026", group:"Group A", home:"South Korea", hs:2, away:"Czech Republic", as:1, yh:1, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:5, foh:9, foa:16, poh:62, poa:38, hgh:0, hga:1, sgh:1, sga:0, shh:15, sha:7, fg:{m:59,t:"Czech Republic"} },
     { date:"11 Jun 2026", group:"Group A", home:"Mexico", hs:2, away:"South Africa", as:0, yh:1, ya:2, rh:1, ra:2, oh:0, oa:0, ph:0, pa:0, ch:3, ca:1, foh:12, foa:11, poh:61, poa:39, hgh:1, hga:0, sgh:0, sga:0, shh:16, sha:3, fg:{m:9,t:"Mexico"} }
   ],
   // Full group-stage schedule. Routine moves a match out of fixtures into recentScores once played.
   fixtures: [
-    {date:"12 Jun 2026", time:"03:00", group:"A", home:"South Korea", away:"Czech Republic"},
     {date:"12 Jun 2026", time:"20:00", group:"B", home:"Canada", away:"Bosnia-Herzegovina"},
     {date:"13 Jun 2026", time:"02:00", group:"D", home:"United States", away:"Paraguay"},
     {date:"13 Jun 2026", time:"20:00", group:"B", home:"Qatar", away:"Switzerland"},
