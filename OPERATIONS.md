@@ -13,15 +13,15 @@ Anthropic's cloud on a schedule (no laptop needed).
 
 1. Open Claude Code on the web → **Routines** → **New routine**.
 2. **Repository:** connect `leo-gecco/wc-sweepstake`.
-3. **Schedule:** Run **every 2 hours, but only across the match window** — cron (UTC): `0 1-7/2,17-23/2 * * *`.
-   That fires at **18:00, 20:00, 22:00, 00:00, 02:00, 04:00, 06:00 and 08:00 BST**, spanning the earliest
-   kickoff (17:00 BST) through the last overnight final whistle (a 05:00 BST game ends ~07:00) and the
-   08:00 BST message run. The board refreshes within ~2 hours of any final whistle; overnight lag is fine
-   because the 08:00 run recaps the whole night. The WhatsApp message is written by the 08:00 run only
-   (MESSAGE GATE). Most slots find nothing new and make no commit, so it's cheap. (If your routine reads
-   cron in UK/BST rather than UTC, use `0 0-8/2,18-22/2 * * *` instead. The message gate keys off UK
-   wall-clock either way.) Note: at this cadence the **08:00 BST run is the single morning-message slot** —
-   if you want a retry in case it fails, add a 10:00 BST run: `0 1-7/2,9,17-23/2 * * *`.
+3. **Schedule:** Run **every 2 hours through the evening, then a single morning refresh** — cron (UTC):
+   `0 7,17-23/2 * * *`. That fires at **18:00, 20:00, 22:00 and 00:00 BST** (every 2 hours from the earliest
+   kickoff through midnight), then nothing overnight until a single **08:00 BST** refresh. Games that finish
+   after midnight (kickoffs run as late as 05:00 BST, ending ~07:00) simply wait for the 08:00 run, which
+   also recaps the whole night and writes the WhatsApp message (MESSAGE GATE). Most slots find nothing new
+   and make no commit, so it's cheap. (If your routine reads cron in UK/BST rather than UTC, use
+   `0 0,8,18-22/2 * * *` instead. The message gate keys off UK wall-clock either way.) Note: the **08:00 BST
+   run is the single morning-message slot** — if you want a retry in case it fails, add a 10:00 BST run:
+   `0 7,9,17-23/2 * * *`.
 4. **Push permissions:** allow the routine to push to `main` (GitHub Pages serves `main`). If the
    routine is locked to `claude/…` branches, instead point GitHub Pages at that branch, or add an
    auto-merge action.
@@ -135,7 +135,7 @@ L: England, Croatia, Ghana, Panama
 - `date:` = the UK (Europe/London) kick-off date, so results sit on the same day as the UK-dated fixtures
   (a late US game that finishes after UK midnight belongs to the next UK day).
 
-# PROCEDURE (board refreshes every 2 hours; message once a day at 08:00)
+# PROCEDURE (board refreshes on the schedule above; message once a day at 08:00)
 1. Read dashboard.html; find `recentScores: [` and `fixtures: [`.
 
 2. EVERY RUN — refresh the board:
@@ -154,7 +154,7 @@ L: England, Croatia, Ghana, Panama
    - the current UK (Europe/London) time is 08:00 or later, AND
    - `whatsapp/{today-UK-date}.txt` does NOT already exist in the repo.
    Otherwise skip the message entirely and just report "board updated; message not due / already sent".
-   This yields exactly ONE message per UK day — the first run at/after 08:00 — independent of the 2-hourly
+   This yields exactly ONE message per UK day — the first run at/after 08:00 — independent of the earlier
    board refreshes.
 
 4. Build the morning message (recap + preview) covering the LATEST DAY'S full progress + today's games —
@@ -287,11 +287,12 @@ run output for you to copy). Ask and I'll build the Actions workflow.
 
 ## 3. Notes
 
-- **Cadence:** board refreshes every 2 hours across the match window (`0 1-7/2,17-23/2 * * *`); the
-  WhatsApp message is written once a day by the 08:00 run (MESSAGE GATE). Every-2h keeps the live board
-  reasonably fresh while halving run cost versus hourly; overnight games may lag up to ~2h but are always
-  caught (and recapped) by the morning run. The gate means just one morning message, no chat spam. Most
-  runs find nothing new and make no commit, so it stays cheap.
+- **Cadence:** board refreshes every 2 hours through the evening, then a single 08:00 BST run
+  (`0 7,17-23/2 * * *`); the WhatsApp message is written once a day by that 08:00 run (MESSAGE GATE). The
+  evening cadence keeps the live board fresh while games are being watched; after midnight there are no
+  runs, so overnight games (kickoffs as late as 05:00 BST) are caught and recapped by the morning run. The
+  gate means just one morning message, no chat spam. Most runs find nothing new and make no commit, so it
+  stays cheap.
 - **Groups:** the prompt tells Claude to use official FIFA groups / ESPN standings. Once the real draw
   is confirmed, paste the fixed team→group map in to remove any ambiguity.
 - **First run:** trigger it manually once to confirm ESPN is reachable from the routine container and the
@@ -332,5 +333,5 @@ If steps 2-3 pass on a friendly date, the live World Cup runs will behave the sa
 ## Alternative (no AI, deterministic)
 If you'd rather not spend tokens per run, the same job can be done by a **GitHub Actions** cron workflow
 running a small Node script (fetch ESPN → parse → update the file → commit). It can run more frequently
-than every 2 hours and costs nothing, but it's fixed logic with no judgement for edge cases. Say the word and
+and costs nothing, but it's fixed logic with no judgement for edge cases. Say the word and
 I'll build that version instead.
