@@ -30,6 +30,7 @@
   html.light .ev.og{ background:rgba(93,114,105,.14); color:#3c4d44; border-color:var(--line) }
   html.light .ev.pen{ background:rgba(12,159,90,.12); color:#076b3c; border-color:var(--green-dim) }
   html.light .scope.full{ background:rgba(176,125,18,.16) }
+  html.light .kind.one{ background:rgba(176,125,18,.16); color:#7a5c0c }
   .theme-toggle{cursor:pointer; background:var(--panel); border:1px solid var(--line); border-radius:999px;
     padding:6px 11px; display:inline-flex; align-items:center; gap:8px; line-height:1; transition:border-color .18s}
   .theme-toggle:hover{border-color:var(--green-dim)}
@@ -110,6 +111,11 @@
     text-transform:uppercase; padding:4px 7px; border-radius:6px}
   .scope.group{background:rgba(19,217,122,.12); color:var(--green)}
   .scope.full{background:rgba(242,193,78,.14); color:var(--gold)}
+  .bet .kind{position:absolute; top:14px; right:14px; font-size:9.5px; font-weight:800; letter-spacing:.6px;
+    text-transform:uppercase; padding:4px 7px; border-radius:6px; display:inline-flex; align-items:center; gap:4px}
+  .kind .sym{font-size:11px; line-height:1}
+  .kind.tour{background:rgba(19,217,122,.12); color:var(--green); border:1px solid rgba(19,217,122,.3)}
+  .kind.one{background:rgba(242,193,78,.14); color:var(--gold); border:1px solid rgba(242,193,78,.35)}
   .bet h3{font-size:17px; font-weight:800; padding-right:74px; margin-bottom:3px; letter-spacing:.2px}
   .bet .bet-desc{font-size:13px; color:var(--muted); margin-bottom:14px; line-height:1.3}
   .bet .leadteam{font-family:"Archivo Black",sans-serif; font-size:21px; line-height:1.1}
@@ -675,8 +681,10 @@ const COMPUTE = {
   "Total Domination":    possGap()
 };
 
+const ONEOFF = new Set(["The Hammering","Off Like a Rocket","Fergie Time","Comeback Kings","Smash &amp; Grab","Total Domination"]);
 document.getElementById("bets").innerHTML = DATA.sideBets.map(b=>{
   const auto = COMPUTE[b.name];
+  const oneoff = ONEOFF.has(b.name);
   const team = auto? auto.team : (b.leaderTeam||"TBC");
   const val = auto? auto.value : b.value;
   const tied = (auto&&auto.teams&&auto.teams.length>1) ? auto.teams : null;
@@ -693,7 +701,7 @@ document.getElementById("bets").innerHTML = DATA.sideBets.map(b=>{
   const gameLine = (auto&&auto.game)? `<div class="bet-game">${auto.game}</div>` : '';
   return `
   <div class="bet">
-    <span class="scope ${b.scope}">${b.scope==='group'?'Group stage':'Full tournament'}</span>
+    <span class="kind ${oneoff?'one':'tour'}"><span class="sym">${oneoff?'\u26a1':'\u2211'}</span>${oneoff?'Single game':'Tournament'}</span>
     <h3>${b.name}</h3>
     <div class="bet-desc">${b.desc||''}</div>
     <div class="leadteam${tied?' multi':''}">${teamLine}</div>
