@@ -161,7 +161,7 @@ L: England, Croatia, Ghana, Panama
    NOT just what changed since the previous run. "Latest day" = every game completed since yesterday
    morning: rows dated YESTERDAY (UK) plus any overnight games dated TODAY (UK) that have finished. Call
    that set R.
-   - BEFORE/AFTER without memory: compute the £ standings across all 20 side bets TWICE —
+   - BEFORE/AFTER without memory: compute the £ money table and the Champion's Bonus TWICE —
      once from ALL recentScores (AFTER), once EXCLUDING set R (BEFORE). The diff is exactly what those
      games changed (leaders won/lost, who climbed the money table).
    - Content: recap the results in R, the movers from that diff, the current money standings, then a
@@ -172,18 +172,22 @@ L: England, Croatia, Ghana, Panama
 5. Report: matches added (with scores), whether the daily message was sent this run, side-bet/standings
    changes, manual-review flags, push status. If the message WAS sent, paste it verbatim for copy-paste.
 
-# HOW TO COMPUTE STANDINGS (for BEFORE/AFTER)
-For ALL 20 side bets — the 14 running totals (most goals scored, most conceded, most yellows, reds, own
-goals, penalties conceded, corners, fouls, clean sheets, headed goals, sub goals, highest avg possession,
-most shots faced, most shots per goal) plus the 6 single-game awards (heaviest defeat, fastest goal,
-latest 90'+ winner, biggest comeback, lowest winning possession, highest single-game possession): find the leading
-team(s) from recentScores, map each to its punter(s) via the ALLOC list in dashboard.html, and award £10
-per bet. Split the £10 equally across the tied teams, then split each team's share equally across that
-team's owners.
-CO-OWNED TEAMS — two teams appear under TWO punters in ALLOC: **Japan = Leo & Tom**, **Curacao = Jamie &
-Brownout**. If a co-owned team leads or ties a bet, both owners share that team's money. Whenever you map a
-team to a punter (standings or the WhatsApp message), check for a second owner and name/credit both.
-Sum per punter to get the £ standings across all 20 bets — this matches the dashboard's Leaderboard Over Time, which now counts every side bet.
+# HOW TO COMPUTE STANDINGS + CHAMPION'S BONUS (for BEFORE/AFTER)
+For each of the 20 side bets (the 14 running totals + 6 single-game awards), find the leading team(s) from
+recentScores and map them to punter(s) via the ALLOC list in dashboard.html. Then settle each bet ONE of
+three ways:
+- ONE punter leads (a single team leads, or several tied teams that are all the same punter's): that punter
+  wins the £10. If the single leading team is CO-OWNED (Japan = Leo & Tom, Curacao = Jamie & Brownout),
+  split it £5 / £5.
+- TWO OR MORE punters are tied for the lead — a CONTESTED bet: nobody banks it, the £10 goes to the
+  CHAMPION'S BONUS.
+- NO team leads the bet yet — UNASSIGNED: the £10 also goes to the CHAMPION'S BONUS.
+Sum each punter's outright wins for the £ money table. The CHAMPION'S BONUS = £10 x (contested + unassigned
+bets); it is NOT credited to anyone during the tournament — it is won at the end by whoever owns the
+tournament-winning team (split if that team is co-owned). This matches the dashboard exactly: single-winner
+side-bet cards are green, and the contested/unassigned cards are gold and feed the bonus.
+CO-OWNED TEAMS — Japan = Leo & Tom, Curacao = Jamie & Brownout. Whenever you credit a co-owned team, name
+and split between both owners.
 
 # WHATSAPP SUMMARY (paste-ready, entertaining) — the single daily 08:00 message
 A recap of the games completed since yesterday's message (yesterday's results + any overnight games), the
@@ -219,7 +223,8 @@ Rules:
   Bad:  "Corner Shop: now Brazil (Sam)."  (no metric, no reason)
 - Movers layout — group by punter, biggest mover first: a BOLD headline line per punter (name + new total
   + one-line reason), then each bet they took on its OWN bulleted line "• {Bet}: {flag}{Team} ({metric})".
-  Roll tied/shared bets into one "Shared:" line at the end. Keeps it scannable, not a paragraph.
+  Contested or unassigned bets pay no one — don't list them as a punter's winnings; if notable, mention
+  them only as feeding the Champion's Bonus. Keeps it scannable, not a paragraph.
 - On today layout — lead with the TEAMS, then the time, then stakes underneath:
   "{flag}{Home} v {flag}{Away} — {kickoff} BST" then a short who-owns-what line below it.
 - If nothing changed: "*💥 Movers* — quiet day, no shake-ups on the board."
@@ -239,13 +244,13 @@ Template (drop any empty section):
 • {Bet}: {flag}{Team} ({metric})
 *{Punter} £{n}* — {reason}
 • {Bet}: {flag}{Team} ({metric})
-Shared: {Bet} ({flag}/{flag} {metric} each) · {Bet} ({flag}/{flag} {metric} each)
 
 *💰 Money table*
 1. *{Punter} £{n}*
 2. {Punter} £{n}
 3. {Punter} £{n}
 =. {everyone still on zero} — all £0
+🏆 *Champion's Bonus £{n}* — to whoever owns the winner ({x} contested + {y} unassigned bets)
 {one-line dig at the bottom}
 
 *⚽ On today*

@@ -60,7 +60,7 @@ single-game ones: The Hammering (heaviest defeat), Off Like a Rocket (fastest go
 (latest 90'+ winner), Comeback Kings (biggest comeback), Smash & Grab (won on lowest possession),
 Total Domination (highest possession in a match).
 
-When a team leads a bet its owner banks £10; ties split it across the tied teams' owners.
+When a single team leads a bet its owner banks £10 (co-owned teams split it £5/£5). If two or more punters are tied for a bet — or a bet has no winner yet — its £10 is not split: it rolls into the **Champion's Bonus**, won at the end by whoever owns the tournament-winning team. The board has a **Rules** tab explaining this.
 
 ### Co-owned teams (important quirk)
 
@@ -78,6 +78,6 @@ automatically via the `ALLOC` array; `OPERATIONS.md` reminds the routine to cred
 
 ## Status / open ideas
 
-Tournament is underway (kicked off 11 June 2026). One idea on the table (not yet actioned): trimming a
-few weaker/tie-prone side bets and consolidating the freed money into a main prize for the owner of the
-tournament-winning team.
+Tournament is underway (kicked off 11 June 2026). The **Champion's Bonus** is live: any contested or
+no-winner side bet rolls its £10 into a pot won by the owner of the tournament-winning team. Set
+`DATA.champion` to the winning team's name at the end and the board awards the bonus automatically.
