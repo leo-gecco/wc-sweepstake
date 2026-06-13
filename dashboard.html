@@ -751,7 +751,7 @@ document.getElementById("bets").innerHTML = DATA.sideBets.map(b=>{
   let teamLine, ownerLine;
   if(leadingTeams.length===0){
     teamLine = `${flagOf(b.leaderTeam||"TBC")}${b.leaderTeam||"TBC"}`;
-    ownerLine = `<span class="leadowner-tbc">awaiting results</span>`;
+    ownerLine = `<span class="own-pill pot">Unassigned</span>`;
   } else {
     teamLine = leadingTeams.map(t=>`${flagOf(t)}${t}`).join(", ");
     if(leadingTeams.length===1 || owners.length<=1){
@@ -790,7 +790,7 @@ document.getElementById("bets").innerHTML = DATA.sideBets.map(b=>{
     el.innerHTML=`<div class="tphy">\u{1F3C6}</div><div><div class="lab">Champion's Bonus — won</div><div class="amt">£${potNow}</div><div class="sub">${flagOf(champ)}${champ} won the tournament — to <b>${champOwners.join(" & ")}</b></div></div>`;
   } else {
     el.className="ppot";
-    el.innerHTML=`<div class="tphy">\u{1F3C6}</div><div><div class="lab">Champion's Bonus</div><div class="amt">£${potNow}</div><div class="sub">Won by whoever owns the tournament winner${(contestedN||noWinnerN)?` · ${contestedN} contested + ${noWinnerN} with no winner`:``}</div></div><div class="right"><div class="lab">Awarded</div><div style="font-size:14px; color:var(--ink); margin-top:4px; font-weight:700">At the final</div></div>`;
+    el.innerHTML=`<div class="tphy">\u{1F3C6}</div><div><div class="lab">Champion's Bonus</div><div class="amt">£${potNow}</div><div class="sub">Made up of contested &amp; unassigned side bets, £10 each${(contestedN||noWinnerN)?` (${contestedN} contested + ${noWinnerN} unassigned)`:``}. Won by whoever owns the tournament winner.</div></div><div class="right"><div class="lab">Awarded</div><div style="font-size:14px; color:var(--ink); margin-top:4px; font-weight:700">At the final</div></div>`;
   }
 })();
 const sh = document.getElementById("scoresHost");
