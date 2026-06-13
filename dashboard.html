@@ -102,6 +102,26 @@
   .prize.win .amt{color:var(--gold)}
   .prize .nm{font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:8px}
   .prize .hold{margin-top:12px; font-size:14px}
+  .own-pill{display:inline-block; font-size:12.5px; font-weight:700; padding:3px 11px; border-radius:999px; letter-spacing:.2px}
+  .own-pill.win{background:rgba(19,217,122,.14); color:var(--green); border:1px solid var(--green-dim)}
+  .own-pill.pot{background:rgba(242,193,78,.16); color:var(--gold); border:1px solid rgba(242,193,78,.5)}
+  .leadowner-tbc{color:var(--muted); font-size:13px}
+  .ppot{display:flex; align-items:center; gap:16px; background:linear-gradient(160deg,rgba(242,193,78,.10),var(--panel)); border:1px solid rgba(242,193,78,.45); border-radius:16px; padding:16px 20px; margin-bottom:18px}
+  .ppot .tphy{font-size:38px; line-height:1}
+  .ppot .lab{font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); font-weight:700}
+  .ppot .amt{font-family:"Anton"; font-size:38px; line-height:1; color:var(--gold); margin-top:2px}
+  .ppot .sub{font-size:13px; color:var(--muted); margin-top:5px}
+  .ppot .right{margin-left:auto; text-align:right}
+  .ppot.win{border-color:var(--green-dim); background:linear-gradient(160deg,rgba(19,217,122,.10),var(--panel))}
+  .ppot.win .amt{color:var(--green)}
+  .lb-row.potrow{border-top:1px dashed var(--line); margin-top:6px; padding-top:12px}
+  .lb-row.potrow .pos{background:none; font-size:20px}
+  .lb-row.potrow .v{color:var(--gold)}
+  .rules{display:flex; flex-direction:column; gap:16px}
+  .rule{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px 20px}
+  .rule.gold{border-color:rgba(242,193,78,.45); background:linear-gradient(160deg,rgba(242,193,78,.07),var(--panel))}
+  .rule h3{font-family:"Anton"; font-size:21px; letter-spacing:.5px; margin-bottom:8px; color:var(--ink)}
+  .rule p{font-size:15px; line-height:1.75; color:var(--muted)}
   .prize .hold b{color:var(--ink)} .prize .hold span{color:var(--muted)}
   .bets{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
   .bet{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px 16px 14px; position:relative;
@@ -322,6 +342,7 @@
     <button class="tab" data-tab="fix">Fixtures</button>
     <button class="tab" data-tab="trk">Side-Bet Tracker</button>
     <button class="tab" data-tab="lb">Leaderboard Over Time</button>
+    <button class="tab" data-tab="rules">Rules</button>
   </nav>
   <div id="view-dash" class="view active">
   <section class="hero">
@@ -338,6 +359,7 @@
   </section>
   <section class="sec rise" style="animation-delay:.16s">
     <div class="sec-h"><h2>Side Bets</h2><div class="ln"></div><div class="tag">&pound;10 each &middot; 20 live &middot; whole pot</div></div>
+    <div id="prizePot" class="ppot"></div>
     <div class="bets" id="bets"></div>
   </section>
   <section class="sec rise" style="animation-delay:.2s">
@@ -399,6 +421,29 @@
       </div>
     </section>
   </div>
+  <div id="view-rules" class="view">
+    <section class="sec" style="margin-top:30px">
+      <div class="sec-h"><h2>Rules</h2><div class="ln"></div><div class="tag">How the sweepstake works</div></div>
+      <div class="rules">
+        <div class="rule">
+          <h3>The basics</h3>
+          <p>Ten of us are in at &pound;20 each &mdash; a &pound;200 pot. All 48 World Cup teams were drawn live and screen-recorded, so everyone holds five teams. The whole pot is paid out through 20 side bets worth &pound;10 each; there are no entry-fee refunds.</p>
+        </div>
+        <div class="rule">
+          <h3>How a bet is held</h3>
+          <p>Each side bet is &ldquo;held&rdquo; by whoever owns the team currently leading its metric &mdash; most goals, most corners, fastest goal, and so on. Standings update from real full-time match stats (never mid-game) and settle when the tournament ends. The single-game awards can change hands as records fall.</p>
+        </div>
+        <div class="rule gold">
+          <h3>The prize pot &#127942;</h3>
+          <p>If two or more punters are tied for a bet, nobody banks it &mdash; that &pound;10 rolls into the prize pot. Any bet that ends with no winner goes there too. The pot is won outright by whoever owns the tournament-winning team, on top of their own bet winnings, and stays unassigned until the final is played.</p>
+        </div>
+        <div class="rule">
+          <h3>Co-owned teams</h3>
+          <p>Two teams are shared picks: Japan (Leo &amp; Tom) and Curacao (Jamie &amp; Brownout). Any winnings from a co-owned team are split 50/50 between the two owners. A co-owned team leading a bet on its own still counts as a win and is split &mdash; it is not treated as contested.</p>
+        </div>
+      </div>
+    </section>
+  </div>
   <div id="view-lb" class="view">
     <section class="sec" style="margin-top:30px">
       <div class="sec-h"><h2>Leaderboard Over Time</h2><div class="ln"></div><div class="tag">&pound; won per punter &middot; by matchday</div></div>
@@ -407,14 +452,14 @@
           <button type="button" id="lbShowAll" class="active">Show all</button>
           <button type="button" id="lbHideAll">Hide all</button>
         </div>
-        <div class="lb-meta" id="lbMeta">Tap a name below the chart to show/hide &middot; all 20 bets &middot; &pound;200 pot</div>
+        <div class="lb-meta" id="lbMeta">Tap a name to show/hide &middot; contested &amp; winnerless bets feed the prize pot</div>
       </div>
       <div class="lb-grid">
         <div class="lb-chart"><canvas id="lbChart"></canvas></div>
         <div class="lb-rank" id="lbRank"></div>
       </div>
       <div class="lb-note">
-        Each line is a punter, showing cumulative &pound; they would win if the side bets were settled at that matchday. Tap any line or point for a punter's breakdown. Tap a name in the legend below the chart to show or hide that punter, or use Show all / Hide all above. Tied bets split the &pound;10 between the tied teams' owners. All 20 side bets now count toward the standings (the full &pound;200 pot): the 14 running totals (goals scored, goals conceded, yellows, reds, own goals, penalties conceded, corners, fouls, clean sheets, headed goals, substitute goals, average possession, shots faced, shots per goal) plus the 6 single-game awards (heaviest defeat, fastest goal, latest winner, comeback king, lowest winning possession, highest match possession). The single-game awards reflect the current record-holder and can change as the tournament goes on.
+        Each line is a punter's running &pound; from the bets they hold <b>outright</b>. If two or more punters are tied for a bet &mdash; or a bet has no winner yet &mdash; its &pound;10 is not split: it goes into the <b>prize pot</b> (shown on the Dashboard) and is won by whoever owns the tournament winner. A bet led by a single team pays its owner (co-owned teams split it). Tap any point for a punter's breakdown; tap a name in the legend to show or hide them.
       </div>
     </section>
   </div>
@@ -433,6 +478,7 @@
 const DATA = {
   lastUpdated: "13 Jun 2026, 09:08 BST",
   pot: 200,
+  champion: "",
   mainPrizes: [],
   sideBets: [
     { name:"Goal Machine",         desc:"Most goals scored",            scope:"full", leaderTeam:"TBC", owner:null, value:"" },
@@ -560,6 +606,13 @@ TEAM_OWNERS["usa"] = TEAM_OWNERS["united states"];
 function ownersOf(team){ return TEAM_OWNERS[(team||"").toLowerCase()] || []; }
 function ownerOf(team){ const o=ownersOf(team); return o.length? o[0] : null; }
 function ownLabel(team){ const o=ownersOf(team); return o.length? o.join(" & ") : ""; }
+function settle(teams){
+  if(!teams||!teams.length) return {pot:true};
+  const owners=[...new Set(teams.flatMap(t=>ownersOf(t)))];
+  if(!owners.length) return {pot:true};
+  if(teams.length===1 || owners.length===1) return {win:owners};
+  return {pot:true};
+}
 
 /* team -> flag emoji */
 const FLAG = {
@@ -613,49 +666,55 @@ function leader(key, dir){
   return {team:best, value:val, teams};
 }
 function heaviestDefeat(){
-  let row=null, margin=0;
-  DATA.recentScores.forEach(s=>{ const m=Math.abs(s.hs-s.as); if(m>margin){ margin=m; row=s; } });
-  if(!row) return null;
-  const loser = row.hs<row.as?row.home:row.away;
-  return {team:loser, value:`${Math.max(row.hs,row.as)}-${Math.min(row.hs,row.as)}`, game:gameStr(row)};
+  let margin=0; DATA.recentScores.forEach(s=>{ const m=Math.abs(s.hs-s.as); if(m>margin) margin=m; });
+  if(margin===0) return null;
+  const rows=DATA.recentScores.filter(s=>Math.abs(s.hs-s.as)===margin);
+  const teams=[...new Set(rows.map(s=>s.hs<s.as?s.home:s.away))]; const row=rows[0];
+  return {team:teams[0], value:`${Math.max(row.hs,row.as)}-${Math.min(row.hs,row.as)}`, game:gameStr(row), teams};
 }
 function avgPossLeader(){
-  let best=null, val=0;
-  Object.entries(teamAgg).forEach(([t,a])=>{ if(a.played>0){ const av=a.posSum/a.played; if(av>val){ val=av; best=t; } } });
-  return best? {team:best, value:Math.round(val)+"%"} : null;
+  let val=0; Object.entries(teamAgg).forEach(([t,a])=>{ if(a.played>0){ const av=a.posSum/a.played; if(av>val) val=av; } });
+  if(val===0) return null;
+  const teams=Object.entries(teamAgg).filter(([t,a])=>a.played>0 && a.posSum/a.played===val).map(([t])=>t);
+  return {team:teams[0], value:Math.round(val)+"%", teams};
 }
 function fastestGoal(){
-  let row=null, team=null, m=99999;
-  DATA.recentScores.forEach(s=>{ if(s.fg && s.fg.m<m){ m=s.fg.m; team=s.fg.t; row=s; } });
-  return row? {team:team, value:m+"'", game:gameStr(row)} : null;
+  let m=99999; DATA.recentScores.forEach(s=>{ if(s.fg && s.fg.m<m) m=s.fg.m; });
+  if(m===99999) return null;
+  const rows=DATA.recentScores.filter(s=>s.fg && s.fg.m===m); const teams=[...new Set(rows.map(s=>s.fg.t))];
+  return {team:teams[0], value:m+"'", game:gameStr(rows[0]), teams};
 }
 function latestWinner(){
-  let row=null, team=null, m=-1;
-  DATA.recentScores.forEach(s=>{ if(s.lw && s.lw.m>m){ m=s.lw.m; team=s.lw.t; row=s; } });
-  return row? {team:team, value:m+"'", game:gameStr(row)} : null;
+  let m=-1; DATA.recentScores.forEach(s=>{ if(s.lw && s.lw.m>m) m=s.lw.m; });
+  if(m<0) return null;
+  const rows=DATA.recentScores.filter(s=>s.lw && s.lw.m===m); const teams=[...new Set(rows.map(s=>s.lw.t))];
+  return {team:teams[0], value:m+"'", game:gameStr(rows[0]), teams};
 }
 function comebackKing(){
-  let row=null, team=null, d=0;
-  DATA.recentScores.forEach(s=>{ if(s.cb && s.cb.d>d){ d=s.cb.d; team=s.cb.t; row=s; } });
-  return row? {team:team, value:"from "+d+" down", game:gameStr(row)} : null;
+  let d=0; DATA.recentScores.forEach(s=>{ if(s.cb && s.cb.d>d) d=s.cb.d; });
+  if(d===0) return null;
+  const rows=DATA.recentScores.filter(s=>s.cb && s.cb.d===d); const teams=[...new Set(rows.map(s=>s.cb.t))];
+  return {team:teams[0], value:"from "+d+" down", game:gameStr(rows[0]), teams};
 }
 function wastefulLeader(){
-  let best=null, val=0;
-  Object.entries(teamAgg).forEach(([t,a])=>{ if(a.sf>0){ const r=a.sf/Math.max(a.gs,1); if(r>val){ val=r; best=t; } } });
-  return best? {team:best, value:(Math.round(val*10)/10)+" shots/goal"} : null;
+  let val=0; Object.entries(teamAgg).forEach(([t,a])=>{ if(a.sf>0){ const r=a.sf/Math.max(a.gs,1); if(r>val) val=r; } });
+  if(val===0) return null;
+  const teams=Object.entries(teamAgg).filter(([t,a])=>a.sf>0 && a.sf/Math.max(a.gs,1)===val).map(([t])=>t);
+  return {team:teams[0], value:(Math.round(val*10)/10)+" shots/goal", teams};
 }
 function lowWinPoss(){
-  let row=null, team=null, val=101;
-  DATA.recentScores.forEach(s=>{
-    if(s.hs>s.as && (s.poh||101)<val){ val=s.poh; team=s.home; row=s; }
-    else if(s.as>s.hs && (s.poa||101)<val){ val=s.poa; team=s.away; row=s; }
-  });
-  return row? {team:team, value:val+"% & won", game:gameStr(row)} : null;
+  let val=101; DATA.recentScores.forEach(s=>{ if(s.hs>s.as && (s.poh||101)<val) val=s.poh; else if(s.as>s.hs && (s.poa||101)<val) val=s.poa; });
+  if(val===101) return null;
+  const teams=[]; DATA.recentScores.forEach(s=>{ if(s.hs>s.as && s.poh===val) teams.push(s.home); else if(s.as>s.hs && s.poa===val) teams.push(s.away); });
+  const uniq=[...new Set(teams)]; const row=DATA.recentScores.find(s=>(s.hs>s.as&&s.poh===val)||(s.as>s.hs&&s.poa===val));
+  return {team:uniq[0], value:val+"% & won", game:gameStr(row), teams:uniq};
 }
 function topPossession(){
-  let row=null, team=null, val=0;
-  DATA.recentScores.forEach(s=>{ if((s.poh||0)>val){ val=s.poh; team=s.home; row=s; } if((s.poa||0)>val){ val=s.poa; team=s.away; row=s; } });
-  return row? {team:team, value:val+"%", game:gameStr(row)} : null;
+  let val=0; DATA.recentScores.forEach(s=>{ if((s.poh||0)>val) val=s.poh; if((s.poa||0)>val) val=s.poa; });
+  if(val===0) return null;
+  const teams=[]; DATA.recentScores.forEach(s=>{ if(s.poh===val) teams.push(s.home); if(s.poa===val) teams.push(s.away); });
+  const uniq=[...new Set(teams)]; const row=DATA.recentScores.find(s=>s.poh===val||s.poa===val);
+  return {team:uniq[0], value:val+"%", game:gameStr(row), teams:uniq};
 }
 
 const COMPUTE = {
@@ -685,18 +744,21 @@ const ONEOFF = new Set(["The Hammering","Off Like a Rocket","Fergie Time","Comeb
 document.getElementById("bets").innerHTML = DATA.sideBets.map(b=>{
   const auto = COMPUTE[b.name];
   const oneoff = ONEOFF.has(b.name);
-  const team = auto? auto.team : (b.leaderTeam||"TBC");
   const val = auto? auto.value : b.value;
-  const tied = (auto&&auto.teams&&auto.teams.length>1) ? auto.teams : null;
+  const leadingTeams = auto && auto.teams ? auto.teams : (auto && auto.team ? [auto.team] : []);
+  const owners = [...new Set(leadingTeams.flatMap(t=>ownersOf(t)))];
+  const multi = leadingTeams.length>1;
   let teamLine, ownerLine;
-  if(tied){
-    teamLine = tied.map(t=>`${flagOf(t)}${t}`).join(", ");
-    const owners = [...new Set(tied.flatMap(t=>ownersOf(t)))];
-    ownerLine = owners.length? (owners.length>1?`Split between <b>${owners.join(", ")}</b>`:`<b>${owners[0]}</b>`) : 'awaiting results';
+  if(leadingTeams.length===0){
+    teamLine = `${flagOf(b.leaderTeam||"TBC")}${b.leaderTeam||"TBC"}`;
+    ownerLine = `<span class="leadowner-tbc">awaiting results</span>`;
   } else {
-    teamLine = `${flagOf(team)}${team}`;
-    const owners = auto? ownersOf(auto.team) : (b.owner?[b.owner]:[]);
-    ownerLine = owners.length? (owners.length>1?`Split between <b>${owners.join(", ")}</b>`:`<b>${owners[0]}</b>`) : 'awaiting results';
+    teamLine = leadingTeams.map(t=>`${flagOf(t)}${t}`).join(", ");
+    if(leadingTeams.length===1 || owners.length<=1){
+      ownerLine = owners.length? `<span class="own-pill win">${owners.join(" & ")}</span>` : `<span class="leadowner-tbc">awaiting results</span>`;
+    } else {
+      ownerLine = `<span class="own-pill pot">Contested · ${owners.join(", ")}</span>`;
+    }
   }
   const gameLine = (auto&&auto.game)? `<div class="bet-game">${auto.game}</div>` : '';
   return `
@@ -704,13 +766,31 @@ document.getElementById("bets").innerHTML = DATA.sideBets.map(b=>{
     <span class="kind ${oneoff?'one':'tour'}"><span class="sym">${oneoff?'\u26a1':'\u2211'}</span>${oneoff?'Single game':'Tournament'}</span>
     <h3>${b.name}</h3>
     <div class="bet-desc">${b.desc||''}</div>
-    <div class="leadteam${tied?' multi':''}">${teamLine}</div>
+    <div class="leadteam${multi?' multi':''}">${teamLine}</div>
     <div class="leadowner">${ownerLine}</div>
     ${gameLine}
     ${val!==""&&val!=null?`<div class="val">${val}</div>`:''}
   </div>`;
 }).join("");
 
+(function(){
+  const el=document.getElementById("prizePot"); if(!el) return;
+  let potNow=0, contestedN=0, noWinnerN=0;
+  DATA.sideBets.forEach(b=>{
+    const auto=COMPUTE[b.name];
+    const teams = auto && auto.teams ? auto.teams : (auto && auto.team ? [auto.team] : []);
+    const r=settle(teams);
+    if(r.pot){ potNow+=10; if(teams.length>=2) contestedN++; else noWinnerN++; }
+  });
+  const champ=(DATA.champion||"").trim(); const champOwners=champ?ownersOf(champ):[];
+  if(champ && champOwners.length){
+    el.className="ppot win";
+    el.innerHTML=`<div class="tphy">\u{1F3C6}</div><div><div class="lab">Prize pot — won</div><div class="amt">£${potNow}</div><div class="sub">${flagOf(champ)}${champ} won the tournament — to <b>${champOwners.join(" & ")}</b></div></div>`;
+  } else {
+    el.className="ppot";
+    el.innerHTML=`<div class="tphy">\u{1F3C6}</div><div><div class="lab">Prize pot</div><div class="amt">£${potNow}</div><div class="sub">Won by whoever owns the tournament winner${(contestedN||noWinnerN)?` · ${contestedN} contested + ${noWinnerN} with no winner`:``}</div></div><div class="right"><div class="lab">Awarded</div><div style="font-size:14px; color:var(--ink); margin-top:4px; font-weight:700">At the final</div></div>`;
+  }
+})();
 const sh = document.getElementById("scoresHost");
 const scoreTag = document.getElementById("scoreTag");
 const playedKeys = new Set(DATA.recentScores.map(s=>s.home+"|"+s.away));
@@ -960,6 +1040,7 @@ function topPossessionSlice(slice){ let v=0; slice.forEach(s=>{ if((s.poh||0)>v)
 
 const DATES = [...new Set(DATA.recentScores.map(s=>s.date))].reverse();
 const SERIES = {}; PUNTERS.forEach(p=>SERIES[p]=[]);
+const POT_SERIES = [];
 const BETS_AT_CUT = {}; PUNTERS.forEach(p=>BETS_AT_CUT[p]=[]);
 
 DATES.forEach(d=>{
@@ -989,12 +1070,15 @@ DATES.forEach(d=>{
   };
   const punterMoney = {}; const punterBets = {};
   PUNTERS.forEach(p=>{ punterMoney[p]=0; punterBets[p]=[]; });
+  let potAtCut = 0;
   Object.entries(leaders).forEach(([bet,teams])=>{
-    if(!teams||!teams.length) return;
-    const perTeam = BET_VAL/teams.length;   // split £10 across tied teams
-    teams.forEach(tm=>{ const owners=ownersOf(tm); if(!owners.length) return; const per=perTeam/owners.length; owners.forEach(own=>{ punterMoney[own]+=per; if(!punterBets[own].includes(bet)) punterBets[own].push(bet); }); });
+    const r = settle(teams);
+    if(r.pot){ potAtCut += BET_VAL; return; }
+    const per = BET_VAL / r.win.length;
+    r.win.forEach(own=>{ punterMoney[own]+=per; if(!punterBets[own].includes(bet)) punterBets[own].push(bet); });
   });
   PUNTERS.forEach(p=>{ SERIES[p].push(punterMoney[p]); BETS_AT_CUT[p].push(punterBets[p]); });
+  POT_SERIES.push(potAtCut);
 });
 
 const RANK_SERIES = {}; PUNTERS.forEach(p=>RANK_SERIES[p]=[]);
@@ -1120,7 +1204,8 @@ function renderLbRank(){
         </div>
         <div class="v">£${(r.v%1?+r.v.toFixed(1):r.v)}</div>
       </div>`;
-    }).join("")}`;
+    }).join("")}
+    ${(function(){ const champ=(DATA.champion||"").trim(); const champOwners=champ?ownersOf(champ):[]; const pt=POT_SERIES[i]||0; return `<div class="lb-row potrow"><div class="pos">\u{1F3C6}</div><div><div class="nm">Prize pot</div><div class="bets">${champ&&champOwners.length? champ+" won — to "+champOwners.join(" & ") : "held for the tournament winner's owner"}</div></div><div class="v">£${pt}</div></div>`; })()}`;
 }
 
 document.getElementById("lbShowAll").addEventListener("click",()=>{
