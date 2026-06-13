@@ -14,14 +14,17 @@ Anthropic's cloud on a schedule (no laptop needed).
 1. Open Claude Code on the web → **Routines** → **New routine**.
 2. **Repository:** connect `leo-gecco/wc-sweepstake`.
 3. **Schedule:** Run **every 2 hours through the evening, then a single morning refresh** — cron (UTC):
-   `0 7,17-23/2 * * *`. That fires at **18:00, 20:00, 22:00 and 00:00 BST** (every 2 hours from the earliest
-   kickoff through midnight), then nothing overnight until a single **08:00 BST** refresh. Games that finish
-   after midnight (kickoffs run as late as 05:00 BST, ending ~07:00) simply wait for the 08:00 run, which
+   `15 7,17-23/2 * * *`. That fires at **18:15, 20:15, 22:15 and 00:15 BST** (every 2 hours from the earliest
+   kickoff through midnight), then nothing overnight until a single **08:15 BST** refresh. The **:15 offset
+   is deliberate** — matches kick off on the hour and run ~2 hours wall-clock, so firing at HH:15 clears the
+   final whistle (and ESPN's short status lag) of a game that kicked off two hours earlier; firing on the
+   hour used to coincide with those finishes and occasionally caught a game still in play. Games that finish
+   after midnight (kickoffs run as late as 05:00 BST, ending ~07:00) simply wait for the 08:15 run, which
    also recaps the whole night and writes the WhatsApp message (MESSAGE GATE). Most slots find nothing new
    and make no commit, so it's cheap. (If your routine reads cron in UK/BST rather than UTC, use
-   `0 0,8,18-22/2 * * *` instead. The message gate keys off UK wall-clock either way.) Note: the **08:00 BST
-   run is the single morning-message slot** — if you want a retry in case it fails, add a 10:00 BST run:
-   `0 7,9,17-23/2 * * *`.
+   `15 0,8,18-22/2 * * *` instead. The message gate keys off UK wall-clock either way.) Note: the **08:15 BST
+   run is the single morning-message slot** — if you want a retry in case it fails, add a 10:15 BST run:
+   `15 7,9,17-23/2 * * *`.
 4. **Push permissions:** allow the routine to push to `main` (GitHub Pages serves `main`). If the
    routine is locked to `claude/…` branches, instead point GitHub Pages at that branch, or add an
    auto-merge action.
@@ -294,8 +297,8 @@ run output for you to copy). Ask and I'll build the Actions workflow.
 
 ## 3. Notes
 
-- **Cadence:** board refreshes every 2 hours through the evening, then a single 08:00 BST run
-  (`0 7,17-23/2 * * *`); the WhatsApp message is written once a day by that 08:00 run (MESSAGE GATE). The
+- **Cadence:** board refreshes every 2 hours through the evening, then a single 08:15 BST run
+  (`15 7,17-23/2 * * *`); the WhatsApp message is written once a day by that 08:15 run (MESSAGE GATE). The
   evening cadence keeps the live board fresh while games are being watched; after midnight there are no
   runs, so overnight games (kickoffs as late as 05:00 BST) are caught and recapped by the morning run. The
   gate means just one morning message, no chat spam. Most runs find nothing new and make no commit, so it
