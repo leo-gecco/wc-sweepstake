@@ -832,7 +832,7 @@ if(DATA.recentScores.length){
           const evStrip = (hEv.length||aEv.length)? `<div class="events"><span class="evside">${hEv.join("")}</span><span class="evside ar">${aEv.join("")}</span></div>` : '';
           return `
           <div class="score">
-            <div class="gp">${s.group||''}</div>
+            <div class="gp">${s.group? (/^group/i.test(s.group)?s.group:'Group '+s.group) : ''}</div>
             <div class="home ${hWin?'winner':drw?'draw':''}"><span class="tm">${flagOf(s.home)}${s.home}</span>${hOwn?`<span class="own">${hOwn}</span>`:''}</div>
             <div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">–</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div>
             <div class="away ${aWin?'winner':drw?'draw':''}"><span class="tm">${flagOf(s.away)}${s.away}</span>${aOwn?`<span class="own">${aOwn}</span>`:''}</div>
@@ -864,7 +864,7 @@ if(fh){
             const hOwn=ownLabel(f.home),aOwn=ownLabel(f.away);
             return `
             <div class="score fixture">
-              <div class="gp">${f.group||''}</div>
+              <div class="gp">${f.group? (/^group/i.test(f.group)?f.group:'Group '+f.group) : ''}</div>
               <div class="home"><span class="tm">${flagOf(f.home)}${f.home}</span>${hOwn?`<span class="own">${hOwn}</span>`:''}</div>
               <div class="sc"><span class="ko">${f.time||'v'}</span></div>
               <div class="away"><span class="tm">${flagOf(f.away)}${f.away}</span>${aOwn?`<span class="own">${aOwn}</span>`:''}</div>
