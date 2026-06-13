@@ -176,7 +176,7 @@ L: England, Croatia, Ghana, Panama
 For ALL 20 side bets — the 14 running totals (most goals scored, most conceded, most yellows, reds, own
 goals, penalties conceded, corners, fouls, clean sheets, headed goals, sub goals, highest avg possession,
 most shots faced, most shots per goal) plus the 6 single-game awards (heaviest defeat, fastest goal,
-latest 90'+ winner, biggest comeback, lowest winning possession, biggest possession gap): find the leading
+latest 90'+ winner, biggest comeback, lowest winning possession, highest single-game possession): find the leading
 team(s) from recentScores, map each to its punter(s) via the ALLOC list in dashboard.html, and award £10
 per bet. Split the £10 equally across the tied teams, then split each team's share equally across that
 team's owners.
@@ -214,7 +214,7 @@ Rules:
   Aerial Threat = headed goals · Super Sub = sub goals · Tiki-Taka = average possession % ·
   Shooting Gallery = shots faced · The Hammering = scoreline/margin · Off Like a Rocket = goal minute ·
   Fergie Time = goal minute · Comeback Kings = goals overturned · Smash & Grab = winning possession % ·
-  All Sizzle No Steak = shots per goal · Total Domination = possession gap.
+  All Sizzle No Steak = shots per goal · Total Domination = highest match possession %.
   Good: "Corner Shop: now Brazil (Sam) on 10 corners, their 4-0 v Haiti did it."
   Bad:  "Corner Shop: now Brazil (Sam)."  (no metric, no reason)
 - Movers layout — group by punter, biggest mover first: a BOLD headline line per punter (name + new total

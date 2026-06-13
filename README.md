@@ -58,7 +58,7 @@ Wrong Net (own goals), Spot-Kick Magnet (penalties conceded), Corner Shop (corne
 (avg possession), Shooting Gallery (shots faced), All Sizzle No Steak (shots per goal) — plus the
 single-game ones: The Hammering (heaviest defeat), Off Like a Rocket (fastest goal), Fergie Time
 (latest 90'+ winner), Comeback Kings (biggest comeback), Smash & Grab (won on lowest possession),
-Total Domination (biggest possession gap).
+Total Domination (highest possession in a match).
 
 When a team leads a bet its owner banks £10; ties split it across the tied teams' owners.
 
