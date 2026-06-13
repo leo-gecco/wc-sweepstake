@@ -407,14 +407,14 @@
           <button type="button" id="lbShowAll" class="active">Show all</button>
           <button type="button" id="lbHideAll">Hide all</button>
         </div>
-        <div class="lb-meta" id="lbMeta">Tap a name below the chart to show/hide &middot; &pound;140 of &pound;200 charted</div>
+        <div class="lb-meta" id="lbMeta">Tap a name below the chart to show/hide &middot; all 20 bets &middot; &pound;200 pot</div>
       </div>
       <div class="lb-grid">
         <div class="lb-chart"><canvas id="lbChart"></canvas></div>
         <div class="lb-rank" id="lbRank"></div>
       </div>
       <div class="lb-note">
-        Each line is a punter, showing cumulative &pound; they would win if the side bets were settled at that matchday. Tap any line or point for a punter's breakdown. Tap a name in the legend below the chart to show or hide that punter, or use Show all / Hide all above. Tied bets split the &pound;10 between the tied teams' owners. The 14 running-total bets are charted: goals scored, goals conceded, yellows, reds, own goals, penalties conceded, corners, fouls, clean sheets, headed goals, substitute goals, average possession, shots faced, heaviest defeat. The 6 one-off awards (fastest goal, latest winner, comeback king, most shots per goal, lowest winning possession, biggest possession gap) are decided on the day and shown on the Side Bets tab.
+        Each line is a punter, showing cumulative &pound; they would win if the side bets were settled at that matchday. Tap any line or point for a punter's breakdown. Tap a name in the legend below the chart to show or hide that punter, or use Show all / Hide all above. Tied bets split the &pound;10 between the tied teams' owners. All 20 side bets now count toward the standings (the full &pound;200 pot): the 14 running totals (goals scored, goals conceded, yellows, reds, own goals, penalties conceded, corners, fouls, clean sheets, headed goals, substitute goals, average possession, shots faced, shots per goal) plus the 6 single-game awards (heaviest defeat, fastest goal, latest winner, comeback king, lowest winning possession, biggest possession gap). The single-game awards reflect the current record-holder and can change as the tournament goes on.
       </div>
     </section>
   </div>
@@ -911,7 +911,7 @@ function aggToCutoff(cutDate, dates){
   const idx = dates.indexOf(cutDate);
   const slice = DATA.recentScores.filter(s=>dates.indexOf(s.date)<=idx);
   const A = {};
-  function b(t,k,v){ if(!t) return; A[t]=A[t]||{yc:0,rc:0,og:0,pen:0,gs:0,gc:0,played:0,co:0,fo:0,hg:0,sg:0,posSum:0,cs:0,sfd:0}; A[t][k]+=v; }
+  function b(t,k,v){ if(!t) return; A[t]=A[t]||{yc:0,rc:0,og:0,pen:0,gs:0,gc:0,played:0,co:0,fo:0,hg:0,sg:0,posSum:0,cs:0,sfd:0,sf:0}; A[t][k]+=v; }
   slice.forEach(s=>{
     b(s.home,"yc",s.yh||0); b(s.away,"yc",s.ya||0);
     b(s.home,"rc",s.rh||0); b(s.away,"rc",s.ra||0);
@@ -925,6 +925,7 @@ function aggToCutoff(cutDate, dates){
     b(s.home,"sg",s.sgh||0); b(s.away,"sg",s.sga||0);
     b(s.home,"posSum",s.poh||0); b(s.away,"posSum",s.poa||0);
     b(s.home,"sfd",s.sha||0); b(s.away,"sfd",s.shh||0);
+    b(s.home,"sf",s.shh||0); b(s.away,"sf",s.sha||0);
     b(s.home,"played",1); b(s.away,"played",1);
     if((s.as||0)===0) b(s.home,"cs",1);
     if((s.hs||0)===0) b(s.away,"cs",1);
@@ -950,6 +951,12 @@ function heaviestDefeatSlice(slice){
   slice.forEach(s=>{ const d=Math.abs(s.hs-s.as); if(d>m){ m=d; best=(s.hs<s.as?s.home:s.away); } });
   return best;
 }
+function shotsPerGoalSlice(A){ let v=0; Object.values(A).forEach(a=>{ if(a.sf>0){ const r=a.sf/Math.max(a.gs,1); if(r>v) v=r; } }); return v>0? Object.entries(A).filter(([t,a])=>a.sf>0 && (a.sf/Math.max(a.gs,1))===v).map(([t])=>t) : []; }
+function fastestGoalSlice(slice){ let m=1e9; slice.forEach(s=>{ if(s.fg && s.fg.m<m) m=s.fg.m; }); if(m===1e9) return []; return [...new Set(slice.filter(s=>s.fg && s.fg.m===m).map(s=>s.fg.t))]; }
+function latestWinnerSlice(slice){ let m=-1; slice.forEach(s=>{ if(s.lw && s.lw.m>m) m=s.lw.m; }); if(m<0) return []; return [...new Set(slice.filter(s=>s.lw && s.lw.m===m).map(s=>s.lw.t))]; }
+function comebackSlice(slice){ let d=0; slice.forEach(s=>{ if(s.cb && s.cb.d>d) d=s.cb.d; }); if(d===0) return []; return [...new Set(slice.filter(s=>s.cb && s.cb.d===d).map(s=>s.cb.t))]; }
+function lowWinPossSlice(slice){ let v=101; slice.forEach(s=>{ if(s.hs>s.as){ const p=(s.poh==null?101:s.poh); if(p<v) v=p; } else if(s.as>s.hs){ const p=(s.poa==null?101:s.poa); if(p<v) v=p; } }); if(v===101) return []; const out=[]; slice.forEach(s=>{ if(s.hs>s.as && s.poh===v) out.push(s.home); else if(s.as>s.hs && s.poa===v) out.push(s.away); }); return [...new Set(out)]; }
+function possGapSlice(slice){ let v=0; slice.forEach(s=>{ const g=Math.abs((s.poh||0)-(s.poa||0)); if(g>v) v=g; }); if(v===0) return []; const out=[]; slice.forEach(s=>{ const g=Math.abs((s.poh||0)-(s.poa||0)); if(g===v) out.push(s.poh>=s.poa?s.home:s.away); }); return [...new Set(out)]; }
 
 const DATES = [...new Set(DATA.recentScores.map(s=>s.date))].reverse();
 const SERIES = {}; PUNTERS.forEach(p=>SERIES[p]=[]);
@@ -972,7 +979,13 @@ DATES.forEach(d=>{
     "Super Sub":            leaderTeamsAll(agg,"sg"),
     "Tiki-Taka":            wrap(avgPossSlice(agg)),
     "Shooting Gallery":     leaderTeamsAll(agg,"sfd"),
-    "The Hammering":        wrap(heaviestDefeatSlice(slice))
+    "All Sizzle, No Steak": shotsPerGoalSlice(agg),
+    "The Hammering":        wrap(heaviestDefeatSlice(slice)),
+    "Off Like a Rocket":    fastestGoalSlice(slice),
+    "Fergie Time":          latestWinnerSlice(slice),
+    "Comeback Kings":       comebackSlice(slice),
+    "Smash &amp; Grab":     lowWinPossSlice(slice),
+    "Total Domination":     possGapSlice(slice)
   };
   const punterMoney = {}; const punterBets = {};
   PUNTERS.forEach(p=>{ punterMoney[p]=0; punterBets[p]=[]; });

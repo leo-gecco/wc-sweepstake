@@ -161,7 +161,7 @@ L: England, Croatia, Ghana, Panama
    NOT just what changed since the previous run. "Latest day" = every game completed since yesterday
    morning: rows dated YESTERDAY (UK) plus any overnight games dated TODAY (UK) that have finished. Call
    that set R.
-   - BEFORE/AFTER without memory: compute the £ standings and the 14 running-total bet leaders TWICE —
+   - BEFORE/AFTER without memory: compute the £ standings across all 20 side bets TWICE —
      once from ALL recentScores (AFTER), once EXCLUDING set R (BEFORE). The diff is exactly what those
      games changed (leaders won/lost, who climbed the money table).
    - Content: recap the results in R, the movers from that diff, the current money standings, then a
@@ -173,15 +173,17 @@ L: England, Croatia, Ghana, Panama
    changes, manual-review flags, push status. If the message WAS sent, paste it verbatim for copy-paste.
 
 # HOW TO COMPUTE STANDINGS (for BEFORE/AFTER)
-For each of the 14 running-total bets (most goals scored, most conceded, most yellows, reds, own goals,
-penalties conceded, corners, fouls, clean sheets, headed goals, sub goals, highest avg possession,
-most shots faced, heaviest defeat): find the leading team(s) from recentScores, map each to its punter(s)
-via the ALLOC list in dashboard.html, and award £10 per bet. Split the £10 equally across the tied teams,
-then split each team's share equally across that team's owners.
+For ALL 20 side bets — the 14 running totals (most goals scored, most conceded, most yellows, reds, own
+goals, penalties conceded, corners, fouls, clean sheets, headed goals, sub goals, highest avg possession,
+most shots faced, most shots per goal) plus the 6 single-game awards (heaviest defeat, fastest goal,
+latest 90'+ winner, biggest comeback, lowest winning possession, biggest possession gap): find the leading
+team(s) from recentScores, map each to its punter(s) via the ALLOC list in dashboard.html, and award £10
+per bet. Split the £10 equally across the tied teams, then split each team's share equally across that
+team's owners.
 CO-OWNED TEAMS — two teams appear under TWO punters in ALLOC: **Japan = Leo & Tom**, **Curacao = Jamie &
 Brownout**. If a co-owned team leads or ties a bet, both owners share that team's money. Whenever you map a
 team to a punter (standings or the WhatsApp message), check for a second owner and name/credit both.
-Sum per punter to get the £ standings. (The 6 one-off bets are not counted here.)
+Sum per punter to get the £ standings across all 20 bets — this matches the dashboard's Leaderboard Over Time, which now counts every side bet.
 
 # WHATSAPP SUMMARY (paste-ready, entertaining) — the single daily 08:00 message
 A recap of the games completed since yesterday's message (yesterday's results + any overnight games), the
