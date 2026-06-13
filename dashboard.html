@@ -487,7 +487,7 @@
    - recentScores: prepend each day's new batch at the top
    ============================================================ */
 const DATA = {
-  lastUpdated: "13 Jun 2026, 09:08 BST",
+  lastUpdated: "13 Jun 2026, 22:21 BST",
   pot: 200,
   champion: "",
   mainPrizes: [],
@@ -518,6 +518,7 @@ const DATA = {
   // fg={m,t}=earliest goal (min, team), lw={m,t}=90'+ decisive goal, cb={t,d}=comeback (team, goals down)
   // Schedule prepends each day's matches to the top of this array. Newest batch first.
   recentScores: [
+    { date:"13 Jun 2026", group:"Group B", home:"Qatar", hs:1, away:"Switzerland", as:1, yh:2, ya:1, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:3, ca:10, foh:12, foa:11, poh:32, poa:68, hgh:1, hga:0, sgh:0, sga:0, shh:7, sha:26, fg:{m:17,t:"Switzerland"}, lw:{m:94,t:"Qatar"} },
     { date:"13 Jun 2026", group:"Group D", home:"United States", hs:4, away:"Paraguay", as:1, yh:1, ya:5, rh:0, ra:0, oh:0, oa:1, ph:0, pa:0, ch:3, ca:1, foh:13, foa:17, poh:65, poa:35, hgh:0, hga:0, sgh:1, sga:1, shh:16, sha:9, fg:{m:7,t:"United States"} },
     { date:"12 Jun 2026", group:"Group A", home:"South Korea", hs:2, away:"Czech Republic", as:1, yh:1, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:5, foh:9, foa:16, poh:62, poa:38, hgh:0, hga:1, sgh:1, sga:0, shh:15, sha:7, fg:{m:59,t:"Czech Republic"} },
     { date:"12 Jun 2026", group:"Group B", home:"Canada", hs:1, away:"Bosnia-Herzegovina", as:1, yh:2, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:9, ca:4, foh:10, foa:20, poh:61, poa:39, hgh:0, hga:1, sgh:1, sga:0, shh:13, sha:8, fg:{m:21,t:"Bosnia-Herzegovina"} },
@@ -525,7 +526,6 @@ const DATA = {
   ],
   // Full group-stage schedule. Routine moves a match out of fixtures into recentScores once played.
   fixtures: [
-    {date:"13 Jun 2026", time:"20:00", group:"B", home:"Qatar", away:"Switzerland"},
     {date:"13 Jun 2026", time:"23:00", group:"C", home:"Brazil", away:"Morocco"},
     {date:"14 Jun 2026", time:"02:00", group:"C", home:"Haiti", away:"Scotland"},
     {date:"14 Jun 2026", time:"05:00", group:"D", home:"Australia", away:"Turkey"},
