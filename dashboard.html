@@ -106,6 +106,7 @@
   .own-pill.win{background:rgba(19,217,122,.14); color:var(--green); border:1px solid var(--green-dim)}
   .own-pill.pot{background:rgba(242,193,78,.16); color:var(--gold); border:1px solid rgba(242,193,78,.5)}
   .leadowner-tbc{color:var(--muted); font-size:13px}
+  .bet.bonus{border-color:rgba(242,193,78,.5); background:linear-gradient(160deg,rgba(242,193,78,.10),var(--panel))}
   .ppot{display:flex; align-items:center; gap:16px; background:linear-gradient(160deg,rgba(242,193,78,.10),var(--panel)); border:1px solid rgba(242,193,78,.45); border-radius:16px; padding:16px 20px; margin-bottom:18px}
   .ppot .tphy{font-size:38px; line-height:1}
   .ppot .lab{font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); font-weight:700}
@@ -761,8 +762,9 @@ document.getElementById("bets").innerHTML = DATA.sideBets.map(b=>{
     }
   }
   const gameLine = (auto&&auto.game)? `<div class="bet-game">${auto.game}</div>` : '';
+  const cardCls = (leadingTeams.length===0 || (leadingTeams.length>1 && owners.length>1)) ? ' bonus' : '';
   return `
-  <div class="bet">
+  <div class="bet${cardCls}">
     <span class="kind ${oneoff?'one':'tour'}"><span class="sym">${oneoff?'\u26a1':'\u2211'}</span>${oneoff?'Single game':'Tournament'}</span>
     <h3>${b.name}</h3>
     <div class="bet-desc">${b.desc||''}</div>
