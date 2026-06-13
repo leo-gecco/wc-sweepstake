@@ -160,9 +160,10 @@
   .score:hover{border-color:var(--green-dim); transform:translateY(-2px)}
   .score::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--green-dim); opacity:.7}
   .score .gp{grid-column:1/-1; text-align:center; font-size:12px; font-weight:800; color:var(--muted); letter-spacing:.8px; text-transform:uppercase}
-  .score .home{font-weight:800; font-size:18px; text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:3px}
-  .score .away{font-weight:800; font-size:18px; text-align:left; display:flex; flex-direction:column; align-items:flex-start; gap:3px}
-  .score .sc{font-family:"Anton"; font-size:30px; letter-spacing:1px; min-width:82px; text-align:center;
+  .score .home{font-weight:800; font-size:18px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:3px}
+  .score .away{font-weight:800; font-size:18px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:3px}
+  .score .sc{font-family:"Anton"; font-size:30px; line-height:1; letter-spacing:1px; min-width:82px; min-height:44px; text-align:center;
+    display:flex; align-items:center; justify-content:center;
     background:rgba(19,217,122,.06); border:1px solid var(--line); border-radius:8px; padding:4px 10px; white-space:nowrap}
   .score .sc .d{color:var(--muted); margin:0 6px}
   .score .winner{color:var(--green)}
