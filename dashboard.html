@@ -357,9 +357,9 @@
       <div class="potstrip" id="potstrip"></div>
     </div>
   </section>
+  <div id="prizePot" class="ppot" style="margin-top:24px"></div>
   <section class="sec rise" style="animation-delay:.16s">
     <div class="sec-h"><h2>Side Bets</h2><div class="ln"></div><div class="tag">&pound;10 each &middot; 20 live &middot; whole pot</div></div>
-    <div id="prizePot" class="ppot"></div>
     <div class="bets" id="bets"></div>
   </section>
   <section class="sec rise" style="animation-delay:.2s">
@@ -434,8 +434,8 @@
           <p>Each side bet is &ldquo;held&rdquo; by whoever owns the team currently leading its metric &mdash; most goals, most corners, fastest goal, and so on. Standings update from real full-time match stats (never mid-game) and settle when the tournament ends. The single-game awards can change hands as records fall.</p>
         </div>
         <div class="rule gold">
-          <h3>The prize pot &#127942;</h3>
-          <p>If two or more punters are tied for a bet, nobody banks it &mdash; that &pound;10 rolls into the prize pot. Any bet that ends with no winner goes there too. The pot is won outright by whoever owns the tournament-winning team, on top of their own bet winnings, and stays unassigned until the final is played.</p>
+          <h3>Champion's Bonus &#127942;</h3>
+          <p>If two or more punters are tied for a bet, nobody banks it &mdash; that &pound;10 rolls into the Champion's Bonus. Any bet that ends with no winner goes there too. The pot is won outright by whoever owns the tournament-winning team, on top of their own bet winnings, and stays unassigned until the final is played.</p>
         </div>
         <div class="rule">
           <h3>Co-owned teams</h3>
@@ -452,14 +452,14 @@
           <button type="button" id="lbShowAll" class="active">Show all</button>
           <button type="button" id="lbHideAll">Hide all</button>
         </div>
-        <div class="lb-meta" id="lbMeta">Tap a name to show/hide &middot; contested &amp; winnerless bets feed the prize pot</div>
+        <div class="lb-meta" id="lbMeta">Tap a name to show/hide &middot; contested &amp; winnerless bets feed the Champion's Bonus</div>
       </div>
       <div class="lb-grid">
         <div class="lb-chart"><canvas id="lbChart"></canvas></div>
         <div class="lb-rank" id="lbRank"></div>
       </div>
       <div class="lb-note">
-        Each line is a punter's running &pound; from the bets they hold <b>outright</b>. If two or more punters are tied for a bet &mdash; or a bet has no winner yet &mdash; its &pound;10 is not split: it goes into the <b>prize pot</b> (shown on the Dashboard) and is won by whoever owns the tournament winner. A bet led by a single team pays its owner (co-owned teams split it). Tap any point for a punter's breakdown; tap a name in the legend to show or hide them.
+        Each line is a punter's running &pound; from the bets they hold <b>outright</b>. If two or more punters are tied for a bet &mdash; or a bet has no winner yet &mdash; its &pound;10 is not split: it goes into the <b>Champion's Bonus</b> (shown on the Dashboard) and is won by whoever owns the tournament winner. A bet led by a single team pays its owner (co-owned teams split it). Tap any point for a punter's breakdown; tap a name in the legend to show or hide them.
       </div>
     </section>
   </div>
@@ -782,13 +782,15 @@ document.getElementById("bets").innerHTML = DATA.sideBets.map(b=>{
     const r=settle(teams);
     if(r.pot){ potNow+=10; if(teams.length>=2) contestedN++; else noWinnerN++; }
   });
+  if(potNow===0){ el.style.display="none"; el.innerHTML=""; return; }
+  el.style.display="";
   const champ=(DATA.champion||"").trim(); const champOwners=champ?ownersOf(champ):[];
   if(champ && champOwners.length){
     el.className="ppot win";
-    el.innerHTML=`<div class="tphy">\u{1F3C6}</div><div><div class="lab">Prize pot — won</div><div class="amt">£${potNow}</div><div class="sub">${flagOf(champ)}${champ} won the tournament — to <b>${champOwners.join(" & ")}</b></div></div>`;
+    el.innerHTML=`<div class="tphy">\u{1F3C6}</div><div><div class="lab">Champion's Bonus — won</div><div class="amt">£${potNow}</div><div class="sub">${flagOf(champ)}${champ} won the tournament — to <b>${champOwners.join(" & ")}</b></div></div>`;
   } else {
     el.className="ppot";
-    el.innerHTML=`<div class="tphy">\u{1F3C6}</div><div><div class="lab">Prize pot</div><div class="amt">£${potNow}</div><div class="sub">Won by whoever owns the tournament winner${(contestedN||noWinnerN)?` · ${contestedN} contested + ${noWinnerN} with no winner`:``}</div></div><div class="right"><div class="lab">Awarded</div><div style="font-size:14px; color:var(--ink); margin-top:4px; font-weight:700">At the final</div></div>`;
+    el.innerHTML=`<div class="tphy">\u{1F3C6}</div><div><div class="lab">Champion's Bonus</div><div class="amt">£${potNow}</div><div class="sub">Won by whoever owns the tournament winner${(contestedN||noWinnerN)?` · ${contestedN} contested + ${noWinnerN} with no winner`:``}</div></div><div class="right"><div class="lab">Awarded</div><div style="font-size:14px; color:var(--ink); margin-top:4px; font-weight:700">At the final</div></div>`;
   }
 })();
 const sh = document.getElementById("scoresHost");
@@ -1205,7 +1207,7 @@ function renderLbRank(){
         <div class="v">£${(r.v%1?+r.v.toFixed(1):r.v)}</div>
       </div>`;
     }).join("")}
-    ${(function(){ const champ=(DATA.champion||"").trim(); const champOwners=champ?ownersOf(champ):[]; const pt=POT_SERIES[i]||0; return `<div class="lb-row potrow"><div class="pos">\u{1F3C6}</div><div><div class="nm">Prize pot</div><div class="bets">${champ&&champOwners.length? champ+" won — to "+champOwners.join(" & ") : "held for the tournament winner's owner"}</div></div><div class="v">£${pt}</div></div>`; })()}`;
+    ${(function(){ const champ=(DATA.champion||"").trim(); const champOwners=champ?ownersOf(champ):[]; const pt=POT_SERIES[i]||0; return `<div class="lb-row potrow"><div class="pos">\u{1F3C6}</div><div><div class="nm">Champion's Bonus</div><div class="bets">${champ&&champOwners.length? champ+" won — to "+champOwners.join(" & ") : "held for the tournament winner's owner"}</div></div><div class="v">£${pt}</div></div>`; })()}`;
 }
 
 document.getElementById("lbShowAll").addEventListener("click",()=>{
