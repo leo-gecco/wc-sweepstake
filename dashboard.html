@@ -199,8 +199,7 @@
   .team .nm{flex:1}
   .team .rk{font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums}
   .team .rk.elite{color:var(--gold)} .team .rk.minnow{color:var(--red)}
-  .pcard .thd{display:flex; align-items:center; padding:2px 0 5px; font-size:9.5px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:var(--muted)}
-  .pcard .thd .thd-l{flex:1}
+  .pcard .thd{display:flex; justify-content:flex-end; align-items:center; padding:2px 0 5px; font-size:9.5px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:var(--muted)}
   .tabs{display:flex; gap:8px; margin-top:24px; border-bottom:1px solid var(--line); padding-bottom:0; overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; -webkit-overflow-scrolling:touch}
   .tabs::-webkit-scrollbar{display:none}
   .tab{padding:12px 18px; font-family:"Anton",sans-serif; font-size:15px; letter-spacing:1px; text-transform:uppercase; white-space:nowrap; flex:0 0 auto;
@@ -894,7 +893,7 @@ ps.innerHTML = `
 document.getElementById("punters").innerHTML = ALLOC.map(([name,teams])=>`
   <div class="pcard">
     <div class="pn">${name}<span class="cnt">${teams.length} teams</span></div>
-    <div class="thd"><span class="thd-l">Team</span><span class="thd-r">FIFA rank</span></div>
+    <div class="thd">FIFA rank</div>
     ${teams.map(([t,g,r])=>`
       <div class="team">
         <span class="grp">${g}</span>
