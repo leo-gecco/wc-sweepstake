@@ -13,8 +13,9 @@ logic in `dashboard.html`, and mirror the bet-unit list in `OPERATIONS.md`.
 | **Early Bath** | Earliest red card of the tournament (lowest minute) | ⚡ Single game | red-card event minute | **Seeing Red** (most reds) — confirmed |
 | **Cinderella** | Furthest-progressing team with the lowest FIFA rank | Tournament arc | FIFA rank (already in `ALLOC`) + round reached | a weak running-total bet |
 | **Houdini** | Scrapes out of the group on fewest points / worst goal difference | Tournament arc | group standings (points, GD) | a weak running-total bet |
+| **Snoozefest FC** | Fewest goals in a team's matches (scored + conceded) — the anti-Entertainers | ∑ Tournament | recentScores (min hs+as in their games) | a weak running-total bet |
 
-Confirmed replacement: **Early Bath → Seeing Red**.
+Confirmed replacement: **Early Bath → Seeing Red**. Snoozefest FC pairs naturally with The Entertainers (same metric, opposite end).
 Other four: map onto the weakest current bets next time (candidates to retire below).
 
 ## Candidate bets to retire (sparse / tie-prone / dull)
@@ -43,7 +44,7 @@ Other four: map onto the weakest current bets next time (candidates to retire be
 Drop-in verifiable from the ESPN feed: **The Flagged** (most offsides), **Safe Hands /
 The Cat** (most GK saves), **Dead-Eye** (most shots on target), **Pass Masters** (most
 completed passes / best accuracy), **The Enforcers** (most tackles), **Whipped In** (most
-crosses), **Snoozefest FC** (fewest goals in their matches).
+crosses).
 
 Single-game / moment: **Goal Glut** (highest-scoring match), **Ten Men Standing** (win/draw
 after a red), **Booked in a Blink** (earliest yellow), **Shootout Slayer** (win a penalty
