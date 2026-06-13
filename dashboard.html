@@ -196,8 +196,9 @@
   .team .nm{flex:1}
   .team .rk{font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums}
   .team .rk.elite{color:var(--gold)} .team .rk.minnow{color:var(--red)}
-  .tabs{display:flex; gap:8px; margin-top:24px; border-bottom:1px solid var(--line); padding-bottom:0}
-  .tab{padding:12px 18px; font-family:"Anton",sans-serif; font-size:15px; letter-spacing:1px; text-transform:uppercase;
+  .tabs{display:flex; gap:8px; margin-top:24px; border-bottom:1px solid var(--line); padding-bottom:0; overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; -webkit-overflow-scrolling:touch}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:12px 18px; font-family:"Anton",sans-serif; font-size:15px; letter-spacing:1px; text-transform:uppercase; white-space:nowrap; flex:0 0 auto;
     color:var(--muted); cursor:pointer; border:none; background:transparent; position:relative; transition:color .18s}
   .tab:hover{color:var(--ink)}
   .tab.active{color:var(--green)}
@@ -293,6 +294,8 @@
   }
   @media(max-width:560px){
     .bets,.grid18{grid-template-columns:1fr}
+    .tabs{gap:2px; margin-top:18px}
+    .tab{padding:10px 12px; font-size:13px; letter-spacing:.4px}
     .potbox .big{font-size:52px}
     .mark{font-size:16px}
     .potbox .who{font-size:12px}
@@ -341,8 +344,9 @@
   <nav class="tabs">
     <button class="tab active" data-tab="dash">Dashboard</button>
     <button class="tab" data-tab="fix">Fixtures</button>
-    <button class="tab" data-tab="trk">Side-Bet Tracker</button>
-    <button class="tab" data-tab="lb">Leaderboard Over Time</button>
+    <button class="tab" data-tab="trk">Tracker</button>
+    <button class="tab" data-tab="lb">Leaderboard</button>
+    <button class="tab" data-tab="draw">The Draw</button>
     <button class="tab" data-tab="rules">Rules</button>
   </nav>
   <div id="view-dash" class="view active">
@@ -366,10 +370,6 @@
   <section class="sec rise" style="animation-delay:.2s">
     <div class="sec-h"><h2>Latest Scores</h2><div class="ln"></div><div class="tag" id="scoreTag">Kick-off 11 June</div></div>
     <div id="scoresHost"></div>
-  </section>
-  <section class="sec rise" style="animation-delay:.24s">
-    <div class="sec-h"><h2>The Draw</h2><div class="ln"></div><div class="tag">10 punters &middot; 48 teams</div></div>
-    <div class="grid18" id="punters"></div>
   </section>
   </div>
   <div id="view-fix" class="view">
@@ -420,6 +420,12 @@
       <div style="margin-top:14px; font-size:13.5px; color:var(--muted); line-height:1.7">
         Star marks the current side-bet leader in that column. Key: P played, YC yellows, RC reds, OG own goals, PEN penalties conceded, GF goals for, GA goals against, GD goal difference, CK corners, FL fouls, CS clean sheets, HG headed goals, SG sub goals, SHF shots faced, POS avg possession.
       </div>
+    </section>
+  </div>
+  <div id="view-draw" class="view">
+    <section class="sec" style="margin-top:30px">
+      <div class="sec-h"><h2>The Draw</h2><div class="ln"></div><div class="tag">10 punters &middot; 48 teams</div></div>
+      <div class="grid18" id="punters"></div>
     </section>
   </div>
   <div id="view-rules" class="view">
