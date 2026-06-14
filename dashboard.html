@@ -827,11 +827,11 @@ if(DATA.recentScores.length){
           if(s.yh)hEv.push(`<span class="ev yc">${s.yh} YC</span>`);
           if(s.rh)hEv.push(`<span class="ev rc">${s.rh} RC</span>`);
           if(s.oh)hEv.push(`<span class="ev og">${s.oh} OG</span>`);
-          if(s.ph)hEv.push(`<span class="ev pen">${s.ph} PEN</span>`);
+          if(s.pa)hEv.push(`<span class="ev pen">${s.pa} PEN</span>`); /* PEN shown on the awarded side (pa = pens away conceded = home awarded) */
           if(s.ya)aEv.push(`<span class="ev yc">${s.ya} YC</span>`);
           if(s.ra)aEv.push(`<span class="ev rc">${s.ra} RC</span>`);
           if(s.oa)aEv.push(`<span class="ev og">${s.oa} OG</span>`);
-          if(s.pa)aEv.push(`<span class="ev pen">${s.pa} PEN</span>`);
+          if(s.ph)aEv.push(`<span class="ev pen">${s.ph} PEN</span>`); /* PEN shown on the awarded side (ph = pens home conceded = away awarded) */
           const evStrip = (hEv.length||aEv.length)? `<div class="events"><span class="evside">${hEv.join("")}</span><span class="evside ar">${aEv.join("")}</span></div>` : '';
           return `
           <div class="score">
