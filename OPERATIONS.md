@@ -235,7 +235,10 @@ Rules:
   Contested or unassigned bets pay no one — don't list them as a punter's winnings; if notable, mention
   them only as feeding the Champion's Bonus. Keeps it scannable, not a paragraph.
 - On today layout — lead with the TEAMS, then the time, then stakes underneath:
-  "{flag}{Home} v {flag}{Away} — {kickoff} BST" then a short who-owns-what line below it.
+  "{flag}{Home} v {flag}{Away} — {kickoff} BST" then a short who-owns-what line below it. In that
+  who-owns line, reference each punter with JUST the flag in parentheses — "Aaron (🇩🇪)", NOT
+  "Aaron (🇩🇪 Germany)" — since the matchup line directly above already names both teams. (This is the one
+  place the bare-flag is used without the country name; everywhere else keep flag+name.)
 - If nothing changed: "*💥 Movers* — quiet day, no shake-ups on the board."
 
 Template (drop any empty section):
@@ -264,7 +267,7 @@ Template (drop any empty section):
 
 *⚽ On today*
 {flag}{Home} v {flag}{Away} — {kickoff} BST
-{who owns each side, what's at stake}
+{who owns each side using punter (flag) only, e.g. "Aaron (🇩🇪) wants his first cash; Jamie & Brownout (🇨🇼) chase the upset"}
 ...
 👀 *One to watch:* {punter} leaps into 1st if {flag}{Team} {does X}.
 
