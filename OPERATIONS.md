@@ -269,7 +269,6 @@ Template (drop any empty section):
 {flag}{Home} v {flag}{Away} — {kickoff} BST
 {who owns each side using punter (flag) only, e.g. "Aaron (🇩🇪) wants his first cash; Jamie & Brownout (🇨🇼) chase the upset"}
 ...
-👀 *One to watch:* {punter} leaps into 1st if {flag}{Team} {does X}.
 
 📲 Live board: https://leo-gecco.github.io/wc-sweepstake/
 
