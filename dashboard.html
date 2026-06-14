@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Archivo+Black&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7/css/flag-icons.min.css">
 <style>
   :root{
     --bg:#070d0b; --bg2:#0c1714; --panel:#10211c; --panel2:#152a23;
@@ -41,6 +42,7 @@
   html.light .theme-toggle .tt-track{background:var(--green-dim)}
   html.light .theme-toggle .tt-knob{transform:translateX(20px)}
   *{box-sizing:border-box;margin:0;padding:0}
+  .fi{vertical-align:-0.12em; border-radius:2px; box-shadow:0 0 0 .5px rgba(0,0,0,.28)}
   html{scroll-behavior:smooth}
   body{
     background:
@@ -636,7 +638,21 @@ const FLAG = {
   "Uzbekistan":"🇺🇿","Qatar":"🇶🇦","Iraq":"🇮🇶","South Africa":"🇿🇦","Saudi Arabia":"🇸🇦","Jordan":"🇯🇴",
   "Bosnia-Herzegovina":"🇧🇦","Cape Verde":"🇨🇻","Ghana":"🇬🇭","Curacao":"🇨🇼","Haiti":"🇭🇹","New Zealand":"🇳🇿"
 };
-function flagOf(team){ const f=FLAG[team]; return f? f+" " : ""; }
+function emojiToISO(flag){
+  const cps=[...flag].map(c=>c.codePointAt(0));
+  if(cps[0]===0x1F3F4){ // tag sequence (England/Scotland/Wales)
+    const tags=cps.slice(1).filter(c=>c>=0xE0061&&c<=0xE007A).map(c=>String.fromCharCode(c-0xE0000)).join("");
+    return tags.indexOf("gb")===0 ? "gb-"+tags.slice(2) : null;
+  }
+  if(cps.length>=2 && cps[0]>=0x1F1E6 && cps[0]<=0x1F1FF)
+    return String.fromCharCode(cps[0]-0x1F1E6+97)+String.fromCharCode(cps[1]-0x1F1E6+97);
+  return null;
+}
+function flagOf(team){
+  const f=FLAG[team]; if(!f) return "";
+  const iso=emojiToISO(f);
+  return iso ? `<span class="fi fi-${iso}" title="${team}"></span> ` : (f+" ");
+}
 
 /* render */
 document.getElementById("potChip").textContent = "POT £"+DATA.pot;
