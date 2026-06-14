@@ -162,8 +162,14 @@ L: England, Croatia, Ghana, Panama
 
 4. Build the morning message (recap + preview) covering the LATEST DAY'S full progress + today's games —
    NOT just what changed since the previous run. "Latest day" = every game completed since yesterday
-   morning: rows dated YESTERDAY (UK) plus any overnight games dated TODAY (UK) that have finished. Call
-   that set R.
+   morning: rows dated YESTERDAY (UK) plus any overnight games dated TODAY (UK) that have finished — THEN
+   EXCLUDE any match already reported in the previous day's message `whatsapp/{YESTERDAY-UK-date}.txt`
+   (read that file if it exists; drop a candidate when BOTH its team names already appear together on one
+   of that file's result lines). This de-dup stops overnight games (00:00–08:15 kickoffs, which were pulled
+   into the previous morning's message as "today's overnight") from being recapped again the next morning
+   as "yesterday's rows". Call that de-duplicated set R. (The money table still uses ALL recentScores; only
+   the Results recap and the BEFORE/AFTER movers diff use R, so standings stay correct and nothing is
+   double-counted.)
    - BEFORE/AFTER without memory: compute the £ money table and the Champion's Bonus TWICE —
      once from ALL recentScores (AFTER), once EXCLUDING set R (BEFORE). The diff is exactly what those
      games changed (leaders won/lost, who climbed the money table).
