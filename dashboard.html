@@ -109,6 +109,12 @@
   .own-pill.win{background:rgba(19,217,122,.14); color:var(--green); border:1px solid var(--green-dim)}
   .own-pill.pot{background:rgba(242,193,78,.16); color:var(--gold); border:1px solid rgba(242,193,78,.5)}
   .leadowner-tbc{color:var(--muted); font-size:13px}
+  .combopill{display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:800; padding:3px 10px; border-radius:999px; background:rgba(127,155,144,.16); color:var(--ink); line-height:1}
+  .combopill .r{color:var(--muted)}
+  .combopill.lead{background:rgba(242,193,78,.18); color:var(--gold)}
+  .combopill.lead .r{color:var(--gold)}
+  .score .own{display:inline-flex; align-items:center; justify-content:center; gap:5px; flex-wrap:wrap}
+  .score .own .amp{color:var(--muted); font-weight:700; font-size:11px; opacity:.7}
   .bet.bonus{border-color:rgba(242,193,78,.5); background:linear-gradient(160deg,rgba(242,193,78,.10),var(--panel))}
   .ppot{display:flex; align-items:center; gap:16px; background:linear-gradient(160deg,rgba(242,193,78,.10),var(--panel)); border:1px solid rgba(242,193,78,.45); border-radius:16px; padding:16px 20px; margin-bottom:18px}
   .ppot .tphy{font-size:38px; line-height:1}
@@ -767,6 +773,22 @@ const COMPUTE = {
   "Total Domination":    topPossession()
 };
 
+/* current MONEY rank per punter (settle all 20 bets over the tournament so far) */
+const CURRENT = (function(){
+  const punters = ALLOC.map(([n])=>n);
+  const money={}; punters.forEach(p=>money[p]=0);
+  Object.values(COMPUTE).forEach(c=>{ const teams = c&&c.teams ? c.teams : (c&&c.team ? [c.team] : []); const r=settle(teams); if(r.win){ const per=10/r.win.length; r.win.forEach(o=>money[o]+=per); } });
+  const rank={}; const sorted=punters.map(p=>({p,v:money[p]})).sort((a,b)=>b.v-a.v);
+  let lv=null,lr=0; sorted.forEach((x,i)=>{ const rr=(x.v===lv)?lr:i+1; rank[x.p]=rr; lv=x.v; lr=rr; });
+  return {rank, money};
+})();
+function isLeader(p){ return CURRENT.rank[p]===1 && CURRENT.money[p]>0; }
+function crownName(p){ return isLeader(p) ? p+" 👑" : p; }
+function rankPill(p){ return isLeader(p)
+  ? `<span class="combopill lead">${p} <span class="r">#1 👑</span></span>`
+  : `<span class="combopill">${p} <span class="r">#${CURRENT.rank[p]}</span></span>`; }
+function ownersRanked(team){ return ownersOf(team).map(rankPill).join('<span class="amp">&</span>'); }
+
 const ONEOFF = new Set(["The Hammering","Off Like a Rocket","Fergie Time","Comeback Kings","Smash &amp; Grab","Total Domination"]);
 document.getElementById("bets").innerHTML = DATA.sideBets.map(b=>{
   const auto = COMPUTE[b.name];
@@ -782,9 +804,9 @@ document.getElementById("bets").innerHTML = DATA.sideBets.map(b=>{
   } else {
     teamLine = leadingTeams.map(t=>`${flagOf(t)}${t}`).join(", ");
     if(leadingTeams.length===1 || owners.length<=1){
-      ownerLine = owners.length? `<span class="own-pill win">${owners.join(" & ")}</span>` : `<span class="leadowner-tbc">awaiting results</span>`;
+      ownerLine = owners.length? `<span class="own-pill win">${owners.map(crownName).join(" & ")}</span>` : `<span class="leadowner-tbc">awaiting results</span>`;
     } else {
-      ownerLine = `<span class="own-pill pot">Contested · ${owners.join(", ")}</span>`;
+      ownerLine = `<span class="own-pill pot">Contested · ${owners.map(crownName).join(", ")}</span>`;
     }
   }
   const gameLine = (auto&&auto.game)? `<div class="bet-game">${auto.game}</div>` : '';
@@ -837,7 +859,7 @@ if(DATA.recentScores.length){
       </div>
       <div class="scores">
         ${md.list.map(s=>{
-          const hOwn=ownLabel(s.home),aOwn=ownLabel(s.away);
+          const hOwn=ownersRanked(s.home),aOwn=ownersRanked(s.away);
           const hWin=s.hs>s.as,aWin=s.as>s.hs,drw=s.hs===s.as;
           const hEv=[], aEv=[];
           if(s.yh)hEv.push(`<span class="ev yc">${s.yh} YC</span>`);
@@ -880,7 +902,7 @@ if(fh){
         </div>
         <div class="scores">
           ${md.list.map(f=>{
-            const hOwn=ownLabel(f.home),aOwn=ownLabel(f.away);
+            const hOwn=ownersRanked(f.home),aOwn=ownersRanked(f.away);
             return `
             <div class="score fixture">
               <div class="gp">${f.group? (/^group/i.test(f.group)?f.group:'Group '+f.group) : ''}</div>
