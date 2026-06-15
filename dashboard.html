@@ -489,7 +489,7 @@
    - recentScores: prepend each day's new batch at the top
    ============================================================ */
 const DATA = {
-  lastUpdated: "15 Jun 2026, 00:15 BST",
+  lastUpdated: "15 Jun 2026, 08:15 BST",
   pot: 200,
   champion: "",
   mainPrizes: [],
@@ -520,6 +520,8 @@ const DATA = {
   // fg={m,t}=earliest goal (min, team), lw={m,t}=90'+ decisive goal, cb={t,d}=comeback (team, goals down)
   // Schedule prepends each day's matches to the top of this array. Newest batch first.
   recentScores: [
+    { date:"15 Jun 2026", group:"Group E", home:"Ivory Coast", hs:1, away:"Ecuador", as:0, yh:3, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:3, ca:6, foh:10, foa:13, poh:48, poa:52, hgh:0, hga:0, sgh:1, sga:0, shh:15, sha:12, fg:{m:90,t:"Ivory Coast"}, lw:{m:90,t:"Ivory Coast"} },
+    { date:"15 Jun 2026", group:"Group F", home:"Sweden", hs:5, away:"Tunisia", as:1, yh:0, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:2, foh:10, foa:8, poh:49, poa:51, hgh:0, hga:1, sgh:1, sga:0, shh:13, sha:6, fg:{m:7,t:"Sweden"} },
     { date:"14 Jun 2026", group:"Group C", home:"Haiti", hs:0, away:"Scotland", as:1, yh:1, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:3, foh:23, foa:21, poh:54, poa:46, hgh:0, hga:0, sgh:0, sga:0, shh:15, sha:9, fg:{m:28,t:"Scotland"} },
     { date:"14 Jun 2026", group:"Group D", home:"Australia", hs:2, away:"Turkey", as:0, yh:0, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:8, foh:12, foa:4, poh:28, poa:72, hgh:0, hga:0, sgh:0, sga:0, shh:9, sha:30, fg:{m:27,t:"Australia"} },
     { date:"14 Jun 2026", group:"Group E", home:"Germany", hs:7, away:"Curacao", as:1, yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:1, ch:8, ca:1, foh:18, foa:11, poh:65, poa:35, hgh:1, hga:0, sgh:1, sga:0, shh:26, sha:8, fg:{m:6,t:"Germany"} },
@@ -533,8 +535,6 @@ const DATA = {
   ],
   // Full group-stage schedule. Routine moves a match out of fixtures into recentScores once played.
   fixtures: [
-    {date:"15 Jun 2026", time:"00:00", group:"E", home:"Ivory Coast", away:"Ecuador"},
-    {date:"15 Jun 2026", time:"03:00", group:"F", home:"Sweden", away:"Tunisia"},
     {date:"15 Jun 2026", time:"17:00", group:"H", home:"Spain", away:"Cape Verde"},
     {date:"15 Jun 2026", time:"20:00", group:"G", home:"Belgium", away:"Egypt"},
     {date:"15 Jun 2026", time:"23:00", group:"H", home:"Saudi Arabia", away:"Uruguay"},
