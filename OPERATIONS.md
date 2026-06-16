@@ -23,8 +23,9 @@ Anthropic's cloud on a schedule (no laptop needed).
    also recaps the whole night and writes the WhatsApp message (MESSAGE GATE). Most slots find nothing new
    and make no commit, so it's cheap. (If your routine reads cron in UK/BST rather than UTC, use
    `15 0,8,18-22/2 * * *` instead. The message gate keys off UK wall-clock either way.) Note: the **08:15 BST
-   run is the single morning-message slot** — if you want a retry in case it fails, add a 10:15 BST run:
-   `15 7,9,17-23/2 * * *`.
+   run is the slot that may write the WhatsApp digest** — but ONLY on Mondays and Fridays (see MESSAGE
+   GATE); on other mornings that run just refreshes the board. If you want a retry in case the Mon/Fri
+   run fails, add a 10:15 BST run: `15 7,9,17-23/2 * * *`.
 4. **Push permissions:** allow the routine to push to `main` (GitHub Pages serves `main`). If the
    routine is locked to `claude/…` branches, instead point GitHub Pages at that branch, or add an
    auto-merge action.
@@ -138,7 +139,7 @@ L: England, Croatia, Ghana, Panama
 - `date:` = the UK (Europe/London) kick-off date, so results sit on the same day as the UK-dated fixtures
   (a late US game that finishes after UK midnight belongs to the next UK day).
 
-# PROCEDURE (board refreshes on the schedule above; message once a day at 08:00)
+# PROCEDURE (board refreshes on the schedule above; WhatsApp digest on Mon & Fri at 08:15)
 1. Read dashboard.html; find `recentScores: [` and `fixtures: [`.
 
 2. EVERY RUN — refresh the board:
@@ -153,32 +154,31 @@ L: England, Croatia, Ghana, Panama
       "Board update: {UK datetime}". (If there were no new matches, nothing changed — skip the commit and
       continue to step 3.)
 
-3. MESSAGE GATE — only the 08:00 run writes the WhatsApp message. Write it this run only if BOTH:
-   - the current UK (Europe/London) time is 08:00 or later, AND
+3. MESSAGE GATE — the WhatsApp digest goes out TWICE A WEEK, on MONDAY and FRIDAY only. Write it this run
+   only if ALL of:
+   - today (UK, Europe/London) is MONDAY or FRIDAY, AND
+   - the current UK time is 08:00 or later, AND
    - `whatsapp/{today-UK-date}.txt` does NOT already exist in the repo.
-   Otherwise skip the message entirely and just report "board updated; message not due / already sent".
-   This yields exactly ONE message per UK day — the first run at/after 08:00 — independent of the earlier
-   board refreshes.
+   On any other day — or any earlier run on a Mon/Fri — do NOT write a message (the board still refreshes
+   as normal); just report "board updated; digest not due / already sent". This yields exactly ONE digest
+   each Monday and Friday: the first run at/after 08:00 that day.
 
-4. Build the morning message (recap + preview) covering the LATEST DAY'S full progress + today's games —
-   NOT just what changed since the previous run. "Latest day" = every game completed since yesterday
-   morning: rows dated YESTERDAY (UK) plus any overnight games dated TODAY (UK) that have finished — THEN
-   EXCLUDE any match already reported in the previous day's message `whatsapp/{YESTERDAY-UK-date}.txt`
-   (read that file if it exists; drop a candidate when BOTH its team names already appear together on one
-   of that file's result lines). This de-dup stops overnight games (00:00–08:15 kickoffs, which were pulled
-   into the previous morning's message as "today's overnight") from being recapped again the next morning
-   as "yesterday's rows". Call that de-duplicated set R. (The money table still uses ALL recentScores; only
-   the Results recap and the BEFORE/AFTER movers diff use R, so standings stay correct and nothing is
-   double-counted.)
-   - BEFORE/AFTER without memory: compute the £ money table and the Champion's Bonus TWICE —
-     once from ALL recentScores (AFTER), once EXCLUDING set R (BEFORE). The diff is exactly what those
-     games changed (leaders won/lost, who climbed the money table).
-   - Content: recap the results in R, the movers from that diff, the current money standings, then a
-     preview of TODAY's fixtures (from `fixtures:`, today's UK date, with their BST kickoff times).
+4. Build the digest (recap + preview) covering EVERYTHING SINCE THE PREVIOUS DIGEST — this can span
+   several days (e.g. a Monday digest covers Fri/Sat/Sun). Find what to recap without memory: read the
+   existing `whatsapp/*.txt` files, collect the (date + home + away) of every match already posted in any
+   of them, and set R = all FULL-TIME matches in recentScores that are NOT in that already-posted set.
+   That is "everything since the last digest", and it can never double-report a match.
+   - BEFORE/AFTER without memory: compute the £ money table and the Champion's Bonus TWICE — once from ALL
+     recentScores (AFTER), once EXCLUDING set R (BEFORE). The diff is what changed over the whole period
+     since the last digest (leaders won/lost, who climbed the money table).
+   - Content: recap the results in R GROUPED BY DAY (a dated sub-header per day, newest day first), the net
+     movers from that diff, the current money standings, then a preview of TODAY's fixtures (from
+     `fixtures:`, today's UK date, with BST kickoff times). Since it's a multi-day gap, you may also preview
+     the next day or two's headline fixtures.
    - Write `whatsapp/{today-UK-date}.txt` and commit it to `main` per PUSH METHOD, message
-     "Daily message: {date}". If dashboard.html also changed this run, push both in one commit.
+     "Digest: {date}". If dashboard.html also changed this run, push both in one commit.
 
-5. Report: matches added (with scores), whether the daily message was sent this run, side-bet/standings
+5. Report: matches added (with scores), whether the digest was sent this run, side-bet/standings
    changes, manual-review flags, push status. If the message WAS sent, paste it verbatim for copy-paste.
 
 # HOW TO COMPUTE STANDINGS + CHAMPION'S BONUS (for BEFORE/AFTER)
@@ -199,7 +199,7 @@ CO-OWNED TEAMS — Japan = Leo & Tom, Curacao = Jamie & Brownout. Whenever you c
 and split between both owners.
 
 # WHATSAPP SUMMARY (paste-ready, entertaining) — the single daily 08:00 message
-A recap of the games completed since yesterday's message (yesterday's results + any overnight games), the
+A recap of every game since the previous digest (this can span several days — e.g. a weekend), the
 money swings they caused (with metrics), the current standings, then a preview of TODAY's games. It reads
 as a "good morning, here's where we're at + what's on today" brief.
 For the preview, read TODAY's fixtures from the `fixtures:` array in dashboard.html (filter to today's UK
@@ -245,7 +245,8 @@ Template (drop any empty section):
 
 *🏆 WC2026 SWEEPSTAKE — {Friday 12 June}*
 
-*📋 Results since yesterday*
+*📋 Results since last update*
+{newest day, e.g. Sunday}
 {home flag} {Home} {hs}-{as} {Away} {away flag}
 ...
 {one short banter line}
@@ -306,7 +307,7 @@ run output for you to copy). Ask and I'll build the Actions workflow.
 ## 3. Notes
 
 - **Cadence:** board refreshes every 2 hours through the evening, then a single 08:15 BST run
-  (`15 7,17-23/2 * * *`); the WhatsApp message is written once a day by that 08:15 run (MESSAGE GATE). The
+  (`15 7,17-23/2 * * *`); the WhatsApp digest is written twice a week (Mon & Fri) by the 08:15 run (MESSAGE GATE). The
   evening cadence keeps the live board fresh while games are being watched; after midnight there are no
   runs, so overnight games (kickoffs as late as 05:00 BST) are caught and recapped by the morning run. The
   gate means just one morning message, no chat spam. Most runs find nothing new and make no commit, so it

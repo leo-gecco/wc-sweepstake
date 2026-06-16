@@ -18,8 +18,8 @@ and no build step — to change what the board shows, you edit the data in `dash
 A scheduled **Claude Code routine** does this automatically each day (see `OPERATIONS.md`):
 it pulls completed match stats from ESPN's public API, prepends them to `recentScores`, trims the
 played game out of `fixtures`, updates the timestamp, and pushes to `main`. It only ever writes
-**full-time** results (never mid-game). It also writes one paste-ready WhatsApp summary per day at
-08:00 UK time into `whatsapp/`.
+**full-time** results (never mid-game). It also writes a paste-ready WhatsApp digest twice a week
+(Monday & Friday, 08:15 UK), covering everything since the last one, into `whatsapp/`.
 
 ## Files
 
