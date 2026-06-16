@@ -198,7 +198,7 @@ side-bet cards are green, and the contested/unassigned cards are gold and feed t
 CO-OWNED TEAMS — Japan = Leo & Tom, Curacao = Jamie & Brownout. Whenever you credit a co-owned team, name
 and split between both owners.
 
-# WHATSAPP SUMMARY (paste-ready, entertaining) — the single daily 08:00 message
+# WHATSAPP SUMMARY (paste-ready, entertaining) — the twice-weekly Mon/Fri digest
 A recap of every game since the previous digest (this can span several days — e.g. a weekend), the
 money swings they caused (with metrics), the current standings, then a preview of TODAY's games. It reads
 as a "good morning, here's where we're at + what's on today" brief.
