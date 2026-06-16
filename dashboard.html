@@ -163,13 +163,13 @@
   .md-head .md-pill{margin-left:auto; font-size:10px; font-weight:800; padding:4px 9px; border-radius:999px;
     background:rgba(19,217,122,.10); color:var(--green); border:1px solid var(--green-dim); letter-spacing:.8px}
   .scores{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
-  .score{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px;
+  .score{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:0 12px;
     background:linear-gradient(180deg,var(--panel),var(--panel2));
     border:1px solid var(--line); border-radius:12px; padding:14px 16px; position:relative; overflow:hidden;
     transition:border-color .18s ease, transform .18s ease}
   .score:hover{border-color:var(--green-dim); transform:translateY(-2px)}
   .score::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--green-dim); opacity:.7}
-  .score .gp{grid-column:1/-1; text-align:center; font-size:12px; font-weight:800; color:var(--muted); letter-spacing:.8px; text-transform:uppercase}
+  .score .gp{grid-column:1/-1; text-align:center; font-size:12px; font-weight:800; color:var(--muted); letter-spacing:.8px; text-transform:uppercase; margin-top:-6px}
   .score .home{font-weight:800; font-size:18px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:3px}
   .score .away{font-weight:800; font-size:18px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:3px}
   .score .sc{font-family:"Anton"; font-size:30px; line-height:1; letter-spacing:1px; min-width:82px; min-height:44px; text-align:center;
