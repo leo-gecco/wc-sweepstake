@@ -344,8 +344,7 @@
   #fixturesHost .score{align-content:start}
   #fixturesHost .events{min-height:20px}
   #fixturesHost .events.ev-empty{border-top:none; margin-top:0; padding-top:0; margin-bottom:0}
-  .score.fixture .gp{position:absolute; left:0; right:0; text-align:center; margin-top:0; top:8px}
-  .score.fixture .loc{position:absolute; left:0; right:0; text-align:center; white-space:nowrap; font-family:"Hanken Grotesk",system-ui,sans-serif; font-size:11px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; color:var(--muted); line-height:1}
+  .score.fixture .loc{grid-column:1/-1; text-align:center; margin-top:9px; white-space:nowrap; font-family:"Hanken Grotesk",system-ui,sans-serif; font-size:11px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; color:var(--muted); line-height:1}
   .md-pill.ft{background:rgba(127,155,144,.16); color:var(--muted); border-color:var(--line)}
   /* include-played toggle */
   .fixbar{display:flex; align-items:center; gap:14px; margin:0 0 18px; flex-wrap:wrap}
@@ -388,6 +387,8 @@
   .ko .mid{font-family:"Hanken Grotesk"; font-weight:800; font-size:16px; color:var(--green); letter-spacing:.5px; text-align:center; min-width:78px}
   .ko .mid .vs{display:block; font-size:10px; color:var(--muted); font-weight:700; letter-spacing:1px; margin-top:2px}
   .ko .loc{grid-column:1/-1; text-align:center; font-size:11px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; color:var(--muted); margin-top:10px}
+  .ko .slot.team .tm{display:inline-block; font-size:15px; font-weight:800; color:var(--ink)}
+  .ko .mid .ko-sc{font-family:"Anton"; font-size:24px; color:var(--ink); letter-spacing:1px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
@@ -951,17 +952,7 @@ if(DATA.recentScores.length){
 }
 scoreTag.textContent = DATA.recentScores.length ? `${DATA.recentScores.length} results · ${upcoming.length} to play` : `0 results · ${upcoming.length} to play`;
 
-function positionFixtureExtras(){
-  const host=document.getElementById("fixturesHost"); if(!host) return;
-  host.querySelectorAll(".score.fixture").forEach(card=>{
-    const gp=card.querySelector(".gp"), sc=card.querySelector(".sc"), loc=card.querySelector(".loc");
-    if(!sc) return;
-    const cr=card.getBoundingClientRect(), sr=sc.getBoundingClientRect();
-    if(!cr.height) return;
-    if(gp) gp.style.top=(((cr.top+sr.top)/2) - gp.getBoundingClientRect().height/2 - cr.top)+"px";
-    if(loc){ loc.style.bottom="auto"; loc.style.top=(((sr.bottom+cr.bottom)/2) - loc.getBoundingClientRect().height/2 - cr.top)+"px"; }
-  });
-}
+function positionFixtureExtras(){ /* layout is now pure CSS */ }
 const fh = document.getElementById("fixturesHost");
 if(fh){
   const fixQ = document.getElementById("fixQ");
@@ -1050,43 +1041,45 @@ if(fh){
 }
 
 const KNOCKOUTS = [
- {r:"Round of 32",span:"28 Jun \u2013 4 Jul",date:"28 Jun",time:"20:00",h:"Runner-up A",a:"Runner-up B",v:"INGLEWOOD, USA"},
- {r:"Round of 32",date:"29 Jun",time:"18:00",h:"Winner C",a:"Runner-up F",v:"HOUSTON, USA"},
- {r:"Round of 32",date:"29 Jun",time:"21:30",h:"Winner E",a:"3rd A/B/C/D/F",v:"FOXBOROUGH, USA"},
- {r:"Round of 32",date:"30 Jun",time:"02:00",h:"Winner F",a:"Runner-up C",v:"GUADALUPE, MEXICO"},
- {r:"Round of 32",date:"30 Jun",time:"18:00",h:"Runner-up E",a:"Runner-up I",v:"ARLINGTON, USA"},
- {r:"Round of 32",date:"30 Jun",time:"22:00",h:"Winner I",a:"3rd C/D/F/G/H",v:"EAST RUTHERFORD, USA"},
- {r:"Round of 32",date:"1 Jul",time:"02:00",h:"Winner A",a:"3rd C/E/F/H/I",v:"MEXICO CITY, MEXICO"},
- {r:"Round of 32",date:"1 Jul",time:"17:00",h:"Winner L",a:"3rd E/H/I/J/K",v:"ATLANTA, USA"},
- {r:"Round of 32",date:"1 Jul",time:"21:00",h:"Winner G",a:"3rd A/E/H/I/J",v:"SEATTLE, USA"},
- {r:"Round of 32",date:"2 Jul",time:"01:00",h:"Winner D",a:"3rd B/E/F/I/J",v:"SANTA CLARA, USA"},
- {r:"Round of 32",date:"2 Jul",time:"20:00",h:"Winner H",a:"Runner-up J",v:"INGLEWOOD, USA"},
- {r:"Round of 32",date:"3 Jul",time:"00:00",h:"Runner-up K",a:"Runner-up L",v:"TORONTO, CANADA"},
- {r:"Round of 32",date:"3 Jul",time:"04:00",h:"Winner B",a:"3rd E/F/G/I/J",v:"VANCOUVER, CANADA"},
- {r:"Round of 32",date:"3 Jul",time:"19:00",h:"Runner-up D",a:"Runner-up G",v:"ARLINGTON, USA"},
- {r:"Round of 32",date:"3 Jul",time:"23:00",h:"Winner J",a:"Runner-up H",v:"MIAMI GARDENS, USA"},
- {r:"Round of 32",date:"4 Jul",time:"02:30",h:"Winner K",a:"3rd D/E/I/J/L",v:"KANSAS CITY, USA"},
- {r:"Round of 16",span:"4 \u2013 7 Jul",date:"4 Jul",time:"18:00",h:"Winner R32-1",a:"Winner R32-3",v:"HOUSTON, USA"},
- {r:"Round of 16",date:"4 Jul",time:"22:00",h:"Winner R32-2",a:"Winner R32-5",v:"PHILADELPHIA, USA"},
- {r:"Round of 16",date:"5 Jul",time:"21:00",h:"Winner R32-4",a:"Winner R32-6",v:"EAST RUTHERFORD, USA"},
- {r:"Round of 16",date:"6 Jul",time:"01:00",h:"Winner R32-7",a:"Winner R32-8",v:"MEXICO CITY, MEXICO"},
- {r:"Round of 16",date:"6 Jul",time:"20:00",h:"Winner R32-11",a:"Winner R32-12",v:"ARLINGTON, USA"},
- {r:"Round of 16",date:"7 Jul",time:"01:00",h:"Winner R32-9",a:"Winner R32-10",v:"SEATTLE, USA"},
- {r:"Round of 16",date:"7 Jul",time:"17:00",h:"Winner R32-14",a:"Winner R32-16",v:"ATLANTA, USA"},
- {r:"Round of 16",date:"7 Jul",time:"21:00",h:"Winner R32-13",a:"Winner R32-15",v:"VANCOUVER, CANADA"},
- {r:"Quarter-finals",span:"9 \u2013 12 Jul",date:"9 Jul",time:"21:00",h:"Winner R16-1",a:"Winner R16-2",v:"FOXBOROUGH, USA"},
- {r:"Quarter-finals",date:"10 Jul",time:"20:00",h:"Winner R16-5",a:"Winner R16-6",v:"INGLEWOOD, USA"},
- {r:"Quarter-finals",date:"11 Jul",time:"22:00",h:"Winner R16-3",a:"Winner R16-4",v:"MIAMI GARDENS, USA"},
- {r:"Quarter-finals",date:"12 Jul",time:"02:00",h:"Winner R16-7",a:"Winner R16-8",v:"KANSAS CITY, USA"},
- {r:"Semi-finals",span:"14 \u2013 15 Jul",date:"14 Jul",time:"20:00",h:"Winner QF-1",a:"Winner QF-2",v:"ARLINGTON, USA"},
- {r:"Semi-finals",date:"15 Jul",time:"20:00",h:"Winner QF-3",a:"Winner QF-4",v:"ATLANTA, USA"},
- {r:"Third-place play-off",span:"18 Jul",date:"18 Jul",time:"22:00",h:"Loser SF-1",a:"Loser SF-2",v:"MIAMI GARDENS, USA"},
- {r:"Final",span:"19 Jul",date:"19 Jul",time:"20:00",h:"Winner SF-1",a:"Winner SF-2",v:"EAST RUTHERFORD, USA"},
+ {id:760486, r:"Round of 32",span:"28 Jun \u2013 4 Jul",date:"28 Jun",time:"20:00",h:"Runner-up A",a:"Runner-up B",v:"INGLEWOOD, USA"},
+ {id:760487, r:"Round of 32",date:"29 Jun",time:"18:00",h:"Winner C",a:"Runner-up F",v:"HOUSTON, USA"},
+ {id:760489, r:"Round of 32",date:"29 Jun",time:"21:30",h:"Winner E",a:"3rd A/B/C/D/F",v:"FOXBOROUGH, USA"},
+ {id:760488, r:"Round of 32",date:"30 Jun",time:"02:00",h:"Winner F",a:"Runner-up C",v:"GUADALUPE, MEXICO"},
+ {id:760490, r:"Round of 32",date:"30 Jun",time:"18:00",h:"Runner-up E",a:"Runner-up I",v:"ARLINGTON, USA"},
+ {id:760492, r:"Round of 32",date:"30 Jun",time:"22:00",h:"Winner I",a:"3rd C/D/F/G/H",v:"EAST RUTHERFORD, USA"},
+ {id:760491, r:"Round of 32",date:"1 Jul",time:"02:00",h:"Winner A",a:"3rd C/E/F/H/I",v:"MEXICO CITY, MEXICO"},
+ {id:760495, r:"Round of 32",date:"1 Jul",time:"17:00",h:"Winner L",a:"3rd E/H/I/J/K",v:"ATLANTA, USA"},
+ {id:760493, r:"Round of 32",date:"1 Jul",time:"21:00",h:"Winner G",a:"3rd A/E/H/I/J",v:"SEATTLE, USA"},
+ {id:760494, r:"Round of 32",date:"2 Jul",time:"01:00",h:"Winner D",a:"3rd B/E/F/I/J",v:"SANTA CLARA, USA"},
+ {id:760497, r:"Round of 32",date:"2 Jul",time:"20:00",h:"Winner H",a:"Runner-up J",v:"INGLEWOOD, USA"},
+ {id:760496, r:"Round of 32",date:"3 Jul",time:"00:00",h:"Runner-up K",a:"Runner-up L",v:"TORONTO, CANADA"},
+ {id:760498, r:"Round of 32",date:"3 Jul",time:"04:00",h:"Winner B",a:"3rd E/F/G/I/J",v:"VANCOUVER, CANADA"},
+ {id:760499, r:"Round of 32",date:"3 Jul",time:"19:00",h:"Runner-up D",a:"Runner-up G",v:"ARLINGTON, USA"},
+ {id:760500, r:"Round of 32",date:"3 Jul",time:"23:00",h:"Winner J",a:"Runner-up H",v:"MIAMI GARDENS, USA"},
+ {id:760501, r:"Round of 32",date:"4 Jul",time:"02:30",h:"Winner K",a:"3rd D/E/I/J/L",v:"KANSAS CITY, USA"},
+ {id:760502, r:"Round of 16",span:"4 \u2013 7 Jul",date:"4 Jul",time:"18:00",h:"Winner R32-1",a:"Winner R32-3",v:"HOUSTON, USA"},
+ {id:760503, r:"Round of 16",date:"4 Jul",time:"22:00",h:"Winner R32-2",a:"Winner R32-5",v:"PHILADELPHIA, USA"},
+ {id:760504, r:"Round of 16",date:"5 Jul",time:"21:00",h:"Winner R32-4",a:"Winner R32-6",v:"EAST RUTHERFORD, USA"},
+ {id:760505, r:"Round of 16",date:"6 Jul",time:"01:00",h:"Winner R32-7",a:"Winner R32-8",v:"MEXICO CITY, MEXICO"},
+ {id:760506, r:"Round of 16",date:"6 Jul",time:"20:00",h:"Winner R32-11",a:"Winner R32-12",v:"ARLINGTON, USA"},
+ {id:760507, r:"Round of 16",date:"7 Jul",time:"01:00",h:"Winner R32-9",a:"Winner R32-10",v:"SEATTLE, USA"},
+ {id:760509, r:"Round of 16",date:"7 Jul",time:"17:00",h:"Winner R32-14",a:"Winner R32-16",v:"ATLANTA, USA"},
+ {id:760508, r:"Round of 16",date:"7 Jul",time:"21:00",h:"Winner R32-13",a:"Winner R32-15",v:"VANCOUVER, CANADA"},
+ {id:760510, r:"Quarter-finals",span:"9 \u2013 12 Jul",date:"9 Jul",time:"21:00",h:"Winner R16-1",a:"Winner R16-2",v:"FOXBOROUGH, USA"},
+ {id:760511, r:"Quarter-finals",date:"10 Jul",time:"20:00",h:"Winner R16-5",a:"Winner R16-6",v:"INGLEWOOD, USA"},
+ {id:760512, r:"Quarter-finals",date:"11 Jul",time:"22:00",h:"Winner R16-3",a:"Winner R16-4",v:"MIAMI GARDENS, USA"},
+ {id:760513, r:"Quarter-finals",date:"12 Jul",time:"02:00",h:"Winner R16-7",a:"Winner R16-8",v:"KANSAS CITY, USA"},
+ {id:760514, r:"Semi-finals",span:"14 \u2013 15 Jul",date:"14 Jul",time:"20:00",h:"Winner QF-1",a:"Winner QF-2",v:"ARLINGTON, USA"},
+ {id:760515, r:"Semi-finals",date:"15 Jul",time:"20:00",h:"Winner QF-3",a:"Winner QF-4",v:"ATLANTA, USA"},
+ {id:760516, r:"Third-place play-off",span:"18 Jul",date:"18 Jul",time:"22:00",h:"Loser SF-1",a:"Loser SF-2",v:"MIAMI GARDENS, USA"},
+ {id:760517, r:"Final",span:"19 Jul",date:"19 Jul",time:"20:00",h:"Winner SF-1",a:"Winner SF-2",v:"EAST RUTHERFORD, USA"},
 ];
 function renderKnockouts(){
   const host=document.getElementById("knockoutsHost"); if(!host) return;
-  const slot=t=>{ const m=t.match(/^(Winner|Runner-up|Loser|3rd)\s+(.*)$/); return m?`${m[1]}<span class="sub">${m[2]}</span>`:t; };
-  const card=k=>`<div class="ko"><div class="date">${k.date}</div><div class="slot">${slot(k.h)}</div><div class="mid">${k.time}<span class="vs">BST</span></div><div class="slot">${slot(k.a)}</div><div class="loc">${k.v}</div></div>`;
+  const isSlot=t=>/^(Winner|Runner-up|Loser|3rd)\b/.test(t);
+  const side=t=>{ if(isSlot(t)){ const m=t.match(/^(Winner|Runner-up|Loser|3rd)\s+(.*)$/); return `<div class="slot">${m?`${m[1]}<span class="sub">${m[2]}</span>`:t}</div>`; } return `<div class="slot team"><span class="tm">${flagOf(t)}${t}</span></div>`; };
+  const mid=k=> (k.hs!=null&&k.as!=null) ? `<div class="mid"><span class="ko-sc">${k.hs}\u2013${k.as}</span><span class="vs">FT</span></div>` : `<div class="mid">${k.time}<span class="vs">BST</span></div>`;
+  const card=k=>`<div class="ko"><div class="date">${k.date}</div>${side(k.h)}${mid(k)}${side(k.a)}<div class="loc">${k.v}</div></div>`;
   let html='<div class="ko-title">Knockout stage</div><div class="ko-note">All times UK (BST). Teams are confirmed as the tournament progresses.</div>';
   let cur=''; let open=false;
   KNOCKOUTS.forEach(k=>{ if(k.r!==cur){ if(open) html+='</div>'; cur=k.r; html+=`<div class="ko-round"><h3>${k.r}</h3><div class="ln"></div><span class="span">${k.span||''}</span></div><div class="scores">`; open=true; } html+=card(k); });
