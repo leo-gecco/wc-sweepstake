@@ -172,7 +172,7 @@
   .score .gp{grid-column:1/-1; text-align:center; font-size:12px; font-weight:800; color:var(--muted); letter-spacing:.8px; text-transform:uppercase; margin-top:-6px}
   .score .home{font-weight:800; font-size:18px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:3px}
   .score .away{font-weight:800; font-size:18px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:3px}
-  .score .sc{font-family:"Anton"; font-size:30px; line-height:1; letter-spacing:1px; min-width:82px; min-height:44px; text-align:center;
+  .score .sc{font-family:"Anton"; font-size:30px; line-height:1; letter-spacing:1px; min-width:82px; min-height:44px; max-height:44px; align-self:center; text-align:center;
     display:flex; align-items:center; justify-content:center;
     background:rgba(19,217,122,.06); border:1px solid var(--line); border-radius:8px; padding:4px 10px; white-space:nowrap}
   .score .sc .d{color:var(--muted); margin:0 6px}
@@ -344,7 +344,7 @@
   #fixturesHost .score{align-content:start}
   #fixturesHost .events{min-height:20px}
   #fixturesHost .events.ev-empty{border-top:none; margin-top:0; padding-top:0; margin-bottom:0}
-  .score.fixture .loc{grid-column:1/-1; text-align:center; margin-top:9px; white-space:nowrap; font-family:"Hanken Grotesk",system-ui,sans-serif; font-size:11px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; color:var(--muted); line-height:1}
+  .score .loc{grid-column:1/-1; text-align:center; margin-top:9px; white-space:nowrap; font-family:"Hanken Grotesk",system-ui,sans-serif; font-size:11px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; color:var(--muted); line-height:1}
   .md-pill.ft{background:rgba(127,155,144,.16); color:var(--muted); border-color:var(--line)}
   /* include-played toggle */
   .fixbar{display:flex; align-items:center; gap:14px; margin:0 0 18px; flex-wrap:wrap}
@@ -382,13 +382,13 @@
     background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--line); border-radius:12px; padding:14px 16px; position:relative; overflow:hidden; min-height:96px}
   .ko::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--line)}
   .ko .date{grid-column:1/-1; text-align:center; font-size:12px; font-weight:800; color:var(--muted); letter-spacing:.8px; text-transform:uppercase; margin-bottom:10px}
-  .ko .slot{text-align:center; font-size:13.5px; font-weight:800; color:var(--ink); line-height:1.2; opacity:.92}
-  .ko .slot .sub{display:block; font-size:13.5px; font-weight:800; color:var(--ink); margin-top:2px}
-  .ko .mid{font-family:"Hanken Grotesk"; font-weight:800; font-size:16px; color:var(--green); letter-spacing:.5px; text-align:center; min-width:78px}
+  .ko .slot{text-align:center; font-size:18px; font-weight:800; color:var(--ink); line-height:1.15; opacity:.92}
+  .ko .slot .sub{display:block; font-size:18px; font-weight:800; color:var(--ink); margin-top:2px}
+  .ko .mid{font-family:"Hanken Grotesk"; font-weight:800; font-size:17px; color:var(--green); letter-spacing:.5px; text-align:center; min-width:78px}
   .ko .mid .vs{display:block; font-size:10px; color:var(--muted); font-weight:700; letter-spacing:1px; margin-top:2px}
   .ko .loc{grid-column:1/-1; text-align:center; font-size:11px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; color:var(--muted); margin-top:10px}
-  .ko .slot.team .tm{display:inline-block; font-size:15px; font-weight:800; color:var(--ink)}
-  .ko .mid .ko-sc{font-family:"Anton"; font-size:24px; color:var(--ink); letter-spacing:1px}
+  .ko .slot.team .tm{display:inline-block; font-size:18px; font-weight:800; color:var(--ink)}
+  .ko .mid .ko-sc{font-family:"Anton"; font-size:30px; color:var(--ink); letter-spacing:1px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
@@ -586,26 +586,26 @@ const DATA = {
   // fg={m,t}=earliest goal (min, team), lw={m,t}=90'+ decisive goal, cb={t,d}=comeback (team, goals down)
   // Schedule prepends each day's matches to the top of this array. Newest batch first.
   recentScores: [
-    { date:"17 Jun 2026", group:"Group J", home:"Argentina", hs:3, away:"Algeria", as:0, yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:2, ca:2, foh:13, foa:8, poh:48, poa:52, hgh:0, hga:0, sgh:0, sga:0, shh:10, sha:7, fg:{m:17,t:"Argentina"} },
-    { date:"17 Jun 2026", group:"Group J", home:"Austria", hs:3, away:"Jordan", as:1, yh:1, ya:0, rh:0, ra:0, oh:0, oa:1, ph:0, pa:1, ch:4, ca:3, foh:12, foa:7, poh:63, poa:37, hgh:0, hga:0, sgh:1, sga:0, shh:11, sha:11, fg:{m:21,t:"Austria"} },
-    { date:"16 Jun 2026", group:"Group G", home:"Iran", hs:2, away:"New Zealand", as:2, yh:1, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:1, foh:10, foa:8, poh:48, poa:52, hgh:1, hga:0, sgh:0, sga:0, shh:17, sha:14, fg:{m:7,t:"New Zealand"} },
-    { date:"16 Jun 2026", group:"Group I", home:"France", hs:3, away:"Senegal", as:1, yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:6, ca:4, foh:5, foa:9, poh:54, poa:46, hgh:0, hga:0, sgh:1, sga:1, shh:11, sha:6, fg:{m:66,t:"France"} },
-    { date:"16 Jun 2026", group:"Group I", home:"Iraq", hs:1, away:"Norway", as:4, yh:1, ya:0, rh:0, ra:0, oh:1, oa:0, ph:0, pa:0, ch:2, ca:5, foh:12, foa:13, poh:39, poa:61, hgh:1, hga:1, sgh:0, sga:1, shh:11, sha:12, fg:{m:29,t:"Norway"} },
-    { date:"15 Jun 2026", group:"Group E", home:"Ivory Coast", hs:1, away:"Ecuador", as:0, yh:3, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:3, ca:6, foh:10, foa:13, poh:48, poa:52, hgh:0, hga:0, sgh:1, sga:0, shh:15, sha:12, fg:{m:90,t:"Ivory Coast"}, lw:{m:90,t:"Ivory Coast"} },
-    { date:"15 Jun 2026", group:"Group F", home:"Sweden", hs:5, away:"Tunisia", as:1, yh:0, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:2, foh:10, foa:8, poh:49, poa:51, hgh:0, hga:1, sgh:1, sga:0, shh:13, sha:6, fg:{m:7,t:"Sweden"} },
-    { date:"15 Jun 2026", group:"Group G", home:"Belgium", hs:1, away:"Egypt", as:1, yh:2, ya:2, rh:0, ra:0, oh:0, oa:1, ph:0, pa:0, ch:2, ca:7, foh:15, foa:15, poh:54, poa:46, hgh:0, hga:0, sgh:0, sga:0, shh:15, sha:14, fg:{m:19,t:"Egypt"} },
-    { date:"15 Jun 2026", group:"Group H", home:"Spain", hs:0, away:"Cape Verde", as:0, yh:1, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:11, ca:1, foh:10, foa:1, poh:74, poa:26, hgh:0, hga:0, sgh:0, sga:0, shh:27, sha:6 },
-    { date:"15 Jun 2026", group:"Group H", home:"Saudi Arabia", hs:1, away:"Uruguay", as:1, yh:1, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:14, foh:11, foa:6, poh:33, poa:67, hgh:0, hga:0, sgh:0, sga:0, shh:7, sha:27, fg:{m:41,t:"Saudi Arabia"} },
-    { date:"14 Jun 2026", group:"Group C", home:"Haiti", hs:0, away:"Scotland", as:1, yh:1, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:3, foh:23, foa:21, poh:54, poa:46, hgh:0, hga:0, sgh:0, sga:0, shh:15, sha:9, fg:{m:28,t:"Scotland"} },
-    { date:"14 Jun 2026", group:"Group D", home:"Australia", hs:2, away:"Turkey", as:0, yh:0, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:8, foh:12, foa:4, poh:28, poa:72, hgh:0, hga:0, sgh:0, sga:0, shh:9, sha:30, fg:{m:27,t:"Australia"} },
-    { date:"14 Jun 2026", group:"Group E", home:"Germany", hs:7, away:"Curacao", as:1, yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:1, ch:8, ca:1, foh:18, foa:11, poh:65, poa:35, hgh:1, hga:0, sgh:1, sga:0, shh:26, sha:8, fg:{m:6,t:"Germany"} },
-    { date:"14 Jun 2026", group:"Group F", home:"Netherlands", hs:2, away:"Japan", as:2, yh:3, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:4, foh:7, foa:7, poh:60, poa:40, hgh:1, hga:1, sgh:0, sga:0, shh:10, sha:10, fg:{m:51,t:"Netherlands"} },
-    { date:"13 Jun 2026", group:"Group B", home:"Qatar", hs:1, away:"Switzerland", as:1, yh:2, ya:1, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:3, ca:10, foh:12, foa:11, poh:32, poa:68, hgh:1, hga:0, sgh:0, sga:0, shh:7, sha:26, fg:{m:17,t:"Switzerland"}, lw:{m:94,t:"Qatar"} },
-    { date:"13 Jun 2026", group:"Group C", home:"Brazil", hs:1, away:"Morocco", as:1, yh:2, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:6, ca:2, foh:16, foa:14, poh:51, poa:49, hgh:0, hga:0, sgh:0, sga:0, shh:12, sha:14, fg:{m:21,t:"Morocco"} },
-    { date:"13 Jun 2026", group:"Group D", home:"United States", hs:4, away:"Paraguay", as:1, yh:1, ya:5, rh:0, ra:0, oh:0, oa:1, ph:0, pa:0, ch:3, ca:1, foh:13, foa:17, poh:65, poa:35, hgh:0, hga:0, sgh:1, sga:1, shh:16, sha:9, fg:{m:7,t:"United States"} },
-    { date:"12 Jun 2026", group:"Group A", home:"South Korea", hs:2, away:"Czech Republic", as:1, yh:1, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:5, foh:9, foa:16, poh:62, poa:38, hgh:0, hga:1, sgh:1, sga:0, shh:15, sha:7, fg:{m:59,t:"Czech Republic"} },
-    { date:"12 Jun 2026", group:"Group B", home:"Canada", hs:1, away:"Bosnia-Herzegovina", as:1, yh:2, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:9, ca:4, foh:10, foa:20, poh:61, poa:39, hgh:0, hga:1, sgh:1, sga:0, shh:13, sha:8, fg:{m:21,t:"Bosnia-Herzegovina"} },
-    { date:"11 Jun 2026", group:"Group A", home:"Mexico", hs:2, away:"South Africa", as:0, yh:1, ya:2, rh:1, ra:2, oh:0, oa:0, ph:0, pa:0, ch:3, ca:1, foh:12, foa:11, poh:61, poa:39, hgh:1, hga:0, sgh:0, sga:0, shh:16, sha:3, fg:{m:9,t:"Mexico"} }
+    { date:"17 Jun 2026", group:"Group J", home:"Argentina", hs:3, away:"Algeria", as:0, venue:"KANSAS CITY, USA", yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:2, ca:2, foh:13, foa:8, poh:48, poa:52, hgh:0, hga:0, sgh:0, sga:0, shh:10, sha:7, fg:{m:17,t:"Argentina"} },
+    { date:"17 Jun 2026", group:"Group J", home:"Austria", hs:3, away:"Jordan", as:1, venue:"SANTA CLARA, USA", yh:1, ya:0, rh:0, ra:0, oh:0, oa:1, ph:0, pa:1, ch:4, ca:3, foh:12, foa:7, poh:63, poa:37, hgh:0, hga:0, sgh:1, sga:0, shh:11, sha:11, fg:{m:21,t:"Austria"} },
+    { date:"16 Jun 2026", group:"Group G", home:"Iran", hs:2, away:"New Zealand", as:2, venue:"INGLEWOOD, USA", yh:1, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:1, foh:10, foa:8, poh:48, poa:52, hgh:1, hga:0, sgh:0, sga:0, shh:17, sha:14, fg:{m:7,t:"New Zealand"} },
+    { date:"16 Jun 2026", group:"Group I", home:"France", hs:3, away:"Senegal", as:1, venue:"EAST RUTHERFORD, USA", yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:6, ca:4, foh:5, foa:9, poh:54, poa:46, hgh:0, hga:0, sgh:1, sga:1, shh:11, sha:6, fg:{m:66,t:"France"} },
+    { date:"16 Jun 2026", group:"Group I", home:"Iraq", hs:1, away:"Norway", as:4, venue:"FOXBOROUGH, USA", yh:1, ya:0, rh:0, ra:0, oh:1, oa:0, ph:0, pa:0, ch:2, ca:5, foh:12, foa:13, poh:39, poa:61, hgh:1, hga:1, sgh:0, sga:1, shh:11, sha:12, fg:{m:29,t:"Norway"} },
+    { date:"15 Jun 2026", group:"Group E", home:"Ivory Coast", hs:1, away:"Ecuador", as:0, venue:"PHILADELPHIA, USA", yh:3, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:3, ca:6, foh:10, foa:13, poh:48, poa:52, hgh:0, hga:0, sgh:1, sga:0, shh:15, sha:12, fg:{m:90,t:"Ivory Coast"}, lw:{m:90,t:"Ivory Coast"} },
+    { date:"15 Jun 2026", group:"Group F", home:"Sweden", hs:5, away:"Tunisia", as:1, venue:"GUADALUPE, MEXICO", yh:0, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:2, foh:10, foa:8, poh:49, poa:51, hgh:0, hga:1, sgh:1, sga:0, shh:13, sha:6, fg:{m:7,t:"Sweden"} },
+    { date:"15 Jun 2026", group:"Group G", home:"Belgium", hs:1, away:"Egypt", as:1, venue:"SEATTLE, USA", yh:2, ya:2, rh:0, ra:0, oh:0, oa:1, ph:0, pa:0, ch:2, ca:7, foh:15, foa:15, poh:54, poa:46, hgh:0, hga:0, sgh:0, sga:0, shh:15, sha:14, fg:{m:19,t:"Egypt"} },
+    { date:"15 Jun 2026", group:"Group H", home:"Spain", hs:0, away:"Cape Verde", as:0, venue:"ATLANTA, USA", yh:1, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:11, ca:1, foh:10, foa:1, poh:74, poa:26, hgh:0, hga:0, sgh:0, sga:0, shh:27, sha:6 },
+    { date:"15 Jun 2026", group:"Group H", home:"Saudi Arabia", hs:1, away:"Uruguay", as:1, venue:"MIAMI GARDENS, USA", yh:1, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:14, foh:11, foa:6, poh:33, poa:67, hgh:0, hga:0, sgh:0, sga:0, shh:7, sha:27, fg:{m:41,t:"Saudi Arabia"} },
+    { date:"14 Jun 2026", group:"Group C", home:"Haiti", hs:0, away:"Scotland", as:1, venue:"FOXBOROUGH, USA", yh:1, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:3, foh:23, foa:21, poh:54, poa:46, hgh:0, hga:0, sgh:0, sga:0, shh:15, sha:9, fg:{m:28,t:"Scotland"} },
+    { date:"14 Jun 2026", group:"Group D", home:"Australia", hs:2, away:"Turkey", as:0, venue:"VANCOUVER, CANADA", yh:0, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:8, foh:12, foa:4, poh:28, poa:72, hgh:0, hga:0, sgh:0, sga:0, shh:9, sha:30, fg:{m:27,t:"Australia"} },
+    { date:"14 Jun 2026", group:"Group E", home:"Germany", hs:7, away:"Curacao", as:1, venue:"HOUSTON, USA", yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:1, ch:8, ca:1, foh:18, foa:11, poh:65, poa:35, hgh:1, hga:0, sgh:1, sga:0, shh:26, sha:8, fg:{m:6,t:"Germany"} },
+    { date:"14 Jun 2026", group:"Group F", home:"Netherlands", hs:2, away:"Japan", as:2, venue:"ARLINGTON, USA", yh:3, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:4, foh:7, foa:7, poh:60, poa:40, hgh:1, hga:1, sgh:0, sga:0, shh:10, sha:10, fg:{m:51,t:"Netherlands"} },
+    { date:"13 Jun 2026", group:"Group B", home:"Qatar", hs:1, away:"Switzerland", as:1, venue:"SANTA CLARA, USA", yh:2, ya:1, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:3, ca:10, foh:12, foa:11, poh:32, poa:68, hgh:1, hga:0, sgh:0, sga:0, shh:7, sha:26, fg:{m:17,t:"Switzerland"}, lw:{m:94,t:"Qatar"} },
+    { date:"13 Jun 2026", group:"Group C", home:"Brazil", hs:1, away:"Morocco", as:1, venue:"EAST RUTHERFORD, USA", yh:2, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:6, ca:2, foh:16, foa:14, poh:51, poa:49, hgh:0, hga:0, sgh:0, sga:0, shh:12, sha:14, fg:{m:21,t:"Morocco"} },
+    { date:"13 Jun 2026", group:"Group D", home:"United States", hs:4, away:"Paraguay", as:1, venue:"INGLEWOOD, USA", yh:1, ya:5, rh:0, ra:0, oh:0, oa:1, ph:0, pa:0, ch:3, ca:1, foh:13, foa:17, poh:65, poa:35, hgh:0, hga:0, sgh:1, sga:1, shh:16, sha:9, fg:{m:7,t:"United States"} },
+    { date:"12 Jun 2026", group:"Group A", home:"South Korea", hs:2, away:"Czech Republic", as:1, venue:"GUADALAJARA, MEXICO", yh:1, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:5, foh:9, foa:16, poh:62, poa:38, hgh:0, hga:1, sgh:1, sga:0, shh:15, sha:7, fg:{m:59,t:"Czech Republic"} },
+    { date:"12 Jun 2026", group:"Group B", home:"Canada", hs:1, away:"Bosnia-Herzegovina", as:1, venue:"TORONTO, CANADA", yh:2, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:9, ca:4, foh:10, foa:20, poh:61, poa:39, hgh:0, hga:1, sgh:1, sga:0, shh:13, sha:8, fg:{m:21,t:"Bosnia-Herzegovina"} },
+    { date:"11 Jun 2026", group:"Group A", home:"Mexico", hs:2, away:"South Africa", as:0, venue:"MEXICO CITY, MEXICO", yh:1, ya:2, rh:1, ra:2, oh:0, oa:0, ph:0, pa:0, ch:3, ca:1, foh:12, foa:11, poh:61, poa:39, hgh:1, hga:0, sgh:0, sga:0, shh:16, sha:3, fg:{m:9,t:"Mexico"} }
   ],
   // Full group-stage schedule. Routine moves a match out of fixtures into recentScores once played.
   fixtures: [
@@ -942,6 +942,7 @@ if(DATA.recentScores.length){
             <div class="home ${hWin?'winner':drw?'draw':''}"><span class="tm">${flagOf(s.home)}${s.home}</span>${hOwn?`<span class="own">${hOwn}</span>`:''}</div>
             <div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">–</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div>
             <div class="away ${aWin?'winner':drw?'draw':''}"><span class="tm">${flagOf(s.away)}${s.away}</span>${aOwn?`<span class="own">${aOwn}</span>`:''}</div>
+            ${s.venue?`<span class="loc">${s.venue}</span>`:''}
             ${evStrip}
           </div>`;
         }).join("")}
@@ -992,6 +993,7 @@ if(fh){
               <div class="home ${hWin?'winner':drw?'draw':''}">${hOwn?`<span class="own">${hOwn}</span>`:''}<span class="tm">${flagOf(s.home)}${s.home}</span>${fifaLine(s.home)}</div>
               <div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">\u2013</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div>
               <div class="away ${aWin?'winner':drw?'draw':''}">${aOwn?`<span class="own">${aOwn}</span>`:''}<span class="tm">${flagOf(s.away)}${s.away}</span>${fifaLine(s.away)}</div>
+              ${s.venue?`<span class="loc">${s.venue}</span>`:''}
               ${strip}
             </div>`;
   };

@@ -39,9 +39,12 @@ played game out of `fixtures`, updates the timestamp, and pushes to `main`. It o
 - `DATA.lastUpdated` — timestamp shown in the header chip, e.g. `"12 Jun 2026, 08:00 BST"`.
 - `DATA.pot` — total pot (200).
 - `DATA.sideBets` — the 20 side bets (name + description). Leaders/values are computed, not stored.
-- `DATA.recentScores` — array of completed matches, newest first. Each row has ~26 fields (score,
-  cards, corners, fouls, possession, shots, plus moment markers `fg`/`lw`/`cb`). This is the only
-  thing that grows during the tournament.
+- `DATA.recentScores` — array of completed matches, newest first. Each row has ~27 fields (score,
+  cards, corners, fouls, possession, shots, a `venue` "CITY, COUNTRY", plus moment markers `fg`/`lw`/`cb`).
+  This is the only thing that grows during the tournament.
+- `KNOCKOUTS` — the 32 knockout ties (R32→Final) shown below the group fixtures: each has an ESPN `id`,
+  round, date, time, `venue`, and slot labels (e.g. `"Winner A"`, `"3rd C/E/F/H/I"`, `"Winner R32-1"`).
+  The routine fills in real team names + scores as rounds resolve. Display-only — does not feed side bets.
 - `DATA.fixtures` — the remaining group-stage fixtures with UK (BST) kick-off times. Played games are
   removed as results come in (the board also hides any fixture whose teams already appear in results).
   Each fixture also carries a `venue` ("CITY, COUNTRY", e.g. `"KANSAS CITY, USA"`) shown on the fixture card; it was sourced from ESPN's scoreboard (`competition.venue.address`).

@@ -111,6 +111,9 @@ Build these fields (h = home, a = away):
 - fg = { m: earliest goal minute in the match, t: "scoring team name" }  (omit for 0-0)
 - lw = { m, t } ONLY if a goal at minute >= 90 won or rescued the game for that team; else omit
 - cb = { t, d } ONLY if a team won/drew after being >= 2 goals down (read the goal order); else omit
+- venue = "CITY, COUNTRY" from the summary/scoreboard `competition.venue.address`: take `city` (drop anything
+  after a comma, e.g. "Santa Clara, California" -> "Santa Clara"), uppercase it, then ", " + `country`
+  uppercased (USA / CANADA / MEXICO). e.g. "KANSAS CITY, USA". Shown on the result card.
 
 # TEAM NAME NORMALISATION (ESPN -> our names)
 Czechia->Czech Republic, USA->United States, Korea Republic->South Korea, Turkiye/Türkiye->Turkey,
@@ -134,10 +137,22 @@ L: England, Croatia, Ghana, Panama
 (Write it as "Group A" etc. in the row. These match the ALLOC + fixtures already in dashboard.html.)
 
 # ROW FORMAT (prepend to the recentScores array, newest first)
-{ date:"DD Mmm 2026", group:"Group X", home:"Team", hs:0, away:"Team", as:0, yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:0, ca:0, foh:0, foa:0, poh:0, poa:0, hgh:0, hga:0, sgh:0, sga:0, shh:0, sha:0, fg:{m:0,t:"Team"} },
+{ date:"DD Mmm 2026", group:"Group X", home:"Team", hs:0, away:"Team", as:0, yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:0, ca:0, foh:0, foa:0, poh:0, poa:0, hgh:0, hga:0, sgh:0, sga:0, shh:0, sha:0, venue:"CITY, COUNTRY", fg:{m:0,t:"Team"} },
 (include lw and cb only when they occurred.)
 - `date:` = the UK (Europe/London) kick-off date, so results sit on the same day as the UK-dated fixtures
   (a late US game that finishes after UK midnight belongs to the next UK day).
+
+# KNOCKOUT STAGE (the `const KNOCKOUTS = [ ... ]` array in dashboard.html)
+The 32 knockout ties (Round of 32 -> Final) are pre-loaded with their `id` (ESPN game id), `r` (round),
+`date`, `time`, `venue`, and slot labels `h`/`a` such as "Winner A", "Runner-up B", "3rd C/E/F/H/I",
+"Winner R32-1". As teams are decided, populate them from ESPN:
+- For each entry, fetch `summary?event={id}` (or that date's scoreboard) and read the two competitors.
+- A competitor is REAL once its name does NOT start with: Group / Winner / Runner-up / Loser / 3rd /
+  Round of / Quarterfinal / Semifinal. When real, set the entry's `h` (and/or `a`) to the NORMALISED team
+  name (same normalisation map above). Leave a side as its slot label while still undecided.
+- If the tie is FULL-TIME, also set integer `hs`/`as` on the entry; the card then shows flags + score.
+- NEVER change `id`, `r`, `date`, `time`, `venue` or `span`. Knockout games do NOT feed the side bets
+  (those stay group-stage only) — this is display-only bracket data.
 
 # PROCEDURE (board refreshes on the schedule above; WhatsApp digest on Mon & Fri at 08:15)
 1. Read dashboard.html; find `recentScores: [` and `fixtures: [`.
@@ -146,13 +161,16 @@ L: England, Croatia, Ghana, Panama
    a. Pull completed matches via the two-step ESPN flow above, for yesterday AND today (UTC).
    b. IDEMPOTENCY: skip any match whose date+home+away row already exists. Never duplicate.
    c. Prepend new rows to recentScores (newest UK date first; order by group letter within a date).
-   d. Move any now-played matches out of the `fixtures:` array. (Each `fixtures:` entry has a `venue:"CITY, COUNTRY"` field shown on the fixture card — sourced from ESPN `competition.venue.address.city`+`.country`. Leave it intact; results rows do not need a venue.)
+   d. Move any now-played matches out of the `fixtures:` array. (Both fixtures and results carry a `venue:"CITY, COUNTRY"` field shown on the card — set it on each new result row from the played match's ESPN venue, per the EXTRACT rule above.)
    e. Update `lastUpdated:` to the current UK date+time, "DD Mmm YYYY, HH:MM BST" (Europe/London).
-   f. VALIDATE the file parses (all 26 fields per row, numbers non-negative ints, strings quoted,
+   f. VALIDATE the file parses (all 27 fields per row incl. `venue`, numbers non-negative ints, strings quoted,
       brackets/commas intact). If it fails: do NOT commit, report the problem, stop.
    g. If anything changed, commit dashboard.html to `main` per PUSH METHOD above, message like
       "Board update: {UK datetime}". (If there were no new matches, nothing changed — skip the commit and
       continue to step 3.)
+   h. KNOCKOUT BRACKET: once the group stage is over — and again after each knockout round — refresh the
+      `KNOCKOUTS` array (see "# KNOCKOUT STAGE" below): fill the real team names, and FT scores, into the
+      slots whose feeders are now decided. Include any changes in the same board-update commit.
 
 3. MESSAGE GATE — the WhatsApp digest goes out TWICE A WEEK, on MONDAY and FRIDAY only. Write it this run
    only if ALL of:
