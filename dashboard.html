@@ -334,7 +334,26 @@
   .md-pill.up{background:rgba(19,217,122,.16);color:#13d97a;border-color:rgba(19,217,122,.3)}
   /* FIFA world-rank line on fixture cards (number matches the punter-name pill) */
   .score .rkline{font-size:11px; font-weight:800; letter-spacing:.3px; font-variant-numeric:tabular-nums; line-height:1}
-  .score .rkline .w{color:var(--muted); opacity:.55; font-weight:700; margin-right:3px; font-size:9px; letter-spacing:.6px; text-transform:uppercase}
+  .score .rkline .w{color:var(--muted); opacity:.5; font-weight:700; margin-right:3px; font-size:11px; letter-spacing:.4px; text-transform:uppercase}
+  /* even 4px spacing of name / FIFA / owner on fixtures-tab cards (Latest Scores untouched) */
+  #fixturesHost .score .home, #fixturesHost .score .away{gap:0}
+  #fixturesHost .score .tm{line-height:1.05; margin-bottom:4px}
+  #fixturesHost .score .rkline{margin-bottom:4px}
+  #fixturesHost .score .own{line-height:1}
+  /* played-game cards inside fixtures search share the Latest-Scores footer alignment */
+  #fixturesHost .score{align-content:start}
+  #fixturesHost .events{min-height:20px}
+  #fixturesHost .events.empty{border-top:none; margin-top:0; padding-top:0; margin-bottom:0}
+  .md-pill.ft{background:rgba(127,155,144,.16); color:var(--muted); border-color:var(--line)}
+  /* include-played toggle */
+  .fixbar{display:flex; align-items:center; gap:14px; margin:0 0 18px; flex-wrap:wrap}
+  .fixbar .fixsearch{margin:0; flex:1; min-width:260px}
+  .ptoggle{display:inline-flex; align-items:center; gap:9px; cursor:pointer; user-select:none; font-size:12.5px; font-weight:700; color:var(--muted)}
+  .ptoggle .track{position:relative; width:40px; height:22px; border-radius:999px; background:var(--line); border:1px solid var(--line); transition:background .2s}
+  .ptoggle .knob{position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:var(--muted); transition:left .2s, background .2s}
+  .ptoggle.on .track{background:rgba(19,217,122,.25); border-color:var(--green-dim)}
+  .ptoggle.on .knob{left:20px; background:var(--green)}
+  .ptoggle.on{color:var(--ink)}
   .rk-el{color:var(--gold)} .rk-mn{color:var(--red)} .rk-md{color:var(--muted)}
   /* consistent results-card alignment regardless of YC/RC/PEN/OG: top-pack content, reserve a footer, divider only when events exist */
   #scoresHost .score{align-content:start}
@@ -406,7 +425,7 @@
   <div id="view-fix" class="view">
     <section class="sec" style="margin-top:30px">
       <div class="sec-h"><h2>Group-Stage Fixtures</h2><div class="ln"></div><div class="tag" id="fixTag">All times UK (BST)</div></div>
-      <div class="fixsearch"><div class="box"><span class="ico">&#9906;</span><input id="fixQ" type="text" placeholder="Search team, group or owner&hellip;" autocomplete="off"><button class="clr" id="fixClr" type="button" aria-label="Clear">&times;</button></div><span class="count" id="fixCount"></span></div>
+      <div class="fixbar"><div class="fixsearch"><div class="box"><span class="ico">&#9906;</span><input id="fixQ" type="text" placeholder="Search team, group or owner&hellip;" autocomplete="off"><button class="clr" id="fixClr" type="button" aria-label="Clear">&times;</button></div></div><div class="ptoggle" id="fixPlayed" role="button" tabindex="0" aria-pressed="false"><span class="track"><span class="knob"></span></span><span>Include played games</span></div><span class="count" id="fixCount"></span></div>
       <div id="fixturesHost"></div>
     </section>
   </div>
@@ -917,47 +936,77 @@ if(fh){
   const fixQ = document.getElementById("fixQ");
   const fixClr = document.getElementById("fixClr");
   const fixCount = document.getElementById("fixCount");
+  const fixPlayed = document.getElementById("fixPlayed");
+  const groupLabel = (g)=> g? (/^group/i.test(g)?g:'Group '+g) : '';
   const fixCard = (f)=>{
     const hOwn=ownersRanked(f.home),aOwn=ownersRanked(f.away);
     return `
             <div class="score fixture">
-              <div class="gp">${f.group? (/^group/i.test(f.group)?f.group:'Group '+f.group) : ''}</div>
+              <div class="gp">${groupLabel(f.group)}</div>
               <div class="home"><span class="tm">${flagOf(f.home)}${f.home}</span>${fifaLine(f.home)}${hOwn?`<span class="own">${hOwn}</span>`:''}</div>
               <div class="sc"><span class="ko">${f.time||'v'}</span></div>
               <div class="away"><span class="tm">${flagOf(f.away)}${f.away}</span>${fifaLine(f.away)}${aOwn?`<span class="own">${aOwn}</span>`:''}</div>
             </div>`;
   };
-  const fixMatches = (f,q)=>{
+  const playedCard = (s)=>{
+    const hOwn=ownersRanked(s.home),aOwn=ownersRanked(s.away);
+    const hWin=s.hs>s.as,aWin=s.as>s.hs,drw=s.hs===s.as;
+    const hEv=[],aEv=[];
+    if(s.yh)hEv.push(`<span class="ev yc">${s.yh} YC</span>`);
+    if(s.rh)hEv.push(`<span class="ev rc">${s.rh} RC</span>`);
+    if(s.oh)hEv.push(`<span class="ev og">${s.oh} OG</span>`);
+    if(s.pa)hEv.push(`<span class="ev pen">${s.pa} PEN</span>`);
+    if(s.ya)aEv.push(`<span class="ev yc">${s.ya} YC</span>`);
+    if(s.ra)aEv.push(`<span class="ev rc">${s.ra} RC</span>`);
+    if(s.oa)aEv.push(`<span class="ev og">${s.oa} OG</span>`);
+    if(s.ph)aEv.push(`<span class="ev pen">${s.ph} PEN</span>`);
+    const strip=(hEv.length||aEv.length)?`<div class="events"><span class="evside">${hEv.join("")}</span><span class="evside ar">${aEv.join("")}</span></div>`:`<div class="events empty"></div>`;
+    return `
+            <div class="score played">
+              <div class="gp">${groupLabel(s.group)}</div>
+              <div class="home ${hWin?'winner':drw?'draw':''}"><span class="tm">${flagOf(s.home)}${s.home}</span>${fifaLine(s.home)}${hOwn?`<span class="own">${hOwn}</span>`:''}</div>
+              <div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">\u2013</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div>
+              <div class="away ${aWin?'winner':drw?'draw':''}"><span class="tm">${flagOf(s.away)}${s.away}</span>${fifaLine(s.away)}${aOwn?`<span class="own">${aOwn}</span>`:''}</div>
+              ${strip}
+            </div>`;
+  };
+  const fixMatches = (o,q)=>{
     if(!q) return true; q=q.toLowerCase().trim();
-    const owners=[...ownersOf(f.home),...ownersOf(f.away)].join(' ').toLowerCase();
-    const grp = f.group? (/^group/i.test(f.group)?f.group:'Group '+f.group) : '';
-    const hay=[f.home,f.away,grp,f.group,owners,f.date].join(' ').toLowerCase();
+    const owners=[...ownersOf(o.home),...ownersOf(o.away)].join(' ').toLowerCase();
+    const hay=[o.home,o.away,groupLabel(o.group),o.group,owners,o.date].join(' ').toLowerCase();
     return q.split(/\s+/).every(tok=>hay.includes(tok));
   };
+  let includePlayed = false;
   function renderFixtures(){
     const q = fixQ ? fixQ.value : '';
     if(fixClr) fixClr.style.display = q ? 'block' : 'none';
-    if(!upcoming.length){ fh.innerHTML = `<div class="empty">All group-stage games have been played.</div>`; if(fixCount) fixCount.textContent=''; return; }
-    const list = upcoming.filter(f=>fixMatches(f,q));
-    if(fixCount) fixCount.textContent = q ? `${list.length} of ${upcoming.length}` : `${upcoming.length} fixtures`;
-    if(!list.length){ fh.innerHTML = `<div class="noresult">No fixtures match &ldquo;<b>${q.replace(/</g,'&lt;')}</b>&rdquo;.</div>`; return; }
+    let pool = upcoming.map(f=>({o:f, played:false}));
+    if(includePlayed) pool = pool.concat(DATA.recentScores.map(s=>({o:s, played:true})));
+    if(!pool.length){ fh.innerHTML = `<div class="empty">All group-stage games have been played.</div>`; if(fixCount) fixCount.textContent=''; return; }
+    const list = pool.filter(x=>fixMatches(x.o,q));
+    if(fixCount) fixCount.textContent = q ? `${list.length} of ${pool.length}` : (includePlayed?`${pool.length} games`:`${pool.length} fixtures`);
+    if(!list.length){ fh.innerHTML = `<div class="noresult">No games match &ldquo;<b>${q.replace(/</g,'&lt;')}</b>&rdquo;.</div>`; return; }
     const byF = []; const seenF = {};
-    list.forEach(f=>{ const k=f.date||"TBC"; if(!(k in seenF)){ seenF[k]=byF.length; byF.push({date:k,list:[]}); } byF[seenF[k]].list.push(f); });
-    byF.forEach(md=>md.list.sort((a,b)=>(a.time||"").localeCompare(b.time||"")));
-    fh.innerHTML = byF.map((md,i)=>`
+    list.forEach(x=>{ const k=x.o.date||"TBC"; if(!(k in seenF)){ seenF[k]=byF.length; byF.push({date:k,list:[]}); } byF[seenF[k]].list.push(x); });
+    byF.forEach(md=>md.list.sort((a,b)=>((a.played?1:0)-(b.played?1:0)) || (a.o.time||"").localeCompare(b.o.time||"")));
+    fh.innerHTML = byF.map((md,i)=>{
+      const allPlayed = md.list.every(x=>x.played);
+      const pill = allPlayed ? '<span class="md-pill ft">Full time</span>' : (i===0 && !q && !includePlayed ? '<span class="md-pill up">Next up</span>' : '');
+      return `
       <div class="matchday">
         <div class="md-head">
           <span class="md-date">${md.date}</span>
           <span class="md-meta">${md.list.length} matches</span>
-          ${i===0&&!q?'<span class="md-pill up">Next up</span>':''}
+          ${pill}
         </div>
         <div class="scores">
-          ${md.list.map(fixCard).join("")}
+          ${md.list.map(x=>x.played?playedCard(x.o):fixCard(x.o)).join("")}
         </div>
-      </div>`).join("");
+      </div>`;}).join("");
   }
   if(fixQ) fixQ.addEventListener("input", renderFixtures);
   if(fixClr) fixClr.addEventListener("click", ()=>{ fixQ.value=''; renderFixtures(); fixQ.focus(); });
+  if(fixPlayed) fixPlayed.addEventListener("click", ()=>{ includePlayed=!includePlayed; fixPlayed.classList.toggle("on",includePlayed); fixPlayed.setAttribute("aria-pressed", includePlayed?"true":"false"); renderFixtures(); });
   renderFixtures();
   const ft=document.getElementById("fixTag"); if(ft) ft.textContent=`${upcoming.length} fixtures · all times UK (BST)`;
 }
