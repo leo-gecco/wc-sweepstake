@@ -332,6 +332,24 @@
   .score.fixture{opacity:.97}
   .score.fixture .sc .ko{color:var(--green);font-family:"Hanken Grotesk";font-weight:800;font-size:17px;letter-spacing:.5px}
   .md-pill.up{background:rgba(19,217,122,.16);color:#13d97a;border-color:rgba(19,217,122,.3)}
+  /* FIFA world-rank line on fixture cards (number matches the punter-name pill) */
+  .score .rkline{font-size:11px; font-weight:800; letter-spacing:.3px; font-variant-numeric:tabular-nums; line-height:1}
+  .score .rkline .w{color:var(--muted); opacity:.55; font-weight:700; margin-right:3px; font-size:9px; letter-spacing:.6px; text-transform:uppercase}
+  .rk-el{color:var(--gold)} .rk-mn{color:var(--red)} .rk-md{color:var(--muted)}
+  /* consistent results-card alignment regardless of YC/RC/PEN/OG: top-pack content, reserve a footer, divider only when events exist */
+  #scoresHost .score{align-content:start}
+  #scoresHost .events{min-height:20px}
+  #scoresHost .events.empty{border-top:none; margin-top:0; padding-top:0; margin-bottom:0}
+  /* fixtures search */
+  .fixsearch{display:flex; align-items:center; gap:10px; margin:0 0 18px; max-width:460px}
+  .fixsearch .box{flex:1; display:flex; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:9px 14px}
+  .fixsearch .box:focus-within{border-color:var(--green-dim)}
+  .fixsearch input{flex:1; background:transparent; border:none; outline:none; color:var(--ink); font-family:inherit; font-size:14px; font-weight:600}
+  .fixsearch input::placeholder{color:var(--muted)}
+  .fixsearch .ico{color:var(--muted); font-size:14px}
+  .fixsearch .clr{cursor:pointer; color:var(--muted); font-weight:800; border:none; background:transparent; font-size:15px; line-height:1; display:none}
+  .fixsearch .count{font-size:12px; color:var(--muted); font-weight:700; white-space:nowrap}
+  .noresult{color:var(--muted); font-size:13px; padding:14px 2px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
@@ -388,6 +406,7 @@
   <div id="view-fix" class="view">
     <section class="sec" style="margin-top:30px">
       <div class="sec-h"><h2>Group-Stage Fixtures</h2><div class="ln"></div><div class="tag" id="fixTag">All times UK (BST)</div></div>
+      <div class="fixsearch"><div class="box"><span class="ico">&#9906;</span><input id="fixQ" type="text" placeholder="Search team, group or owner&hellip;" autocomplete="off"><button class="clr" id="fixClr" type="button" aria-label="Clear">&times;</button></div><span class="count" id="fixCount"></span></div>
       <div id="fixturesHost"></div>
     </section>
   </div>
@@ -623,6 +642,11 @@ const ALLOC = [
 const TEAM_OWNERS = {};
 ALLOC.forEach(([nm,teams])=>teams.forEach(([t])=>{ const k=t.toLowerCase(); (TEAM_OWNERS[k]=TEAM_OWNERS[k]||[]).push(nm); }));
 TEAM_OWNERS["usa"] = TEAM_OWNERS["united states"];
+const TEAM_RANK = {};
+ALLOC.forEach(([nm,teams])=>teams.forEach(([t,g,r])=>{ TEAM_RANK[t.toLowerCase()] = r; }));
+TEAM_RANK["usa"] = TEAM_RANK["united states"];
+function rankOfTeam(team){ return TEAM_RANK[(team||"").toLowerCase()]; }
+function fifaLine(team){ const r=rankOfTeam(team); if(r==null) return ''; const c=r<=10?'rk-el':r>=65?'rk-mn':'rk-md'; return `<span class="rkline ${c}"><span class="w">FIFA</span>#${r}</span>`; }
 function ownersOf(team){ return TEAM_OWNERS[(team||"").toLowerCase()] || []; }
 function ownerOf(team){ const o=ownersOf(team); return o.length? o[0] : null; }
 function ownLabel(team){ const o=ownersOf(team); return o.length? o.join(" & ") : ""; }
@@ -871,7 +895,7 @@ if(DATA.recentScores.length){
           if(s.ra)aEv.push(`<span class="ev rc">${s.ra} RC</span>`);
           if(s.oa)aEv.push(`<span class="ev og">${s.oa} OG</span>`);
           if(s.ph)aEv.push(`<span class="ev pen">${s.ph} PEN</span>`); /* PEN shown on the awarded side (ph = pens home conceded = away awarded) */
-          const evStrip = (hEv.length||aEv.length)? `<div class="events"><span class="evside">${hEv.join("")}</span><span class="evside ar">${aEv.join("")}</span></div>` : '';
+          const evStrip = (hEv.length||aEv.length)? `<div class="events"><span class="evside">${hEv.join("")}</span><span class="evside ar">${aEv.join("")}</span></div>` : `<div class="events empty"></div>`;
           return `
           <div class="score">
             <div class="gp">${s.group? (/^group/i.test(s.group)?s.group:'Group '+s.group) : ''}</div>
@@ -890,34 +914,52 @@ scoreTag.textContent = DATA.recentScores.length ? `${DATA.recentScores.length} r
 
 const fh = document.getElementById("fixturesHost");
 if(fh){
-  if(upcoming.length){
+  const fixQ = document.getElementById("fixQ");
+  const fixClr = document.getElementById("fixClr");
+  const fixCount = document.getElementById("fixCount");
+  const fixCard = (f)=>{
+    const hOwn=ownersRanked(f.home),aOwn=ownersRanked(f.away);
+    return `
+            <div class="score fixture">
+              <div class="gp">${f.group? (/^group/i.test(f.group)?f.group:'Group '+f.group) : ''}</div>
+              <div class="home"><span class="tm">${flagOf(f.home)}${f.home}</span>${fifaLine(f.home)}${hOwn?`<span class="own">${hOwn}</span>`:''}</div>
+              <div class="sc"><span class="ko">${f.time||'v'}</span></div>
+              <div class="away"><span class="tm">${flagOf(f.away)}${f.away}</span>${fifaLine(f.away)}${aOwn?`<span class="own">${aOwn}</span>`:''}</div>
+            </div>`;
+  };
+  const fixMatches = (f,q)=>{
+    if(!q) return true; q=q.toLowerCase().trim();
+    const owners=[...ownersOf(f.home),...ownersOf(f.away)].join(' ').toLowerCase();
+    const grp = f.group? (/^group/i.test(f.group)?f.group:'Group '+f.group) : '';
+    const hay=[f.home,f.away,grp,f.group,owners,f.date].join(' ').toLowerCase();
+    return q.split(/\s+/).every(tok=>hay.includes(tok));
+  };
+  function renderFixtures(){
+    const q = fixQ ? fixQ.value : '';
+    if(fixClr) fixClr.style.display = q ? 'block' : 'none';
+    if(!upcoming.length){ fh.innerHTML = `<div class="empty">All group-stage games have been played.</div>`; if(fixCount) fixCount.textContent=''; return; }
+    const list = upcoming.filter(f=>fixMatches(f,q));
+    if(fixCount) fixCount.textContent = q ? `${list.length} of ${upcoming.length}` : `${upcoming.length} fixtures`;
+    if(!list.length){ fh.innerHTML = `<div class="noresult">No fixtures match &ldquo;<b>${q.replace(/</g,'&lt;')}</b>&rdquo;.</div>`; return; }
     const byF = []; const seenF = {};
-    upcoming.forEach(f=>{ const k=f.date||"TBC"; if(!(k in seenF)){ seenF[k]=byF.length; byF.push({date:k,list:[]}); } byF[seenF[k]].list.push(f); });
+    list.forEach(f=>{ const k=f.date||"TBC"; if(!(k in seenF)){ seenF[k]=byF.length; byF.push({date:k,list:[]}); } byF[seenF[k]].list.push(f); });
     byF.forEach(md=>md.list.sort((a,b)=>(a.time||"").localeCompare(b.time||"")));
     fh.innerHTML = byF.map((md,i)=>`
       <div class="matchday">
         <div class="md-head">
           <span class="md-date">${md.date}</span>
           <span class="md-meta">${md.list.length} matches</span>
-          ${i===0?'<span class="md-pill up">Next up</span>':''}
+          ${i===0&&!q?'<span class="md-pill up">Next up</span>':''}
         </div>
         <div class="scores">
-          ${md.list.map(f=>{
-            const hOwn=ownersRanked(f.home),aOwn=ownersRanked(f.away);
-            return `
-            <div class="score fixture">
-              <div class="gp">${f.group? (/^group/i.test(f.group)?f.group:'Group '+f.group) : ''}</div>
-              <div class="home"><span class="tm">${flagOf(f.home)}${f.home}</span>${hOwn?`<span class="own">${hOwn}</span>`:''}</div>
-              <div class="sc"><span class="ko">${f.time||'v'}</span></div>
-              <div class="away"><span class="tm">${flagOf(f.away)}${f.away}</span>${aOwn?`<span class="own">${aOwn}</span>`:''}</div>
-            </div>`;
-          }).join("")}
+          ${md.list.map(fixCard).join("")}
         </div>
       </div>`).join("");
-    const ft=document.getElementById("fixTag"); if(ft) ft.textContent=`${upcoming.length} fixtures · all times UK (BST)`;
-  } else {
-    fh.innerHTML = `<div class="empty">All group-stage games have been played.</div>`;
   }
+  if(fixQ) fixQ.addEventListener("input", renderFixtures);
+  if(fixClr) fixClr.addEventListener("click", ()=>{ fixQ.value=''; renderFixtures(); fixQ.focus(); });
+  renderFixtures();
+  const ft=document.getElementById("fixTag"); if(ft) ft.textContent=`${upcoming.length} fixtures · all times UK (BST)`;
 }
 
 const ps = document.getElementById("potstrip");
