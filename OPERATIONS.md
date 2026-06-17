@@ -146,7 +146,7 @@ L: England, Croatia, Ghana, Panama
    a. Pull completed matches via the two-step ESPN flow above, for yesterday AND today (UTC).
    b. IDEMPOTENCY: skip any match whose date+home+away row already exists. Never duplicate.
    c. Prepend new rows to recentScores (newest UK date first; order by group letter within a date).
-   d. Move any now-played matches out of the `fixtures:` array.
+   d. Move any now-played matches out of the `fixtures:` array. (Each `fixtures:` entry has a `venue:"CITY, COUNTRY"` field shown on the fixture card — sourced from ESPN `competition.venue.address.city`+`.country`. Leave it intact; results rows do not need a venue.)
    e. Update `lastUpdated:` to the current UK date+time, "DD Mmm YYYY, HH:MM BST" (Europe/London).
    f. VALIDATE the file parses (all 26 fields per row, numbers non-negative ints, strings quoted,
       brackets/commas intact). If it fails: do NOT commit, report the problem, stop.

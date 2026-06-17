@@ -344,6 +344,8 @@
   #fixturesHost .score{align-content:start}
   #fixturesHost .events{min-height:20px}
   #fixturesHost .events.ev-empty{border-top:none; margin-top:0; padding-top:0; margin-bottom:0}
+  .score.fixture .gp{position:absolute; left:0; right:0; text-align:center; margin-top:0; top:8px}
+  .score.fixture .loc{position:absolute; left:0; right:0; text-align:center; white-space:nowrap; font-family:"Hanken Grotesk",system-ui,sans-serif; font-size:11px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; color:var(--muted); line-height:1}
   .md-pill.ft{background:rgba(127,155,144,.16); color:var(--muted); border-color:var(--line)}
   /* include-played toggle */
   .fixbar{display:flex; align-items:center; gap:14px; margin:0 0 18px; flex-wrap:wrap}
@@ -588,58 +590,58 @@ const DATA = {
   ],
   // Full group-stage schedule. Routine moves a match out of fixtures into recentScores once played.
   fixtures: [
-    {date:"17 Jun 2026", time:"18:00", group:"K", home:"Portugal", away:"DR Congo"},
-    {date:"17 Jun 2026", time:"21:00", group:"L", home:"England", away:"Croatia"},
-    {date:"18 Jun 2026", time:"00:00", group:"L", home:"Ghana", away:"Panama"},
-    {date:"18 Jun 2026", time:"03:00", group:"K", home:"Uzbekistan", away:"Colombia"},
-    {date:"18 Jun 2026", time:"17:00", group:"A", home:"Czech Republic", away:"South Africa"},
-    {date:"18 Jun 2026", time:"20:00", group:"B", home:"Switzerland", away:"Bosnia-Herzegovina"},
-    {date:"18 Jun 2026", time:"23:00", group:"B", home:"Canada", away:"Qatar"},
-    {date:"19 Jun 2026", time:"02:00", group:"A", home:"Mexico", away:"South Korea"},
-    {date:"19 Jun 2026", time:"20:00", group:"D", home:"United States", away:"Australia"},
-    {date:"19 Jun 2026", time:"23:00", group:"C", home:"Scotland", away:"Morocco"},
-    {date:"20 Jun 2026", time:"01:30", group:"C", home:"Brazil", away:"Haiti"},
-    {date:"20 Jun 2026", time:"04:00", group:"D", home:"Turkey", away:"Paraguay"},
-    {date:"20 Jun 2026", time:"18:00", group:"F", home:"Netherlands", away:"Sweden"},
-    {date:"20 Jun 2026", time:"21:00", group:"E", home:"Germany", away:"Ivory Coast"},
-    {date:"21 Jun 2026", time:"04:00", group:"E", home:"Ecuador", away:"Curacao"},
-    {date:"21 Jun 2026", time:"05:00", group:"F", home:"Tunisia", away:"Japan"},
-    {date:"21 Jun 2026", time:"17:00", group:"H", home:"Spain", away:"Saudi Arabia"},
-    {date:"21 Jun 2026", time:"20:00", group:"G", home:"Belgium", away:"Iran"},
-    {date:"21 Jun 2026", time:"23:00", group:"H", home:"Uruguay", away:"Cape Verde"},
-    {date:"22 Jun 2026", time:"02:00", group:"G", home:"New Zealand", away:"Egypt"},
-    {date:"22 Jun 2026", time:"18:00", group:"J", home:"Argentina", away:"Austria"},
-    {date:"22 Jun 2026", time:"22:00", group:"I", home:"France", away:"Iraq"},
-    {date:"23 Jun 2026", time:"01:00", group:"I", home:"Norway", away:"Senegal"},
-    {date:"23 Jun 2026", time:"04:00", group:"J", home:"Jordan", away:"Algeria"},
-    {date:"23 Jun 2026", time:"18:00", group:"K", home:"Portugal", away:"Uzbekistan"},
-    {date:"23 Jun 2026", time:"21:00", group:"L", home:"England", away:"Ghana"},
-    {date:"24 Jun 2026", time:"00:00", group:"L", home:"Panama", away:"Croatia"},
-    {date:"24 Jun 2026", time:"03:00", group:"K", home:"Colombia", away:"DR Congo"},
-    {date:"24 Jun 2026", time:"20:00", group:"B", home:"Switzerland", away:"Canada"},
-    {date:"24 Jun 2026", time:"20:00", group:"B", home:"Bosnia-Herzegovina", away:"Qatar"},
-    {date:"24 Jun 2026", time:"23:00", group:"C", home:"Scotland", away:"Brazil"},
-    {date:"24 Jun 2026", time:"23:00", group:"C", home:"Morocco", away:"Haiti"},
-    {date:"25 Jun 2026", time:"02:00", group:"A", home:"Czech Republic", away:"Mexico"},
-    {date:"25 Jun 2026", time:"02:00", group:"A", home:"South Africa", away:"South Korea"},
-    {date:"25 Jun 2026", time:"21:00", group:"E", home:"Ecuador", away:"Germany"},
-    {date:"25 Jun 2026", time:"21:00", group:"E", home:"Curacao", away:"Ivory Coast"},
-    {date:"26 Jun 2026", time:"00:00", group:"F", home:"Japan", away:"Sweden"},
-    {date:"26 Jun 2026", time:"00:00", group:"F", home:"Tunisia", away:"Netherlands"},
-    {date:"26 Jun 2026", time:"03:00", group:"D", home:"Turkey", away:"United States"},
-    {date:"26 Jun 2026", time:"03:00", group:"D", home:"Paraguay", away:"Australia"},
-    {date:"26 Jun 2026", time:"20:00", group:"I", home:"Norway", away:"France"},
-    {date:"26 Jun 2026", time:"20:00", group:"I", home:"Senegal", away:"Iraq"},
-    {date:"27 Jun 2026", time:"01:00", group:"H", home:"Cape Verde", away:"Saudi Arabia"},
-    {date:"27 Jun 2026", time:"01:00", group:"H", home:"Uruguay", away:"Spain"},
-    {date:"27 Jun 2026", time:"04:00", group:"G", home:"Egypt", away:"Iran"},
-    {date:"27 Jun 2026", time:"04:00", group:"G", home:"New Zealand", away:"Belgium"},
-    {date:"27 Jun 2026", time:"22:00", group:"L", home:"Panama", away:"England"},
-    {date:"27 Jun 2026", time:"22:00", group:"L", home:"Croatia", away:"Ghana"},
-    {date:"28 Jun 2026", time:"00:30", group:"K", home:"Colombia", away:"Portugal"},
-    {date:"28 Jun 2026", time:"00:30", group:"K", home:"DR Congo", away:"Uzbekistan"},
-    {date:"28 Jun 2026", time:"03:00", group:"J", home:"Algeria", away:"Austria"},
-    {date:"28 Jun 2026", time:"03:00", group:"J", home:"Jordan", away:"Argentina"}
+    {date:"17 Jun 2026", time:"18:00", group:"K", home:"Portugal", away:"DR Congo", venue:"HOUSTON, USA"},
+    {date:"17 Jun 2026", time:"21:00", group:"L", home:"England", away:"Croatia", venue:"ARLINGTON, USA"},
+    {date:"18 Jun 2026", time:"00:00", group:"L", home:"Ghana", away:"Panama", venue:"TORONTO, CANADA"},
+    {date:"18 Jun 2026", time:"03:00", group:"K", home:"Uzbekistan", away:"Colombia", venue:"MEXICO CITY, MEXICO"},
+    {date:"18 Jun 2026", time:"17:00", group:"A", home:"Czech Republic", away:"South Africa", venue:"ATLANTA, USA"},
+    {date:"18 Jun 2026", time:"20:00", group:"B", home:"Switzerland", away:"Bosnia-Herzegovina", venue:"INGLEWOOD, USA"},
+    {date:"18 Jun 2026", time:"23:00", group:"B", home:"Canada", away:"Qatar", venue:"VANCOUVER, CANADA"},
+    {date:"19 Jun 2026", time:"02:00", group:"A", home:"Mexico", away:"South Korea", venue:"GUADALAJARA, MEXICO"},
+    {date:"19 Jun 2026", time:"20:00", group:"D", home:"United States", away:"Australia", venue:"SEATTLE, USA"},
+    {date:"19 Jun 2026", time:"23:00", group:"C", home:"Scotland", away:"Morocco", venue:"FOXBOROUGH, USA"},
+    {date:"20 Jun 2026", time:"01:30", group:"C", home:"Brazil", away:"Haiti", venue:"PHILADELPHIA, USA"},
+    {date:"20 Jun 2026", time:"04:00", group:"D", home:"Turkey", away:"Paraguay", venue:"SANTA CLARA, USA"},
+    {date:"20 Jun 2026", time:"18:00", group:"F", home:"Netherlands", away:"Sweden", venue:"HOUSTON, USA"},
+    {date:"20 Jun 2026", time:"21:00", group:"E", home:"Germany", away:"Ivory Coast", venue:"TORONTO, CANADA"},
+    {date:"21 Jun 2026", time:"04:00", group:"E", home:"Ecuador", away:"Curacao", venue:"KANSAS CITY, USA"},
+    {date:"21 Jun 2026", time:"05:00", group:"F", home:"Tunisia", away:"Japan", venue:"GUADALUPE, MEXICO"},
+    {date:"21 Jun 2026", time:"17:00", group:"H", home:"Spain", away:"Saudi Arabia", venue:"ATLANTA, USA"},
+    {date:"21 Jun 2026", time:"20:00", group:"G", home:"Belgium", away:"Iran", venue:"INGLEWOOD, USA"},
+    {date:"21 Jun 2026", time:"23:00", group:"H", home:"Uruguay", away:"Cape Verde", venue:"MIAMI GARDENS, USA"},
+    {date:"22 Jun 2026", time:"02:00", group:"G", home:"New Zealand", away:"Egypt", venue:"VANCOUVER, CANADA"},
+    {date:"22 Jun 2026", time:"18:00", group:"J", home:"Argentina", away:"Austria", venue:"ARLINGTON, USA"},
+    {date:"22 Jun 2026", time:"22:00", group:"I", home:"France", away:"Iraq", venue:"PHILADELPHIA, USA"},
+    {date:"23 Jun 2026", time:"01:00", group:"I", home:"Norway", away:"Senegal", venue:"EAST RUTHERFORD, USA"},
+    {date:"23 Jun 2026", time:"04:00", group:"J", home:"Jordan", away:"Algeria", venue:"SANTA CLARA, USA"},
+    {date:"23 Jun 2026", time:"18:00", group:"K", home:"Portugal", away:"Uzbekistan", venue:"HOUSTON, USA"},
+    {date:"23 Jun 2026", time:"21:00", group:"L", home:"England", away:"Ghana", venue:"FOXBOROUGH, USA"},
+    {date:"24 Jun 2026", time:"00:00", group:"L", home:"Panama", away:"Croatia", venue:"TORONTO, CANADA"},
+    {date:"24 Jun 2026", time:"03:00", group:"K", home:"Colombia", away:"DR Congo", venue:"GUADALAJARA, MEXICO"},
+    {date:"24 Jun 2026", time:"20:00", group:"B", home:"Switzerland", away:"Canada", venue:"VANCOUVER, CANADA"},
+    {date:"24 Jun 2026", time:"20:00", group:"B", home:"Bosnia-Herzegovina", away:"Qatar", venue:"SEATTLE, USA"},
+    {date:"24 Jun 2026", time:"23:00", group:"C", home:"Scotland", away:"Brazil", venue:"MIAMI GARDENS, USA"},
+    {date:"24 Jun 2026", time:"23:00", group:"C", home:"Morocco", away:"Haiti", venue:"ATLANTA, USA"},
+    {date:"25 Jun 2026", time:"02:00", group:"A", home:"Czech Republic", away:"Mexico", venue:"MEXICO CITY, MEXICO"},
+    {date:"25 Jun 2026", time:"02:00", group:"A", home:"South Africa", away:"South Korea", venue:"GUADALUPE, MEXICO"},
+    {date:"25 Jun 2026", time:"21:00", group:"E", home:"Ecuador", away:"Germany", venue:"EAST RUTHERFORD, USA"},
+    {date:"25 Jun 2026", time:"21:00", group:"E", home:"Curacao", away:"Ivory Coast", venue:"PHILADELPHIA, USA"},
+    {date:"26 Jun 2026", time:"00:00", group:"F", home:"Japan", away:"Sweden", venue:"ARLINGTON, USA"},
+    {date:"26 Jun 2026", time:"00:00", group:"F", home:"Tunisia", away:"Netherlands", venue:"KANSAS CITY, USA"},
+    {date:"26 Jun 2026", time:"03:00", group:"D", home:"Turkey", away:"United States", venue:"INGLEWOOD, USA"},
+    {date:"26 Jun 2026", time:"03:00", group:"D", home:"Paraguay", away:"Australia", venue:"SANTA CLARA, USA"},
+    {date:"26 Jun 2026", time:"20:00", group:"I", home:"Norway", away:"France", venue:"FOXBOROUGH, USA"},
+    {date:"26 Jun 2026", time:"20:00", group:"I", home:"Senegal", away:"Iraq", venue:"TORONTO, CANADA"},
+    {date:"27 Jun 2026", time:"01:00", group:"H", home:"Cape Verde", away:"Saudi Arabia", venue:"HOUSTON, USA"},
+    {date:"27 Jun 2026", time:"01:00", group:"H", home:"Uruguay", away:"Spain", venue:"GUADALAJARA, MEXICO"},
+    {date:"27 Jun 2026", time:"04:00", group:"G", home:"Egypt", away:"Iran", venue:"SEATTLE, USA"},
+    {date:"27 Jun 2026", time:"04:00", group:"G", home:"New Zealand", away:"Belgium", venue:"VANCOUVER, CANADA"},
+    {date:"27 Jun 2026", time:"22:00", group:"L", home:"Panama", away:"England", venue:"EAST RUTHERFORD, USA"},
+    {date:"27 Jun 2026", time:"22:00", group:"L", home:"Croatia", away:"Ghana", venue:"PHILADELPHIA, USA"},
+    {date:"28 Jun 2026", time:"00:30", group:"K", home:"Colombia", away:"Portugal", venue:"MIAMI GARDENS, USA"},
+    {date:"28 Jun 2026", time:"00:30", group:"K", home:"DR Congo", away:"Uzbekistan", venue:"ATLANTA, USA"},
+    {date:"28 Jun 2026", time:"03:00", group:"J", home:"Algeria", away:"Austria", venue:"KANSAS CITY, USA"},
+    {date:"28 Jun 2026", time:"03:00", group:"J", home:"Jordan", away:"Argentina", venue:"ARLINGTON, USA"}
   ]
 };
 
@@ -931,6 +933,17 @@ if(DATA.recentScores.length){
 }
 scoreTag.textContent = DATA.recentScores.length ? `${DATA.recentScores.length} results · ${upcoming.length} to play` : `0 results · ${upcoming.length} to play`;
 
+function positionFixtureExtras(){
+  const host=document.getElementById("fixturesHost"); if(!host) return;
+  host.querySelectorAll(".score.fixture").forEach(card=>{
+    const gp=card.querySelector(".gp"), sc=card.querySelector(".sc"), loc=card.querySelector(".loc");
+    if(!sc) return;
+    const cr=card.getBoundingClientRect(), sr=sc.getBoundingClientRect();
+    if(!cr.height) return;
+    if(gp) gp.style.top=(((cr.top+sr.top)/2) - gp.getBoundingClientRect().height/2 - cr.top)+"px";
+    if(loc){ loc.style.bottom="auto"; loc.style.top=(((sr.bottom+cr.bottom)/2) - loc.getBoundingClientRect().height/2 - cr.top)+"px"; }
+  });
+}
 const fh = document.getElementById("fixturesHost");
 if(fh){
   const fixQ = document.getElementById("fixQ");
@@ -948,6 +961,7 @@ if(fh){
               <div class="home">${hOwn?`<span class="own">${hOwn}</span>`:''}<span class="tm">${flagOf(f.home)}${f.home}</span>${fifaLine(f.home)}</div>
               <div class="sc"><span class="ko">${f.time||'v'}</span></div>
               <div class="away">${aOwn?`<span class="own">${aOwn}</span>`:''}<span class="tm">${flagOf(f.away)}${f.away}</span>${fifaLine(f.away)}</div>
+              ${f.venue?`<span class="loc">${f.venue}</span>`:''}
             </div>`;
   };
   const playedCard = (s)=>{
@@ -1006,7 +1020,9 @@ if(fh){
           ${md.list.map(x=>x.played?playedCard(x.o):fixCard(x.o)).join("")}
         </div>
       </div>`;}).join("");
+    positionFixtureExtras();
   }
+  window.addEventListener("resize", positionFixtureExtras);
   if(fixQ) fixQ.addEventListener("input", renderFixtures);
   if(fixClr) fixClr.addEventListener("click", ()=>{ fixQ.value=''; renderFixtures(); fixQ.focus(); });
   if(fixPlayed) fixPlayed.addEventListener("click", ()=>{ includePlayed=!includePlayed; fixPlayed.classList.toggle("on",includePlayed); fixPlayed.setAttribute("aria-pressed", includePlayed?"true":"false"); renderFixtures(); });
@@ -1041,6 +1057,7 @@ document.querySelectorAll(".tab").forEach(t=>{
     document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
     t.classList.add("active");
     document.getElementById("view-"+t.dataset.tab).classList.add("active");
+    if(t.dataset.tab==="fix") setTimeout(positionFixtureExtras,30);
   });
 });
 // belt-and-braces: once the entrance animations have played, lock everything visible

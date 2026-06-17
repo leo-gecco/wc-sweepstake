@@ -44,6 +44,7 @@ played game out of `fixtures`, updates the timestamp, and pushes to `main`. It o
   thing that grows during the tournament.
 - `DATA.fixtures` — the remaining group-stage fixtures with UK (BST) kick-off times. Played games are
   removed as results come in (the board also hides any fixture whose teams already appear in results).
+  Each fixture also carries a `venue` ("CITY, COUNTRY", e.g. `"KANSAS CITY, USA"`) shown on the fixture card; it was sourced from ESPN's scoreboard (`competition.venue.address`).
 - `ALLOC` — the draw: `["Player",[["Team","Group",FIFArank], ...]]`. **Ownership is derived from this
   at runtime** — change a name here and the whole board follows.
 
