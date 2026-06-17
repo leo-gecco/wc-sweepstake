@@ -371,6 +371,23 @@
   .fixsearch .clr{cursor:pointer; color:var(--muted); font-weight:800; border:none; background:transparent; font-size:15px; line-height:1; display:none}
   .fixsearch .count{font-size:12px; color:var(--muted); font-weight:700; white-space:nowrap}
   .noresult{color:var(--muted); font-size:13px; padding:14px 2px}
+  /* ===== knockout placeholder section ===== */
+  .ko-sec{margin-top:34px; padding-top:20px; border-top:2px solid var(--line)}
+  .ko-title{font-family:"Anton"; font-weight:400; letter-spacing:1px; text-transform:uppercase; font-size:22px; color:var(--gold); margin:0 0 4px}
+  .ko-note{font-size:12px; color:var(--muted); margin-bottom:18px}
+  .ko-round{display:flex; align-items:center; gap:12px; margin:26px 2px 12px}
+  .ko-round h3{font-family:"Anton"; font-weight:400; letter-spacing:.8px; text-transform:uppercase; font-size:17px; color:var(--ink); margin:0; white-space:nowrap}
+  .ko-round .ln{flex:1; height:1px; background:var(--line)}
+  .ko-round .span{font-size:11px; color:var(--muted); font-weight:700; letter-spacing:.6px; text-transform:uppercase; white-space:nowrap}
+  .ko{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:0 12px;
+    background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--line); border-radius:12px; padding:14px 16px; position:relative; overflow:hidden; min-height:96px}
+  .ko::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--line)}
+  .ko .date{grid-column:1/-1; text-align:center; font-size:12px; font-weight:800; color:var(--muted); letter-spacing:.8px; text-transform:uppercase; margin-bottom:10px}
+  .ko .slot{text-align:center; font-size:13.5px; font-weight:800; color:var(--ink); line-height:1.2; opacity:.92}
+  .ko .slot .sub{display:block; font-size:13.5px; font-weight:800; color:var(--ink); margin-top:2px}
+  .ko .mid{font-family:"Hanken Grotesk"; font-weight:800; font-size:16px; color:var(--green); letter-spacing:.5px; text-align:center; min-width:78px}
+  .ko .mid .vs{display:block; font-size:10px; color:var(--muted); font-weight:700; letter-spacing:1px; margin-top:2px}
+  .ko .loc{grid-column:1/-1; text-align:center; font-size:11px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; color:var(--muted); margin-top:10px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
@@ -429,6 +446,7 @@
       <div class="sec-h"><h2>Group-Stage Fixtures</h2><div class="ln"></div><div class="tag" id="fixTag">All times UK (BST)</div></div>
       <div class="fixbar"><div class="fixsearch"><div class="box"><span class="ico">&#9906;</span><input id="fixQ" type="text" placeholder="Search team, group or owner&hellip;" autocomplete="off"><button class="clr" id="fixClr" type="button" aria-label="Clear">&times;</button></div></div><div class="ptoggle" id="fixPlayed" role="button" tabindex="0" aria-pressed="false"><span class="track"><span class="knob"></span></span><span>Include played games</span></div><span class="count" id="fixCount"></span></div>
       <div id="fixturesHost"></div>
+      <div id="knockoutsHost"></div>
     </section>
   </div>
   <div id="view-trk" class="view">
@@ -995,6 +1013,7 @@ if(fh){
   let includePlayed = false;
   function renderFixtures(){
     const q = fixQ ? fixQ.value : '';
+    { const kh=document.getElementById("knockoutsHost"); if(kh) kh.style.display = q ? "none" : ""; }
     if(fixClr) fixClr.style.display = q ? 'block' : 'none';
     let pool = upcoming.map(f=>({o:f, played:false}));
     if(includePlayed) pool = pool.concat(DATA.recentScores.map(s=>({o:s, played:true})));
@@ -1029,6 +1048,52 @@ if(fh){
   renderFixtures();
   const ft=document.getElementById("fixTag"); if(ft) ft.textContent=`${upcoming.length} fixtures · all times UK (BST)`;
 }
+
+const KNOCKOUTS = [
+ {r:"Round of 32",span:"28 Jun \u2013 4 Jul",date:"28 Jun",time:"20:00",h:"Runner-up A",a:"Runner-up B",v:"INGLEWOOD, USA"},
+ {r:"Round of 32",date:"29 Jun",time:"18:00",h:"Winner C",a:"Runner-up F",v:"HOUSTON, USA"},
+ {r:"Round of 32",date:"29 Jun",time:"21:30",h:"Winner E",a:"3rd A/B/C/D/F",v:"FOXBOROUGH, USA"},
+ {r:"Round of 32",date:"30 Jun",time:"02:00",h:"Winner F",a:"Runner-up C",v:"GUADALUPE, MEXICO"},
+ {r:"Round of 32",date:"30 Jun",time:"18:00",h:"Runner-up E",a:"Runner-up I",v:"ARLINGTON, USA"},
+ {r:"Round of 32",date:"30 Jun",time:"22:00",h:"Winner I",a:"3rd C/D/F/G/H",v:"EAST RUTHERFORD, USA"},
+ {r:"Round of 32",date:"1 Jul",time:"02:00",h:"Winner A",a:"3rd C/E/F/H/I",v:"MEXICO CITY, MEXICO"},
+ {r:"Round of 32",date:"1 Jul",time:"17:00",h:"Winner L",a:"3rd E/H/I/J/K",v:"ATLANTA, USA"},
+ {r:"Round of 32",date:"1 Jul",time:"21:00",h:"Winner G",a:"3rd A/E/H/I/J",v:"SEATTLE, USA"},
+ {r:"Round of 32",date:"2 Jul",time:"01:00",h:"Winner D",a:"3rd B/E/F/I/J",v:"SANTA CLARA, USA"},
+ {r:"Round of 32",date:"2 Jul",time:"20:00",h:"Winner H",a:"Runner-up J",v:"INGLEWOOD, USA"},
+ {r:"Round of 32",date:"3 Jul",time:"00:00",h:"Runner-up K",a:"Runner-up L",v:"TORONTO, CANADA"},
+ {r:"Round of 32",date:"3 Jul",time:"04:00",h:"Winner B",a:"3rd E/F/G/I/J",v:"VANCOUVER, CANADA"},
+ {r:"Round of 32",date:"3 Jul",time:"19:00",h:"Runner-up D",a:"Runner-up G",v:"ARLINGTON, USA"},
+ {r:"Round of 32",date:"3 Jul",time:"23:00",h:"Winner J",a:"Runner-up H",v:"MIAMI GARDENS, USA"},
+ {r:"Round of 32",date:"4 Jul",time:"02:30",h:"Winner K",a:"3rd D/E/I/J/L",v:"KANSAS CITY, USA"},
+ {r:"Round of 16",span:"4 \u2013 7 Jul",date:"4 Jul",time:"18:00",h:"Winner R32-1",a:"Winner R32-3",v:"HOUSTON, USA"},
+ {r:"Round of 16",date:"4 Jul",time:"22:00",h:"Winner R32-2",a:"Winner R32-5",v:"PHILADELPHIA, USA"},
+ {r:"Round of 16",date:"5 Jul",time:"21:00",h:"Winner R32-4",a:"Winner R32-6",v:"EAST RUTHERFORD, USA"},
+ {r:"Round of 16",date:"6 Jul",time:"01:00",h:"Winner R32-7",a:"Winner R32-8",v:"MEXICO CITY, MEXICO"},
+ {r:"Round of 16",date:"6 Jul",time:"20:00",h:"Winner R32-11",a:"Winner R32-12",v:"ARLINGTON, USA"},
+ {r:"Round of 16",date:"7 Jul",time:"01:00",h:"Winner R32-9",a:"Winner R32-10",v:"SEATTLE, USA"},
+ {r:"Round of 16",date:"7 Jul",time:"17:00",h:"Winner R32-14",a:"Winner R32-16",v:"ATLANTA, USA"},
+ {r:"Round of 16",date:"7 Jul",time:"21:00",h:"Winner R32-13",a:"Winner R32-15",v:"VANCOUVER, CANADA"},
+ {r:"Quarter-finals",span:"9 \u2013 12 Jul",date:"9 Jul",time:"21:00",h:"Winner R16-1",a:"Winner R16-2",v:"FOXBOROUGH, USA"},
+ {r:"Quarter-finals",date:"10 Jul",time:"20:00",h:"Winner R16-5",a:"Winner R16-6",v:"INGLEWOOD, USA"},
+ {r:"Quarter-finals",date:"11 Jul",time:"22:00",h:"Winner R16-3",a:"Winner R16-4",v:"MIAMI GARDENS, USA"},
+ {r:"Quarter-finals",date:"12 Jul",time:"02:00",h:"Winner R16-7",a:"Winner R16-8",v:"KANSAS CITY, USA"},
+ {r:"Semi-finals",span:"14 \u2013 15 Jul",date:"14 Jul",time:"20:00",h:"Winner QF-1",a:"Winner QF-2",v:"ARLINGTON, USA"},
+ {r:"Semi-finals",date:"15 Jul",time:"20:00",h:"Winner QF-3",a:"Winner QF-4",v:"ATLANTA, USA"},
+ {r:"Third-place play-off",span:"18 Jul",date:"18 Jul",time:"22:00",h:"Loser SF-1",a:"Loser SF-2",v:"MIAMI GARDENS, USA"},
+ {r:"Final",span:"19 Jul",date:"19 Jul",time:"20:00",h:"Winner SF-1",a:"Winner SF-2",v:"EAST RUTHERFORD, USA"},
+];
+function renderKnockouts(){
+  const host=document.getElementById("knockoutsHost"); if(!host) return;
+  const slot=t=>{ const m=t.match(/^(Winner|Runner-up|Loser|3rd)\s+(.*)$/); return m?`${m[1]}<span class="sub">${m[2]}</span>`:t; };
+  const card=k=>`<div class="ko"><div class="date">${k.date}</div><div class="slot">${slot(k.h)}</div><div class="mid">${k.time}<span class="vs">BST</span></div><div class="slot">${slot(k.a)}</div><div class="loc">${k.v}</div></div>`;
+  let html='<div class="ko-title">Knockout stage</div><div class="ko-note">All times UK (BST). Teams are confirmed as the tournament progresses.</div>';
+  let cur=''; let open=false;
+  KNOCKOUTS.forEach(k=>{ if(k.r!==cur){ if(open) html+='</div>'; cur=k.r; html+=`<div class="ko-round"><h3>${k.r}</h3><div class="ln"></div><span class="span">${k.span||''}</span></div><div class="scores">`; open=true; } html+=card(k); });
+  if(open) html+='</div>';
+  host.innerHTML='<div class="ko-sec">'+html+'</div>';
+}
+renderKnockouts();
 
 const ps = document.getElementById("potstrip");
 const totalGames = DATA.recentScores.length;
