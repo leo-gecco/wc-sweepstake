@@ -343,7 +343,7 @@
   /* played-game cards inside fixtures search share the Latest-Scores footer alignment */
   #fixturesHost .score{align-content:start}
   #fixturesHost .events{min-height:20px}
-  #fixturesHost .events.empty{border-top:none; margin-top:0; padding-top:0; margin-bottom:0}
+  #fixturesHost .events.ev-empty{border-top:none; margin-top:0; padding-top:0; margin-bottom:0}
   .md-pill.ft{background:rgba(127,155,144,.16); color:var(--muted); border-color:var(--line)}
   /* include-played toggle */
   .fixbar{display:flex; align-items:center; gap:14px; margin:0 0 18px; flex-wrap:wrap}
@@ -358,7 +358,7 @@
   /* consistent results-card alignment regardless of YC/RC/PEN/OG: top-pack content, reserve a footer, divider only when events exist */
   #scoresHost .score{align-content:start}
   #scoresHost .events{min-height:20px}
-  #scoresHost .events.empty{border-top:none; margin-top:0; padding-top:0; margin-bottom:0}
+  #scoresHost .events.ev-empty{border-top:none; margin-top:0; padding-top:0; margin-bottom:0}
   /* fixtures search */
   .fixsearch{display:flex; align-items:center; gap:10px; margin:0 0 18px; max-width:460px}
   .fixsearch .box{flex:1; display:flex; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:9px 14px}
@@ -914,7 +914,7 @@ if(DATA.recentScores.length){
           if(s.ra)aEv.push(`<span class="ev rc">${s.ra} RC</span>`);
           if(s.oa)aEv.push(`<span class="ev og">${s.oa} OG</span>`);
           if(s.ph)aEv.push(`<span class="ev pen">${s.ph} PEN</span>`); /* PEN shown on the awarded side (ph = pens home conceded = away awarded) */
-          const evStrip = (hEv.length||aEv.length)? `<div class="events"><span class="evside">${hEv.join("")}</span><span class="evside ar">${aEv.join("")}</span></div>` : `<div class="events empty"></div>`;
+          const evStrip = (hEv.length||aEv.length)? `<div class="events"><span class="evside">${hEv.join("")}</span><span class="evside ar">${aEv.join("")}</span></div>` : `<div class="events ev-empty"></div>`;
           return `
           <div class="score">
             <div class="gp">${s.group? (/^group/i.test(s.group)?s.group:'Group '+s.group) : ''}</div>
@@ -962,7 +962,7 @@ if(fh){
     if(s.ra)aEv.push(`<span class="ev rc">${s.ra} RC</span>`);
     if(s.oa)aEv.push(`<span class="ev og">${s.oa} OG</span>`);
     if(s.ph)aEv.push(`<span class="ev pen">${s.ph} PEN</span>`);
-    const strip=(hEv.length||aEv.length)?`<div class="events"><span class="evside">${hEv.join("")}</span><span class="evside ar">${aEv.join("")}</span></div>`:`<div class="events empty"></div>`;
+    const strip=(hEv.length||aEv.length)?`<div class="events"><span class="evside">${hEv.join("")}</span><span class="evside ar">${aEv.join("")}</span></div>`:`<div class="events ev-empty"></div>`;
     return `
             <div class="score played">
               <div class="gp">${groupLabel(s.group)}</div>
