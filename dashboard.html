@@ -365,6 +365,13 @@
   #scoresHost .score{align-content:start}
   #scoresHost .events{min-height:20px}
   #scoresHost .events.ev-empty{border-top:none; margin-top:0; padding-top:0; margin-bottom:0}
+  /* Latest Scores: match fixtures — punter (plain text) above country left-aligned, FIFA rank below right-aligned, country centred over score */
+  #scoresHost .score .home, #scoresHost .score .away{justify-self:center; gap:0}
+  #scoresHost .score .own{align-self:flex-start; margin-bottom:8px; line-height:1}
+  #scoresHost .score .tm{margin-bottom:8px; line-height:1.05}
+  #scoresHost .score .rkline{align-self:flex-end; margin-bottom:0}
+  #scoresHost .score .gp{margin-top:0; margin-bottom:1px}
+  #scoresHost .score .loc{margin-top:7px}
   /* fixtures search */
   .fixsearch{display:flex; align-items:center; gap:10px; margin:0 0 18px; max-width:460px}
   .fixsearch .box{flex:1; display:flex; align-items:center; gap:8px; background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:9px 14px}
@@ -944,9 +951,9 @@ if(DATA.recentScores.length){
           return `
           <div class="score">
             <div class="gp">${s.group? (/^group/i.test(s.group)?s.group:'Group '+s.group) : ''}</div>
-            <div class="home ${hWin?'winner':drw?'draw':''}"><span class="tm">${flagOf(s.home)}${s.home}</span>${hOwn?`<span class="own">${hOwn}</span>`:''}</div>
+            <div class="home ${hWin?'winner':drw?'draw':''}">${hOwn?`<span class="own">${hOwn}</span>`:''}<span class="tm">${flagOf(s.home)}${s.home}</span>${fifaLine(s.home)}</div>
             <div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">–</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div>
-            <div class="away ${aWin?'winner':drw?'draw':''}"><span class="tm">${flagOf(s.away)}${s.away}</span>${aOwn?`<span class="own">${aOwn}</span>`:''}</div>
+            <div class="away ${aWin?'winner':drw?'draw':''}">${aOwn?`<span class="own">${aOwn}</span>`:''}<span class="tm">${flagOf(s.away)}${s.away}</span>${fifaLine(s.away)}</div>
             ${s.venue?`<span class="loc">${s.venue}</span>`:''}
             ${evStrip}
           </div>`;
