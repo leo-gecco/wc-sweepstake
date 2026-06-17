@@ -336,10 +336,10 @@
   .score .rkline{font-size:11px; font-weight:800; letter-spacing:.3px; font-variant-numeric:tabular-nums; line-height:1}
   .score .rkline .w{color:var(--muted); opacity:.5; font-weight:700; margin-right:3px; font-size:11px; letter-spacing:.4px; text-transform:uppercase}
   /* even 4px spacing of name / FIFA / owner on fixtures-tab cards (Latest Scores untouched) */
-  #fixturesHost .score .home, #fixturesHost .score .away{gap:0}
+  #fixturesHost .score .home, #fixturesHost .score .away{gap:0; padding-bottom:6px}
+  #fixturesHost .score .own{line-height:1; margin-bottom:4px}
   #fixturesHost .score .tm{line-height:1.05; margin-bottom:4px}
-  #fixturesHost .score .rkline{margin-bottom:4px}
-  #fixturesHost .score .own{line-height:1}
+  #fixturesHost .score .rkline{margin-bottom:0}
   /* played-game cards inside fixtures search share the Latest-Scores footer alignment */
   #fixturesHost .score{align-content:start}
   #fixturesHost .events{min-height:20px}
@@ -945,9 +945,9 @@ if(fh){
     return `
             <div class="score fixture">
               <div class="gp">${groupLabel(f.group)}</div>
-              <div class="home"><span class="tm">${flagOf(f.home)}${f.home}</span>${fifaLine(f.home)}${hOwn?`<span class="own">${hOwn}</span>`:''}</div>
+              <div class="home">${hOwn?`<span class="own">${hOwn}</span>`:''}<span class="tm">${flagOf(f.home)}${f.home}</span>${fifaLine(f.home)}</div>
               <div class="sc"><span class="ko">${f.time||'v'}</span></div>
-              <div class="away"><span class="tm">${flagOf(f.away)}${f.away}</span>${fifaLine(f.away)}${aOwn?`<span class="own">${aOwn}</span>`:''}</div>
+              <div class="away">${aOwn?`<span class="own">${aOwn}</span>`:''}<span class="tm">${flagOf(f.away)}${f.away}</span>${fifaLine(f.away)}</div>
             </div>`;
   };
   const playedCard = (s)=>{
@@ -966,9 +966,9 @@ if(fh){
     return `
             <div class="score played">
               <div class="gp">${groupLabel(s.group)}</div>
-              <div class="home ${hWin?'winner':drw?'draw':''}"><span class="tm">${flagOf(s.home)}${s.home}</span>${fifaLine(s.home)}${hOwn?`<span class="own">${hOwn}</span>`:''}</div>
+              <div class="home ${hWin?'winner':drw?'draw':''}">${hOwn?`<span class="own">${hOwn}</span>`:''}<span class="tm">${flagOf(s.home)}${s.home}</span>${fifaLine(s.home)}</div>
               <div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">\u2013</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div>
-              <div class="away ${aWin?'winner':drw?'draw':''}"><span class="tm">${flagOf(s.away)}${s.away}</span>${fifaLine(s.away)}${aOwn?`<span class="own">${aOwn}</span>`:''}</div>
+              <div class="away ${aWin?'winner':drw?'draw':''}">${aOwn?`<span class="own">${aOwn}</span>`:''}<span class="tm">${flagOf(s.away)}${s.away}</span>${fifaLine(s.away)}</div>
               ${strip}
             </div>`;
   };
