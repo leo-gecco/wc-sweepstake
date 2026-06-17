@@ -938,6 +938,8 @@ if(fh){
   const fixCount = document.getElementById("fixCount");
   const fixPlayed = document.getElementById("fixPlayed");
   const groupLabel = (g)=> g? (/^group/i.test(g)?g:'Group '+g) : '';
+  const FX_MONTHS={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+  const dateKey = (d)=>{ const m=/^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})/.exec(d||''); return m? new Date(+m[3], (FX_MONTHS[m[2]]||0), +m[1]).getTime() : Infinity; };
   const fixCard = (f)=>{
     const hOwn=ownersRanked(f.home),aOwn=ownersRanked(f.away);
     return `
@@ -988,7 +990,8 @@ if(fh){
     if(!list.length){ fh.innerHTML = `<div class="noresult">No games match &ldquo;<b>${q.replace(/</g,'&lt;')}</b>&rdquo;.</div>`; return; }
     const byF = []; const seenF = {};
     list.forEach(x=>{ const k=x.o.date||"TBC"; if(!(k in seenF)){ seenF[k]=byF.length; byF.push({date:k,list:[]}); } byF[seenF[k]].list.push(x); });
-    byF.forEach(md=>md.list.sort((a,b)=>((a.played?1:0)-(b.played?1:0)) || (a.o.time||"").localeCompare(b.o.time||"")));
+    byF.forEach(md=>md.list.sort((a,b)=>(a.o.time||"").localeCompare(b.o.time||"")));
+    byF.sort((a,b)=>dateKey(a.date)-dateKey(b.date));
     fh.innerHTML = byF.map((md,i)=>{
       const allPlayed = md.list.every(x=>x.played);
       const pill = allPlayed ? '<span class="md-pill ft">Full time</span>' : (i===0 && !q && !includePlayed ? '<span class="md-pill up">Next up</span>' : '');
