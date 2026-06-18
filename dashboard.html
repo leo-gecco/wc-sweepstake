@@ -1389,7 +1389,18 @@ function makeChart(){
       responsive:true, maintainAspectRatio:false,
       interaction:{ mode:"nearest", intersect:false },
       plugins:{
-        legend:{ position:"bottom", labels:{ color:T.label, boxWidth:10, boxHeight:10, padding:10, font:{size:11} } },
+        legend:{ position:"bottom", labels:{ color:T.label, boxWidth:10, boxHeight:10, padding:10, font:{size:11} },
+          onClick:(e, item, legend)=>{
+            const ch = legend.chart; const idx = item.datasetIndex; const n = ch.data.datasets.length;
+            let visible = 0; for(let i=0;i<n;i++){ if(ch.isDatasetVisible(i)) visible++; }
+            if(visible === n){
+              for(let i=0;i<n;i++){ i===idx ? ch.show(i) : ch.hide(i); }   /* all shown -> isolate clicked */
+            } else if(ch.isDatasetVisible(idx)){
+              if(visible === 1){ for(let i=0;i<n;i++) ch.show(i); } else { ch.hide(idx); }  /* drop clicked; if last, restore all */
+            } else {
+              ch.show(idx);   /* add to comparison */
+            }
+          } },
         tooltip:{
           backgroundColor:T.tipBg, borderColor:T.tipBorder, borderWidth:1, padding:12,
           titleColor:T.tipTitle, bodyColor:T.tipBody, titleFont:{family:"Anton", size:13},
