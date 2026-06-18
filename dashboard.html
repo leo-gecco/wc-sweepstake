@@ -568,7 +568,7 @@
    - recentScores: prepend each day's new batch at the top
    ============================================================ */
 const DATA = {
-  lastUpdated: "18 Jun 2026, 08:15 BST",
+  lastUpdated: "18 Jun 2026, 20:15 BST",
   pot: 200,
   champion: "",
   mainPrizes: [],
@@ -599,6 +599,7 @@ const DATA = {
   // fg={m,t}=earliest goal (min, team), lw={m,t}=90'+ decisive goal, cb={t,d}=comeback (team, goals down)
   // Schedule prepends each day's matches to the top of this array. Newest batch first.
   recentScores: [
+    { date:"18 Jun 2026", group:"Group A", home:"Czech Republic", hs:1, away:"South Africa", as:1, venue:"ATLANTA, USA", yh:1, ya:2, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:5, ca:5, foh:12, foa:10, poh:38, poa:62, hgh:0, hga:0, sgh:0, sga:0, shh:14, sha:17, fg:{m:6,t:"Czech Republic"} },
     { date:"18 Jun 2026", group:"Group K", home:"Uzbekistan", hs:1, away:"Colombia", as:3, venue:"MEXICO CITY, MEXICO", yh:1, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:3, ca:4, foh:14, foa:11, poh:39, poa:61, hgh:1, hga:1, sgh:0, sga:1, shh:8, sha:15, fg:{m:40,t:"Colombia"} },
     { date:"18 Jun 2026", group:"Group L", home:"Ghana", hs:1, away:"Panama", as:0, venue:"TORONTO, CANADA", yh:1, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:2, ca:2, foh:9, foa:11, poh:38, poa:62, hgh:0, hga:0, sgh:0, sga:0, shh:8, sha:11, fg:{m:95,t:"Ghana"}, lw:{m:95,t:"Ghana"} },
     { date:"17 Jun 2026", group:"Group J", home:"Argentina", hs:3, away:"Algeria", as:0, venue:"KANSAS CITY, USA", yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:2, ca:2, foh:13, foa:8, poh:48, poa:52, hgh:0, hga:0, sgh:0, sga:0, shh:10, sha:7, fg:{m:17,t:"Argentina"} },
@@ -626,7 +627,6 @@ const DATA = {
   ],
   // Full group-stage schedule. Routine moves a match out of fixtures into recentScores once played.
   fixtures: [
-    {date:"18 Jun 2026", time:"17:00", group:"A", home:"Czech Republic", away:"South Africa", venue:"ATLANTA, USA"},
     {date:"18 Jun 2026", time:"20:00", group:"B", home:"Switzerland", away:"Bosnia-Herzegovina", venue:"INGLEWOOD, USA"},
     {date:"18 Jun 2026", time:"23:00", group:"B", home:"Canada", away:"Qatar", venue:"VANCOUVER, CANADA"},
     {date:"19 Jun 2026", time:"02:00", group:"A", home:"Mexico", away:"South Korea", venue:"GUADALAJARA, MEXICO"},
