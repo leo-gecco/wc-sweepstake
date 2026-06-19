@@ -108,8 +108,13 @@ Build these fields (h = home, a = away):
 - shh/sha = totalShots
 - hgh/hga = count of goals whose type.text contains "Header"
 - sgh/sga = count of goals where the scorer's athletesInvolved[].position == "SUB"
-- fg = { m: earliest goal minute in the match, t: "scoring team name" }  (omit for 0-0)
-- lw = { m, t } ONLY if a goal at minute >= 90 won or rescued the game for that team; else omit
+- fg = { m: earliest goal minute, s: that goal's clock.value (SECONDS, integer), t: "scoring team name" }  (omit for 0-0)
+    `s` comes from the goal event's `clock.value` (e.g. 307.0 = 5m 7s, shown as "6'"). It is REQUIRED — the
+    "Off Like a Rocket" bet settles on lowest `s` (ties on the displayed minute are broken by the second) and
+    the card shows "{m}m {s}s". If you only have the minute, set s = m*60 as a fallback and flag it.
+- lw = { m, s, t } ONLY if a goal at minute >= 90 won or rescued the game for that team; else omit.
+    `s` = that goal's clock.value (SECONDS). "Fergie Time" settles on highest `s` (minute ties broken by the
+    second); its card still displays the minute "{m}'". Include `s` whenever available (fallback s = m*60).
 - cb = { t, d } ONLY if a team won/drew after being >= 2 goals down (read the goal order); else omit
 - venue = "CITY, COUNTRY" from the summary/scoreboard `competition.venue.address`: take `city` (drop anything
   after a comma, e.g. "Santa Clara, California" -> "Santa Clara"), uppercase it, then ", " + `country`
@@ -137,7 +142,7 @@ L: England, Croatia, Ghana, Panama
 (Write it as "Group A" etc. in the row. These match the ALLOC + fixtures already in dashboard.html.)
 
 # ROW FORMAT (prepend to the recentScores array, newest first)
-{ date:"DD Mmm 2026", group:"Group X", home:"Team", hs:0, away:"Team", as:0, yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:0, ca:0, foh:0, foa:0, poh:0, poa:0, hgh:0, hga:0, sgh:0, sga:0, shh:0, sha:0, venue:"CITY, COUNTRY", fg:{m:0,t:"Team"} },
+{ date:"DD Mmm 2026", group:"Group X", home:"Team", hs:0, away:"Team", as:0, yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:0, ca:0, foh:0, foa:0, poh:0, poa:0, hgh:0, hga:0, sgh:0, sga:0, shh:0, sha:0, venue:"CITY, COUNTRY", fg:{m:0,s:0,t:"Team"} },
 (include lw and cb only when they occurred.)
 - `date:` = the UK (Europe/London) kick-off date, so results sit on the same day as the UK-dated fixtures
   (a late US game that finishes after UK midnight belongs to the next UK day).
@@ -181,7 +186,7 @@ The 32 knockout ties (Round of 32 -> Final) are pre-loaded with their `id` (ESPN
    as normal); just report "board updated; digest not due / already sent". This yields exactly ONE digest
    each Monday and Friday: the first run at/after 08:00 that day.
 
-4. Build the digest (recap + preview) covering EVERYTHING SINCE THE PREVIOUS DIGEST — this can span
+4. Build the digest (recap only) covering EVERYTHING SINCE THE PREVIOUS DIGEST — this can span
    several days (e.g. a Monday digest covers Fri/Sat/Sun). Find what to recap without memory: read the
    existing `whatsapp/*.txt` files, collect the (date + home + away) of every match already posted in any
    of them, and set R = all FULL-TIME matches in recentScores that are NOT in that already-posted set.
@@ -189,10 +194,9 @@ The 32 knockout ties (Round of 32 -> Final) are pre-loaded with their `id` (ESPN
    - BEFORE/AFTER without memory: compute the £ money table and the Champion's Bonus TWICE — once from ALL
      recentScores (AFTER), once EXCLUDING set R (BEFORE). The diff is what changed over the whole period
      since the last digest (leaders won/lost, who climbed the money table).
-   - Content: recap the results in R GROUPED BY DAY (a dated sub-header per day, newest day first), the net
-     movers from that diff, the current money standings, then a preview of TODAY's fixtures (from
-     `fixtures:`, today's UK date, with BST kickoff times). Since it's a multi-day gap, you may also preview
-     the next day or two's headline fixtures.
+   - Content: recap the results in R GROUPED BY DAY (a dated sub-header per day, newest day first), then the
+     Movers (ONLY the punters who newly CLAIMED a bet this period — see the Movers rule below), then the
+     current money standings. There is NO fixtures preview / "on today" section.
    - Write `whatsapp/{today-UK-date}.txt` and commit it to `main` per PUSH METHOD, message
      "Digest: {date}". If dashboard.html also changed this run, push both in one commit.
 
@@ -217,22 +221,18 @@ CO-OWNED TEAMS — Japan = Leo & Tom, Curacao = Jamie & Brownout. Whenever you c
 and split between both owners.
 
 # WHATSAPP SUMMARY (paste-ready, entertaining) — the twice-weekly Mon/Fri digest
-A recap of every game since the previous digest (this can span several days — e.g. a weekend), the
-money swings they caused (with metrics), the current standings, then a preview of TODAY's games. It reads
-as a "good morning, here's where we're at + what's on today" brief.
-For the preview, read TODAY's fixtures from the `fixtures:` array in dashboard.html (filter to today's UK
-date) — each entry already carries its UK (BST) kickoff `time`, so no timezone maths is needed. Map each
-team to its punter(s) via ALLOC (name both owners for the co-owned teams) so you can say who has skin in
-each game and what's at stake.
+A recap of every game since the previous digest (this can span several days — e.g. a weekend), the money
+swings they caused (with metrics), and the current standings. It reads as a "here's where we're at"
+catch-up. There is NO fixtures preview / "on today" section.
 
 Rules:
 - WhatsApp formatting: wrap text in *single asterisks* to BOLD it (WhatsApp renders *text* as bold). Bold
   the title line, EVERY section header, and a punter's name+total when they move. Don't bold whole
   sentences. Emojis welcome.
-- Readability first: a blank line between every section, and each result / mover / fixture on its OWN
+- Readability first: a blank line between every section, and each result / mover on its OWN
   short line. It's read on a phone — no walls of text.
 - ALWAYS put the country's flag emoji immediately before EVERY country/team name, everywhere in the
-  message (results, movers, money table, fixtures, one-to-watch). Never write a bare country name. Use
+  message (results, movers, money table). Never write a bare country name. Use
   the FLAG map already defined in dashboard.html for the exact emoji; for any country not in it, use that
   nation's standard flag emoji.
 - British English, proper group-chat banter: funny, a bit savage, never nasty. Sentences under 20 words.
@@ -248,16 +248,14 @@ Rules:
   All Sizzle No Steak = shots per goal · Total Domination = highest match possession %.
   Good: "Corner Shop: now Brazil (Sam) on 10 corners, their 4-0 v Haiti did it."
   Bad:  "Corner Shop: now Brazil (Sam)."  (no metric, no reason)
-- Movers layout — group by punter, biggest mover first: a BOLD headline line per punter (name + new total
-  + one-line reason), then each bet they took on its OWN bulleted line "• {Bet}: {flag}{Team} ({metric})".
-  Contested or unassigned bets pay no one — don't list them as a punter's winnings; if notable, mention
-  them only as feeding the Champion's Bonus. Keeps it scannable, not a paragraph.
-- On today layout — lead with the TEAMS, then the time, then stakes underneath:
-  "{flag}{Home} v {flag}{Away} — {kickoff} BST" then a short who-owns-what line below it. In that
-  who-owns line, reference each punter with JUST the flag in parentheses — "Aaron (🇩🇪)", NOT
-  "Aaron (🇩🇪 Germany)" — since the matchup line directly above already names both teams. (This is the one
-  place the bare-flag is used without the country name; everywhere else keep flag+name.)
-- If nothing changed: "*💥 Movers* — quiet day, no shake-ups on the board."
+- Movers layout — list ONLY the punters who NEWLY CLAIMED a bet this period (a bet they now lead outright
+  that they didn't lead before). One BOLD headline line per such punter (name + new £ total), then each
+  newly-claimed bet on its OWN bulleted line "• {Bet}: {flag}{Team} ({metric})". A bet that changes hands
+  is reported ONCE, under the punter who GAINED it — do NOT add a separate line for whoever lost it (the
+  money table is the source of truth for positions, so drops aren't double-reported). Bets that became
+  contested or unassigned pay no one and feed the Champion's Bonus; note that in at most one line, not as
+  anyone's winnings.
+- If nobody claimed a new bet: "*💥 Movers* — quiet one, no new bonuses banked."
 
 Template (drop any empty section):
 
@@ -283,11 +281,6 @@ Template (drop any empty section):
 =. {everyone still on zero} — all £0
 🏆 *Champion's Bonus £{n}* — to whoever owns the winner ({x} contested + {y} unassigned bets)
 {one-line dig at the bottom}
-
-*⚽ On today*
-{flag}{Home} v {flag}{Away} — {kickoff} BST
-{who owns each side using punter (flag) only, e.g. "Aaron (🇩🇪) wants his first cash; Jamie & Brownout (🇨🇼) chase the upset"}
-...
 
 📲 Live board: https://leo-gecco.github.io/wc-sweepstake/
 
@@ -372,3 +365,4 @@ If you'd rather not spend tokens per run, the same job can be done by a **GitHub
 running a small Node script (fetch ESPN → parse → update the file → commit). It can run more frequently
 and costs nothing, but it's fixed logic with no judgement for edge cases. Say the word and
 I'll build that version instead.
+                                                                                                                                                                                                                                                                                                                      
