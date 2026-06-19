@@ -596,18 +596,18 @@ const DATA = {
   ],
   // hs/as=score, yh/ya=yellows, rh/ra=reds, oh/oa=own goals, ph/pa=penalties conceded
   // ch/ca=corners, foh/foa=fouls, poh/poa=possession %, hgh/hga=headed goals, sgh/sga=substitute goals, shh/sha=total shots
-  // fg={m,t}=earliest goal (min, team), lw={m,t}=90'+ decisive goal, cb={t,d}=comeback (team, goals down)
+  // fg={m,s,t}=earliest goal (min, s=clock.value seconds for tie-breaks, team), lw={m,s,t}=90'+ decisive goal (s=seconds, optional), cb={t,d}=comeback (team, goals down)
   // Schedule prepends each day's matches to the top of this array. Newest batch first.
   recentScores: [
     { date:"19 Jun 2026", group:"Group A", home:"Mexico", hs:1, away:"South Korea", as:0, venue:"GUADALAJARA, MEXICO", yh:0, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:1, ca:2, foh:9, foa:7, poh:42, poa:58, hgh:0, hga:0, sgh:0, sga:0, shh:8, sha:9, fg:{m:50,t:"Mexico"} },
-    { date:"18 Jun 2026", group:"Group A", home:"Czech Republic", hs:1, away:"South Africa", as:1, venue:"ATLANTA, USA", yh:1, ya:2, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:5, ca:5, foh:12, foa:10, poh:38, poa:62, hgh:0, hga:0, sgh:0, sga:0, shh:14, sha:17, fg:{m:6,t:"Czech Republic"} },
+    { date:"18 Jun 2026", group:"Group A", home:"Czech Republic", hs:1, away:"South Africa", as:1, venue:"ATLANTA, USA", yh:1, ya:2, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:5, ca:5, foh:12, foa:10, poh:38, poa:62, hgh:0, hga:0, sgh:0, sga:0, shh:14, sha:17, fg:{m:6,s:307,t:"Czech Republic"} },
     { date:"18 Jun 2026", group:"Group B", home:"Canada", hs:6, away:"Qatar", as:0, venue:"VANCOUVER, CANADA", yh:1, ya:1, rh:0, ra:2, oh:0, oa:1, ph:0, pa:0, ch:19, ca:1, foh:9, foa:10, poh:79, poa:21, hgh:0, hga:0, sgh:1, sga:0, shh:32, sha:2, fg:{m:16,t:"Canada"} },
     { date:"18 Jun 2026", group:"Group B", home:"Switzerland", hs:4, away:"Bosnia-Herzegovina", as:1, venue:"INGLEWOOD, USA", yh:1, ya:2, rh:0, ra:1, oh:0, oa:0, ph:0, pa:1, ch:7, ca:3, foh:7, foa:18, poh:62, poa:38, hgh:0, hga:0, sgh:3, sga:1, shh:13, sha:5, fg:{m:74,t:"Switzerland"} },
     { date:"18 Jun 2026", group:"Group K", home:"Uzbekistan", hs:1, away:"Colombia", as:3, venue:"MEXICO CITY, MEXICO", yh:1, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:3, ca:4, foh:14, foa:11, poh:39, poa:61, hgh:1, hga:1, sgh:0, sga:1, shh:8, sha:15, fg:{m:40,t:"Colombia"} },
     { date:"18 Jun 2026", group:"Group L", home:"Ghana", hs:1, away:"Panama", as:0, venue:"TORONTO, CANADA", yh:1, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:2, ca:2, foh:9, foa:11, poh:38, poa:62, hgh:0, hga:0, sgh:0, sga:0, shh:8, sha:11, fg:{m:95,t:"Ghana"}, lw:{m:95,t:"Ghana"} },
     { date:"17 Jun 2026", group:"Group J", home:"Argentina", hs:3, away:"Algeria", as:0, venue:"KANSAS CITY, USA", yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:2, ca:2, foh:13, foa:8, poh:48, poa:52, hgh:0, hga:0, sgh:0, sga:0, shh:10, sha:7, fg:{m:17,t:"Argentina"} },
     { date:"17 Jun 2026", group:"Group J", home:"Austria", hs:3, away:"Jordan", as:1, venue:"SANTA CLARA, USA", yh:1, ya:0, rh:0, ra:0, oh:0, oa:1, ph:0, pa:1, ch:4, ca:3, foh:12, foa:7, poh:63, poa:37, hgh:0, hga:0, sgh:1, sga:0, shh:11, sha:11, fg:{m:21,t:"Austria"} },
-    { date:"17 Jun 2026", group:"Group K", home:"Portugal", hs:1, away:"DR Congo", as:1, venue:"HOUSTON, USA", yh:3, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:4, foh:9, foa:10, poh:75, poa:25, hgh:1, hga:1, sgh:0, sga:0, shh:7, sha:8, fg:{m:6,t:"Portugal"} },
+    { date:"17 Jun 2026", group:"Group K", home:"Portugal", hs:1, away:"DR Congo", as:1, venue:"HOUSTON, USA", yh:3, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:4, foh:9, foa:10, poh:75, poa:25, hgh:1, hga:1, sgh:0, sga:0, shh:7, sha:8, fg:{m:6,s:333,t:"Portugal"} },
     { date:"17 Jun 2026", group:"Group L", home:"England", hs:4, away:"Croatia", as:2, venue:"ARLINGTON, USA", yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:1, ch:8, ca:2, foh:10, foa:12, poh:52, poa:48, hgh:1, hga:0, sgh:1, sga:0, shh:22, sha:10, fg:{m:12,t:"England"} },
     { date:"16 Jun 2026", group:"Group G", home:"Iran", hs:2, away:"New Zealand", as:2, venue:"INGLEWOOD, USA", yh:1, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:1, foh:10, foa:8, poh:48, poa:52, hgh:1, hga:0, sgh:0, sga:0, shh:17, sha:14, fg:{m:7,t:"New Zealand"} },
     { date:"16 Jun 2026", group:"Group I", home:"France", hs:3, away:"Senegal", as:1, venue:"EAST RUTHERFORD, USA", yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:6, ca:4, foh:5, foa:9, poh:54, poa:46, hgh:0, hga:0, sgh:1, sga:1, shh:11, sha:6, fg:{m:66,t:"France"} },
@@ -619,7 +619,7 @@ const DATA = {
     { date:"15 Jun 2026", group:"Group H", home:"Saudi Arabia", hs:1, away:"Uruguay", as:1, venue:"MIAMI GARDENS, USA", yh:1, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:14, foh:11, foa:6, poh:33, poa:67, hgh:0, hga:0, sgh:0, sga:0, shh:7, sha:27, fg:{m:41,t:"Saudi Arabia"} },
     { date:"14 Jun 2026", group:"Group C", home:"Haiti", hs:0, away:"Scotland", as:1, venue:"FOXBOROUGH, USA", yh:1, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:3, foh:23, foa:21, poh:54, poa:46, hgh:0, hga:0, sgh:0, sga:0, shh:15, sha:9, fg:{m:28,t:"Scotland"} },
     { date:"14 Jun 2026", group:"Group D", home:"Australia", hs:2, away:"Turkey", as:0, venue:"VANCOUVER, CANADA", yh:0, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:8, foh:12, foa:4, poh:28, poa:72, hgh:0, hga:0, sgh:0, sga:0, shh:9, sha:30, fg:{m:27,t:"Australia"} },
-    { date:"14 Jun 2026", group:"Group E", home:"Germany", hs:7, away:"Curacao", as:1, venue:"HOUSTON, USA", yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:1, ch:8, ca:1, foh:18, foa:11, poh:65, poa:35, hgh:1, hga:0, sgh:1, sga:0, shh:26, sha:8, fg:{m:6,t:"Germany"} },
+    { date:"14 Jun 2026", group:"Group E", home:"Germany", hs:7, away:"Curacao", as:1, venue:"HOUSTON, USA", yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:1, ch:8, ca:1, foh:18, foa:11, poh:65, poa:35, hgh:1, hga:0, sgh:1, sga:0, shh:26, sha:8, fg:{m:6,s:317,t:"Germany"} },
     { date:"14 Jun 2026", group:"Group F", home:"Netherlands", hs:2, away:"Japan", as:2, venue:"ARLINGTON, USA", yh:3, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:5, ca:4, foh:7, foa:7, poh:60, poa:40, hgh:1, hga:1, sgh:0, sga:0, shh:10, sha:10, fg:{m:51,t:"Netherlands"} },
     { date:"13 Jun 2026", group:"Group B", home:"Qatar", hs:1, away:"Switzerland", as:1, venue:"SANTA CLARA, USA", yh:2, ya:1, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:3, ca:10, foh:12, foa:11, poh:32, poa:68, hgh:1, hga:0, sgh:0, sga:0, shh:7, sha:26, fg:{m:17,t:"Switzerland"}, lw:{m:94,t:"Qatar"} },
     { date:"13 Jun 2026", group:"Group C", home:"Brazil", hs:1, away:"Morocco", as:1, venue:"EAST RUTHERFORD, USA", yh:2, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:6, ca:2, foh:16, foa:14, poh:51, poa:49, hgh:0, hga:0, sgh:0, sga:0, shh:12, sha:14, fg:{m:21,t:"Morocco"} },
@@ -789,17 +789,21 @@ function avgPossLeader(){
   const teams=Object.entries(teamAgg).filter(([t,a])=>a.played>0 && a.posSum/a.played===val).map(([t])=>t);
   return {team:teams[0], value:Math.round(val)+"%", teams};
 }
+// fastest/latest goals settle on clock.value SECONDS (s); fall back to minute*60 if s missing
+function fgSecs(s){ return s.fg ? (s.fg.s!=null ? s.fg.s : s.fg.m*60) : Infinity; }
+function lwSecs(s){ return s.lw ? (s.lw.s!=null ? s.lw.s : s.lw.m*60) : -Infinity; }
+function fmtMS(sec){ return Math.floor(sec/60)+"m "+Math.round(sec%60)+"s"; }
 function fastestGoal(){
-  let m=99999; DATA.recentScores.forEach(s=>{ if(s.fg && s.fg.m<m) m=s.fg.m; });
-  if(m===99999) return null;
-  const rows=DATA.recentScores.filter(s=>s.fg && s.fg.m===m); const teams=[...new Set(rows.map(s=>s.fg.t))];
-  return {team:teams[0], value:m+"'", game:gameStr(rows[0]), teams};
+  let best=Infinity; DATA.recentScores.forEach(s=>{ if(s.fg){ const v=fgSecs(s); if(v<best) best=v; } });
+  if(best===Infinity) return null;
+  const rows=DATA.recentScores.filter(s=>s.fg && fgSecs(s)===best); const teams=[...new Set(rows.map(s=>s.fg.t))];
+  return {team:teams[0], value:fmtMS(best), game:gameStr(rows[0]), teams};
 }
 function latestWinner(){
-  let m=-1; DATA.recentScores.forEach(s=>{ if(s.lw && s.lw.m>m) m=s.lw.m; });
-  if(m<0) return null;
-  const rows=DATA.recentScores.filter(s=>s.lw && s.lw.m===m); const teams=[...new Set(rows.map(s=>s.lw.t))];
-  return {team:teams[0], value:m+"'", game:gameStr(rows[0]), teams};
+  let best=-Infinity; DATA.recentScores.forEach(s=>{ if(s.lw){ const v=lwSecs(s); if(v>best) best=v; } });
+  if(best===-Infinity) return null;
+  const rows=DATA.recentScores.filter(s=>s.lw && lwSecs(s)===best); const teams=[...new Set(rows.map(s=>s.lw.t))];
+  return {team:teams[0], value:rows[0].lw.m+"'", game:gameStr(rows[0]), teams};
 }
 function comebackKing(){
   let d=0; DATA.recentScores.forEach(s=>{ if(s.cb && s.cb.d>d) d=s.cb.d; });
@@ -1269,8 +1273,8 @@ function heaviestDefeatSlice(slice){
   return best;
 }
 function shotsPerGoalSlice(A){ let v=0; Object.values(A).forEach(a=>{ if(a.sf>0){ const r=a.sf/Math.max(a.gs,1); if(r>v) v=r; } }); return v>0? Object.entries(A).filter(([t,a])=>a.sf>0 && (a.sf/Math.max(a.gs,1))===v).map(([t])=>t) : []; }
-function fastestGoalSlice(slice){ let m=1e9; slice.forEach(s=>{ if(s.fg && s.fg.m<m) m=s.fg.m; }); if(m===1e9) return []; return [...new Set(slice.filter(s=>s.fg && s.fg.m===m).map(s=>s.fg.t))]; }
-function latestWinnerSlice(slice){ let m=-1; slice.forEach(s=>{ if(s.lw && s.lw.m>m) m=s.lw.m; }); if(m<0) return []; return [...new Set(slice.filter(s=>s.lw && s.lw.m===m).map(s=>s.lw.t))]; }
+function fastestGoalSlice(slice){ let best=Infinity; slice.forEach(s=>{ if(s.fg){ const v=fgSecs(s); if(v<best) best=v; } }); if(best===Infinity) return []; return [...new Set(slice.filter(s=>s.fg && fgSecs(s)===best).map(s=>s.fg.t))]; }
+function latestWinnerSlice(slice){ let best=-Infinity; slice.forEach(s=>{ if(s.lw){ const v=lwSecs(s); if(v>best) best=v; } }); if(best===-Infinity) return []; return [...new Set(slice.filter(s=>s.lw && lwSecs(s)===best).map(s=>s.lw.t))]; }
 function comebackSlice(slice){ let d=0; slice.forEach(s=>{ if(s.cb && s.cb.d>d) d=s.cb.d; }); if(d===0) return []; return [...new Set(slice.filter(s=>s.cb && s.cb.d===d).map(s=>s.cb.t))]; }
 function lowWinPossSlice(slice){ let v=101; slice.forEach(s=>{ if(s.hs>s.as){ const p=(s.poh==null?101:s.poh); if(p<v) v=p; } else if(s.as>s.hs){ const p=(s.poa==null?101:s.poa); if(p<v) v=p; } }); if(v===101) return []; const out=[]; slice.forEach(s=>{ if(s.hs>s.as && s.poh===v) out.push(s.home); else if(s.as>s.hs && s.poa===v) out.push(s.away); }); return [...new Set(out)]; }
 function topPossessionSlice(slice){ let v=0; slice.forEach(s=>{ if((s.poh||0)>v) v=s.poh; if((s.poa||0)>v) v=s.poa; }); if(v===0) return []; const out=[]; slice.forEach(s=>{ if(s.poh===v) out.push(s.home); if(s.poa===v) out.push(s.away); }); return [...new Set(out)]; }
