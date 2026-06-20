@@ -1263,14 +1263,14 @@ function leaderTeamsAll(A,k){
   return val>0? Object.entries(A).filter(([t,a])=>a[k]===val).map(([t])=>t) : [];
 }
 function avgPossSlice(A){
-  let best=null,val=0;
-  Object.entries(A).forEach(([t,a])=>{ if(a.played>0){ const av=a.posSum/a.played; if(av>val){ val=av; best=t; } } });
-  return best;
+  let val=0; Object.values(A).forEach(a=>{ if(a.played>0){ const av=a.posSum/a.played; if(av>val) val=av; } });
+  if(val===0) return [];
+  return Object.entries(A).filter(([t,a])=>a.played>0 && a.posSum/a.played===val).map(([t])=>t);
 }
 function heaviestDefeatSlice(slice){
-  let best=null, m=0;
-  slice.forEach(s=>{ const d=Math.abs(s.hs-s.as); if(d>m){ m=d; best=(s.hs<s.as?s.home:s.away); } });
-  return best;
+  let m=0; slice.forEach(s=>{ const d=Math.abs(s.hs-s.as); if(d>m) m=d; });
+  if(m===0) return [];
+  return [...new Set(slice.filter(s=>Math.abs(s.hs-s.as)===m).map(s=>s.hs<s.as?s.home:s.away))];
 }
 function shotsPerGoalSlice(A){ let v=0; Object.values(A).forEach(a=>{ if(a.sf>0){ const r=a.sf/Math.max(a.gs,1); if(r>v) v=r; } }); return v>0? Object.entries(A).filter(([t,a])=>a.sf>0 && (a.sf/Math.max(a.gs,1))===v).map(([t])=>t) : []; }
 function fastestGoalSlice(slice){ let best=Infinity; slice.forEach(s=>{ if(s.fg){ const v=fgSecs(s); if(v<best) best=v; } }); if(best===Infinity) return []; return [...new Set(slice.filter(s=>s.fg && fgSecs(s)===best).map(s=>s.fg.t))]; }
@@ -1299,10 +1299,10 @@ DATES.forEach(d=>{
     "The Wall":             leaderTeamsAll(agg,"cs"),
     "Aerial Threat":        leaderTeamsAll(agg,"hg"),
     "Super Sub":            leaderTeamsAll(agg,"sg"),
-    "Tiki-Taka":            wrap(avgPossSlice(agg)),
+    "Tiki-Taka":            avgPossSlice(agg),
     "Shooting Gallery":     leaderTeamsAll(agg,"sfd"),
     "All Sizzle, No Steak": shotsPerGoalSlice(agg),
-    "The Hammering":        wrap(heaviestDefeatSlice(slice)),
+    "The Hammering":        heaviestDefeatSlice(slice),
     "Off Like a Rocket":    fastestGoalSlice(slice),
     "Fergie Time":          latestWinnerSlice(slice),
     "Comeback Kings":       comebackSlice(slice),
