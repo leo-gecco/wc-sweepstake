@@ -568,7 +568,7 @@
    - recentScores: prepend each day's new batch at the top
    ============================================================ */
 const DATA = {
-  lastUpdated: "19 Jun 2026, 22:15 BST",
+  lastUpdated: "20 Jun 2026, 08:16 BST",
   pot: 200,
   champion: "",
   mainPrizes: [],
@@ -599,7 +599,10 @@ const DATA = {
   // fg={m,s,t}=earliest goal (min, s=clock.value seconds for tie-breaks, team), lw={m,s,t}=90'+ decisive goal (s=seconds, optional), cb={t,d}=comeback (team, goals down)
   // Schedule prepends each day's matches to the top of this array. Newest batch first.
   recentScores: [
+    { date:"20 Jun 2026", group:"Group C", home:"Brazil", hs:3, away:"Haiti", as:0, yh:1, ya:3, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:4, foh:13, foa:14, poh:57, poa:43, hgh:0, hga:0, sgh:0, sga:0, shh:8, sha:7, venue:"PHILADELPHIA, USA", fg:{m:23,s:1369,t:"Brazil"} },
+    { date:"20 Jun 2026", group:"Group D", home:"Turkey", hs:0, away:"Paraguay", as:1, yh:1, ya:1, rh:0, ra:1, oh:0, oa:0, ph:0, pa:0, ch:12, ca:0, foh:14, foa:15, poh:78, poa:22, hgh:0, hga:0, sgh:0, sga:0, shh:32, sha:7, venue:"SANTA CLARA, USA", fg:{m:2,s:64,t:"Paraguay"} },
     { date:"19 Jun 2026", group:"Group A", home:"Mexico", hs:1, away:"South Korea", as:0, venue:"GUADALAJARA, MEXICO", yh:0, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:1, ca:2, foh:9, foa:7, poh:42, poa:58, hgh:0, hga:0, sgh:0, sga:0, shh:8, sha:9, fg:{m:50,t:"Mexico"} },
+    { date:"19 Jun 2026", group:"Group C", home:"Scotland", hs:0, away:"Morocco", as:1, yh:1, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:2, ca:5, foh:11, foa:8, poh:41, poa:59, hgh:0, hga:0, sgh:0, sga:0, shh:6, sha:12, venue:"FOXBOROUGH, USA", fg:{m:2,s:70,t:"Morocco"} },
     { date:"19 Jun 2026", group:"Group D", home:"United States", hs:2, away:"Australia", as:0, venue:"SEATTLE, USA", yh:3, ya:4, rh:0, ra:0, oh:0, oa:1, ph:0, pa:0, ch:7, ca:4, foh:12, foa:16, poh:62, poa:38, hgh:1, hga:0, sgh:0, sga:0, shh:10, sha:5, fg:{m:11,s:613,t:"United States"} },
     { date:"18 Jun 2026", group:"Group A", home:"Czech Republic", hs:1, away:"South Africa", as:1, venue:"ATLANTA, USA", yh:1, ya:2, rh:0, ra:0, oh:0, oa:0, ph:1, pa:0, ch:5, ca:5, foh:12, foa:10, poh:38, poa:62, hgh:0, hga:0, sgh:0, sga:0, shh:14, sha:17, fg:{m:6,s:307,t:"Czech Republic"} },
     { date:"18 Jun 2026", group:"Group B", home:"Canada", hs:6, away:"Qatar", as:0, venue:"VANCOUVER, CANADA", yh:1, ya:1, rh:0, ra:2, oh:0, oa:1, ph:0, pa:0, ch:19, ca:1, foh:9, foa:10, poh:79, poa:21, hgh:0, hga:0, sgh:1, sga:0, shh:32, sha:2, fg:{m:16,t:"Canada"} },
@@ -631,9 +634,6 @@ const DATA = {
   ],
   // Full group-stage schedule. Routine moves a match out of fixtures into recentScores once played.
   fixtures: [
-    {date:"19 Jun 2026", time:"23:00", group:"C", home:"Scotland", away:"Morocco", venue:"FOXBOROUGH, USA"},
-    {date:"20 Jun 2026", time:"01:30", group:"C", home:"Brazil", away:"Haiti", venue:"PHILADELPHIA, USA"},
-    {date:"20 Jun 2026", time:"04:00", group:"D", home:"Turkey", away:"Paraguay", venue:"SANTA CLARA, USA"},
     {date:"20 Jun 2026", time:"18:00", group:"F", home:"Netherlands", away:"Sweden", venue:"HOUSTON, USA"},
     {date:"20 Jun 2026", time:"21:00", group:"E", home:"Germany", away:"Ivory Coast", venue:"TORONTO, CANADA"},
     {date:"21 Jun 2026", time:"04:00", group:"E", home:"Ecuador", away:"Curacao", venue:"KANSAS CITY, USA"},
