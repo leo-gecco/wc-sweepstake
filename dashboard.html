@@ -568,7 +568,7 @@
    - recentScores: prepend each day's new batch at the top
    ============================================================ */
 const DATA = {
-  lastUpdated: "22 Jun 2026, 08:15 BST",
+  lastUpdated: "22 Jun 2026, 20:16 BST",
   pot: 200,
   champion: "",
   mainPrizes: [],
@@ -600,6 +600,7 @@ const DATA = {
   // Schedule prepends each day's matches to the top of this array. Newest batch first.
   recentScores: [
     { date:"22 Jun 2026", group:"Group G", home:"New Zealand", hs:1, away:"Egypt", as:3, yh:2, ya:1, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:4, foh:14, foa:8, poh:44, poa:56, hgh:1, hga:2, sgh:0, sga:1, shh:11, sha:19, venue:"VANCOUVER, CANADA", fg:{m:15,s:875,t:"New Zealand"} },
+    { date:"22 Jun 2026", group:"Group J", home:"Argentina", hs:2, away:"Austria", as:0, yh:2, ya:2, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:1, ca:3, foh:13, foa:13, poh:54, poa:46, hgh:0, hga:0, sgh:0, sga:0, shh:12, sha:6, venue:"ARLINGTON, USA", fg:{m:38,s:2277,t:"Argentina"} },
     { date:"21 Jun 2026", group:"Group E", home:"Ecuador", hs:0, away:"Curacao", as:0, yh:1, ya:5, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:9, ca:0, foh:7, foa:10, poh:75, poa:25, hgh:0, hga:0, sgh:0, sga:0, shh:27, sha:10, venue:"KANSAS CITY, USA" },
     { date:"21 Jun 2026", group:"Group F", home:"Tunisia", hs:0, away:"Japan", as:4, yh:0, ya:0, rh:0, ra:0, oh:0, oa:0, ph:0, pa:0, ch:3, ca:5, foh:8, foa:15, poh:38, poa:62, hgh:0, hga:1, sgh:0, sga:0, shh:2, sha:11, venue:"GUADALUPE, MEXICO", fg:{m:4,s:207,t:"Japan"} },
     { date:"21 Jun 2026", group:"Group G", home:"Belgium", hs:0, away:"Iran", as:0, yh:1, ya:1, rh:1, ra:0, oh:0, oa:0, ph:0, pa:0, ch:4, ca:2, foh:7, foa:9, poh:70, poa:30, hgh:0, hga:0, sgh:0, sga:0, shh:23, sha:7, venue:"INGLEWOOD, USA" },
@@ -642,7 +643,6 @@ const DATA = {
   ],
   // Full group-stage schedule. Routine moves a match out of fixtures into recentScores once played.
   fixtures: [
-    {date:"22 Jun 2026", time:"18:00", group:"J", home:"Argentina", away:"Austria", venue:"ARLINGTON, USA"},
     {date:"22 Jun 2026", time:"22:00", group:"I", home:"France", away:"Iraq", venue:"PHILADELPHIA, USA"},
     {date:"23 Jun 2026", time:"01:00", group:"I", home:"Norway", away:"Senegal", venue:"EAST RUTHERFORD, USA"},
     {date:"23 Jun 2026", time:"04:00", group:"J", home:"Jordan", away:"Algeria", venue:"SANTA CLARA, USA"},
