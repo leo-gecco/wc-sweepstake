@@ -365,7 +365,7 @@
   #scoresHost .score{align-content:start}
   #scoresHost .events{min-height:20px}
   #scoresHost .events.ev-empty{border-top:none; margin-top:0; padding-top:0; margin-bottom:0}
-  /* Latest Scores: match fixtures — punter (plain text) above country left-aligned, FIFA rank below right-aligned, country centred over score */
+  /* Latest Scores: match fixtures - punter (plain text) above country left-aligned, FIFA rank below right-aligned, country centred over score */
   #scoresHost .score .home, #scoresHost .score .away{justify-self:center; gap:0}
   #scoresHost .score .own{align-self:flex-start; margin-bottom:8px; line-height:1}
   #scoresHost .score .tm{margin-bottom:8px; line-height:1.05}
@@ -919,7 +919,7 @@ document.getElementById("bets").innerHTML = DATA.sideBets.map(b=>{
   const champ=(DATA.champion||"").trim(); const champOwners=champ?ownersOf(champ):[];
   if(champ && champOwners.length){
     el.className="ppot win";
-    el.innerHTML=`<div class="tphy">\u{1F3C6}</div><div><div class="lab">Champion's Bonus — won</div><div class="amt">£${potNow}</div><div class="sub">${flagOf(champ)}${champ} won the tournament — to <b>${champOwners.join(" & ")}</b></div></div>`;
+    el.innerHTML=`<div class="tphy">\u{1F3C6}</div><div><div class="lab">Champion's Bonus - won</div><div class="amt">£${potNow}</div><div class="sub">${flagOf(champ)}${champ} won the tournament - to <b>${champOwners.join(" & ")}</b></div></div>`;
   } else {
     el.className="ppot";
     el.innerHTML=`<div class="tphy">\u{1F3C6}</div><div><div class="lab">Champion's Bonus</div><div class="amt">£${potNow}</div><div class="sub">Made up of contested &amp; unassigned side bets, £10 each${(contestedN||noWinnerN)?` (${contestedN} contested + ${noWinnerN} unassigned)`:``}. Won by whoever owns the tournament winner.</div></div><div class="right"><div class="lab">Awarded</div><div style="font-size:14px; color:var(--ink); margin-top:4px; font-weight:700">At the final</div></div>`;
@@ -1184,7 +1184,7 @@ function renderTracker(){
     return `<tr>
       <td><span class="trk-team">${flagOf(t.team)}${t.team}</span></td>
       <td><span class="trk-group">${t.group}</span></td>
-      <td><span class="trk-owner ${t.owner?'':'none'}">${t.owner||'—'}</span></td>
+      <td><span class="trk-owner ${t.owner?'':'none'}">${t.owner||'-'}</span></td>
       <td class="trk-num ${!t.played?'zero':''}">${t.played||0}</td>
       ${cell("yc",t.yc)}
       ${cell("rc",t.rc)}
@@ -1215,7 +1215,7 @@ document.querySelectorAll("#trkTable thead th").forEach(th=>{
     else { sortKey=k; sortDir = th.dataset.numeric? -1 : 1; }
     renderTracker();
     const info=BETMAP[k]; const co=document.getElementById("trkCallout");
-    if(co) co.innerHTML = info? `Sorted by <b>${info[0]}</b> — ${info[1]} (£10 side bet)` : `Sorted by <b>${th.textContent.trim()}</b> — not a side bet`;
+    if(co) co.innerHTML = info? `Sorted by <b>${info[0]}</b> - ${info[1]} (£10 side bet)` : `Sorted by <b>${th.textContent.trim()}</b> - not a side bet`;
   });
 });
 document.getElementById("trkSearch").addEventListener("input", renderTracker);
@@ -1457,7 +1457,7 @@ function renderLbRank(){
         <div class="v">£${(r.v%1?+r.v.toFixed(1):r.v)}</div>
       </div>`;
     }).join("")}
-    ${(function(){ const champ=(DATA.champion||"").trim(); const champOwners=champ?ownersOf(champ):[]; const pt=POT_SERIES[i]||0; return `<div class="lb-row potrow"><div class="pos">\u{1F3C6}</div><div><div class="nm">Champion's Bonus</div><div class="bets">${champ&&champOwners.length? champ+" won — to "+champOwners.join(" & ") : "held for the tournament winner's owner"}</div></div><div class="v">£${pt}</div></div>`; })()}`;
+    ${(function(){ const champ=(DATA.champion||"").trim(); const champOwners=champ?ownersOf(champ):[]; const pt=POT_SERIES[i]||0; return `<div class="lb-row potrow"><div class="pos">\u{1F3C6}</div><div><div class="nm">Champion's Bonus</div><div class="bets">${champ&&champOwners.length? champ+" won - to "+champOwners.join(" & ") : "held for the tournament winner's owner"}</div></div><div class="v">£${pt}</div></div>`; })()}`;
 }
 
 document.getElementById("lbShowAll").addEventListener("click",()=>{
