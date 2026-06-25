@@ -23,8 +23,8 @@ Anthropic's cloud on a schedule (no laptop needed).
    also recaps the whole night and writes the WhatsApp message (MESSAGE GATE). Most slots find nothing new
    and make no commit, so it's cheap. (If your routine reads cron in UK/BST rather than UTC, use
    `15 0,8,18-22/2 * * *` instead. The message gate keys off UK wall-clock either way.) Note: the **08:15 BST
-   run is the slot that may write the WhatsApp digest** — but ONLY on Mondays and Fridays (see MESSAGE
-   GATE); on other mornings that run just refreshes the board. If you want a retry in case the Mon/Fri
+   run is the slot that may write the WhatsApp digest** — but ONLY on Fridays (see MESSAGE
+   GATE); on other mornings that run just refreshes the board. If you want a retry in case the Friday
    run fails, add a 10:15 BST run: `15 7,9,17-23/2 * * *`.
 4. **Push permissions:** allow the routine to push to `main` (GitHub Pages serves `main`). If the
    routine is locked to `claude/…` branches, instead point GitHub Pages at that branch, or add an
@@ -159,7 +159,7 @@ The 32 knockout ties (Round of 32 -> Final) are pre-loaded with their `id` (ESPN
 - NEVER change `id`, `r`, `date`, `time`, `venue` or `span`. Knockout games do NOT feed the side bets
   (those stay group-stage only) — this is display-only bracket data.
 
-# PROCEDURE (board refreshes on the schedule above; WhatsApp digest on Mon & Fri at 08:15)
+# PROCEDURE (board refreshes on the schedule above; WhatsApp digest on Fri at 08:15)
 1. Read dashboard.html; find `recentScores: [` and `fixtures: [`.
 
 2. EVERY RUN — refresh the board:
@@ -177,26 +177,29 @@ The 32 knockout ties (Round of 32 -> Final) are pre-loaded with their `id` (ESPN
       `KNOCKOUTS` array (see "# KNOCKOUT STAGE" below): fill the real team names, and FT scores, into the
       slots whose feeders are now decided. Include any changes in the same board-update commit.
 
-3. MESSAGE GATE — the WhatsApp digest goes out TWICE A WEEK, on MONDAY and FRIDAY only. Write it this run
+3. MESSAGE GATE — the WhatsApp digest goes out ONCE A WEEK, on FRIDAY only. Write it this run
    only if ALL of:
-   - today (UK, Europe/London) is MONDAY or FRIDAY, AND
+   - today (UK, Europe/London) is FRIDAY, AND
    - the current UK time is 08:00 or later, AND
    - `whatsapp/{today-UK-date}.txt` does NOT already exist in the repo.
-   On any other day — or any earlier run on a Mon/Fri — do NOT write a message (the board still refreshes
+   On any other day — or any earlier run on a Friday — do NOT write a message (the board still refreshes
    as normal); just report "board updated; digest not due / already sent". This yields exactly ONE digest
-   each Monday and Friday: the first run at/after 08:00 that day.
+   each Friday: the first run at/after 08:00 that day.
 
-4. Build the digest (recap only) covering EVERYTHING SINCE THE PREVIOUS DIGEST — this can span
-   several days (e.g. a Monday digest covers Fri/Sat/Sun). Find what to recap without memory: read the
+4. Build the digest (recap only) covering EVERYTHING SINCE THE PREVIOUS DIGEST — this spans the
+   whole week (a Friday digest covers the previous Sat through Fri). Find what to recap without memory: read the
    existing `whatsapp/*.txt` files, collect the (date + home + away) of every match already posted in any
    of them, and set R = all FULL-TIME matches in recentScores that are NOT in that already-posted set.
    That is "everything since the last digest", and it can never double-report a match.
    - BEFORE/AFTER without memory: compute the £ money table and the Champion's Bonus TWICE — once from ALL
      recentScores (AFTER), once EXCLUDING set R (BEFORE). The diff is what changed over the whole period
      since the last digest (leaders won/lost, who climbed the money table).
-   - Content: recap the results in R GROUPED BY DAY (a dated sub-header per day, newest day first), then the
-     Movers (ONLY the punters who newly CLAIMED a bet this period — see the Movers rule below), then the
-     current money standings. There is NO fixtures preview / "on today" section.
+   - Content: a SINGLE summary line stating how many games in R were played this week (NO day-by-day
+     results list — a full week of fixtures is too long for a phone; the live board carries every score),
+     then the Movers (ONLY the punters who newly CLAIMED a bet this period — see the Movers rule below),
+     then the current money standings. There is NO fixtures preview / "on today" section and NO detailed
+     results recap. The BEFORE/AFTER money + bonus diff below still uses the FULL set R, so the movers and
+     standings always reflect EVERY change since the last digest even though the results aren't listed.
    - Write `whatsapp/{today-UK-date}.txt` and commit it to `main` per PUSH METHOD, message
      "Digest: {date}". If dashboard.html also changed this run, push both in one commit.
 
@@ -220,10 +223,11 @@ side-bet cards are green, and the contested/unassigned cards are gold and feed t
 CO-OWNED TEAMS — Japan = Leo & Tom, Curacao = Jamie & Brownout. Whenever you credit a co-owned team, name
 and split between both owners.
 
-# WHATSAPP SUMMARY (paste-ready, entertaining) — the twice-weekly Mon/Fri digest
-A recap of every game since the previous digest (this can span several days — e.g. a weekend), the money
-swings they caused (with metrics), and the current standings. It reads as a "here's where we're at"
-catch-up. There is NO fixtures preview / "on today" section.
+# WHATSAPP SUMMARY (paste-ready, entertaining) — the weekly Friday digest
+A weekly "here's where we're at" catch-up covering everything since the previous Friday digest: the money
+swings (with metrics) and the current standings. It LEADS with a one-line count of games played this week
+(NO detailed results list — a week of fixtures is too long for a phone; the live board has every score),
+then Movers, then the money table. There is NO fixtures preview / "on today" section and NO results recap.
 
 Rules:
 - WhatsApp formatting: wrap text in *single asterisks* to BOLD it (WhatsApp renders *text* as bold). Bold
@@ -259,12 +263,9 @@ Rules:
 
 Template (drop any empty section):
 
-*🏆 WC2026 SWEEPSTAKE — {Friday 12 June}*
+*🏆 WC2026 SWEEPSTAKE — {Friday 26 June}*
 
-*📋 Results since last update*
-{newest day, e.g. Sunday}
-{home flag} {Home} {hs}-{as} {Away} {away flag}
-...
+*📋 This week* — {n} games played since last Friday, full scores on the board 👇
 {one short banter line}
 
 *💥 Movers*
@@ -318,7 +319,7 @@ run output for you to copy). Ask and I'll build the Actions workflow.
 ## 3. Notes
 
 - **Cadence:** board refreshes every 2 hours through the evening, then a single 08:15 BST run
-  (`15 7,17-23/2 * * *`); the WhatsApp digest is written twice a week (Mon & Fri) by the 08:15 run (MESSAGE GATE). The
+  (`15 7,17-23/2 * * *`); the WhatsApp digest is written once a week (Fri) by the 08:15 run (MESSAGE GATE). The
   evening cadence keeps the live board fresh while games are being watched; after midnight there are no
   runs, so overnight games (kickoffs as late as 05:00 BST) are caught and recapped by the morning run. The
   gate means just one morning message, no chat spam. Most runs find nothing new and make no commit, so it
@@ -363,6 +364,4 @@ If steps 2-3 pass on a friendly date, the live World Cup runs will behave the sa
 ## Alternative (no AI, deterministic)
 If you'd rather not spend tokens per run, the same job can be done by a **GitHub Actions** cron workflow
 running a small Node script (fetch ESPN → parse → update the file → commit). It can run more frequently
-and costs nothing, but it's fixed logic with no judgement for edge cases. Say the word and
-I'll build that version instead.
-                                                                                                                                                                                                                                                                                                                      
+and costs nothing, bu
