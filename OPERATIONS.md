@@ -247,7 +247,7 @@ Rules:
   Seeing Red = red cards · Wrong Net = own goals · Spot-Kick Magnet = penalties conceded ·
   Corner Shop = corners won · The Hatchet Men = fouls · The Wall = clean sheets ·
   Aerial Threat = headed goals · Super Sub = sub goals · Tiki-Taka = average possession % ·
-  Shooting Gallery = shots faced · The Hammering = goal difference (GD) · Off Like a Rocket = goal minute ·
+  Shooting Gallery = shots faced · The Hammering = scoreline/margin · Off Like a Rocket = goal minute ·
   Fergie Time = goal minute · Comeback Kings = goals overturned · Smash & Grab = winning possession % ·
   All Sizzle No Steak = shots per goal · Total Domination = highest match possession %.
   Good: "Corner Shop: now Brazil (Sam) on 10 corners, their 4-0 v Haiti did it."
@@ -364,4 +364,4 @@ If steps 2-3 pass on a friendly date, the live World Cup runs will behave the sa
 ## Alternative (no AI, deterministic)
 If you'd rather not spend tokens per run, the same job can be done by a **GitHub Actions** cron workflow
 running a small Node script (fetch ESPN → parse → update the file → commit). It can run more frequently
-and costs nothing
+and costs nothing, bu
