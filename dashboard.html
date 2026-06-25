@@ -781,7 +781,7 @@ function heaviestDefeat(){
   if(margin===0) return null;
   const rows=DATA.recentScores.filter(s=>Math.abs(s.hs-s.as)===margin);
   const teams=[...new Set(rows.map(s=>s.hs<s.as?s.home:s.away))]; const row=rows[0];
-  return {team:teams[0], value:`+${margin}`, game:gameStr(row), teams};
+  return {team:teams[0], value:`-${margin} GD`, game:gameStr(row), teams};
 }
 function avgPossLeader(){
   let val=0; Object.entries(teamAgg).forEach(([t,a])=>{ if(a.played>0){ const av=a.posSum/a.played; if(av>val) val=av; } });
@@ -1492,4 +1492,4 @@ themeBtn.addEventListener("click",()=>{
 </script>
 </body>
 </html>
-                                           
+                                        
