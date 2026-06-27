@@ -1033,7 +1033,7 @@ if(fh){
   let includePlayed = false;
   function renderFixtures(){
     const q = fixQ ? fixQ.value : '';
-    { const kh=document.getElementById("knockoutsHost"); if(kh) kh.style.display = ""; } renderKnockouts(q);
+    { const kh=document.getElementById("knockoutsHost"); if(kh) kh.style.display = ""; } if(window.__koReady) renderKnockouts(q);
     if(fixClr) fixClr.style.display = q ? 'block' : 'none';
     let pool = upcoming.map(f=>({o:f, played:false}));
     if(includePlayed) pool = pool.concat(DATA.recentScores.map(s=>({o:s, played:true})));
@@ -1125,7 +1125,7 @@ function renderKnockouts(q){
   if(open) html+='</div></div>';
   host.innerHTML='<div class="ko-sec">'+html+'</div>';
 }
-renderKnockouts();
+renderKnockouts(); window.__koReady=true;
 
 const ps = document.getElementById("potstrip");
 const totalGames = DATA.recentScores.length;
