@@ -395,7 +395,7 @@
   .noresult{color:var(--muted); font-size:13px; padding:14px 2px}
   /* ===== knockout placeholder section ===== */
   .ko-sec{margin-top:34px; padding-top:20px; border-top:2px solid var(--line)}
-  .ko-title{font-family:"Anton"; font-weight:400; letter-spacing:1px; text-transform:uppercase; font-size:22px; color:var(--gold); margin:0 0 4px}
+  .ko-title{font-family:"Anton"; font-weight:400; letter-spacing:.5px; text-transform:uppercase; font-size:26px; color:var(--gold); margin:0 0 4px}
   .ko-note{font-size:12px; color:var(--muted); margin-bottom:18px}
   .ko-round{display:flex; align-items:center; gap:12px; margin:26px 2px 12px}
   .ko-round h3{font-family:"Anton"; font-weight:400; letter-spacing:.8px; text-transform:uppercase; font-size:17px; color:var(--ink); margin:0; white-space:nowrap}
@@ -1033,7 +1033,7 @@ if(fh){
   let includePlayed = false;
   function renderFixtures(){
     const q = fixQ ? fixQ.value : '';
-    { const kh=document.getElementById("knockoutsHost"); if(kh) kh.style.display = q ? "none" : ""; }
+    { const kh=document.getElementById("knockoutsHost"); if(kh) kh.style.display = ""; } renderKnockouts(q);
     if(fixClr) fixClr.style.display = q ? 'block' : 'none';
     let pool = upcoming.map(f=>({o:f, played:false}));
     if(includePlayed) pool = pool.concat(DATA.recentScores.map(s=>({o:s, played:true})));
@@ -1103,9 +1103,11 @@ const KNOCKOUTS = [
  {id:760516, r:"Third-place play-off",span:"18 Jul",date:"18 Jul",time:"22:00",h:"Loser SF-1",a:"Loser SF-2",v:"MIAMI GARDENS, USA"},
  {id:760517, r:"Final",span:"19 Jul",date:"19 Jul",time:"20:00",h:"Winner SF-1",a:"Winner SF-2",v:"EAST RUTHERFORD, USA"},
 ];
-function renderKnockouts(){
+function renderKnockouts(q){
   const host=document.getElementById("knockoutsHost"); if(!host) return;
+  q=(q||'').toLowerCase().trim();
   const isSlot=t=>/^(Winner|Runner-up|Loser|3rd)\b/.test(t);
+  const koMatch=k=>{ if(!q) return true; const owners=[...(isSlot(k.h)?[]:ownersOf(k.h)), ...(isSlot(k.a)?[]:ownersOf(k.a))].join(' '); const hay=[k.h,k.a,k.r,k.v,k.date,owners].join(' ').toLowerCase(); return q.split(/\s+/).every(tok=>hay.includes(tok)); };
   const koSide=(t,cls)=>{
     if(isSlot(t)) return `<div class="${cls}"><span class="own"><span class="combopill" style="visibility:hidden">x<span class="r">#0</span></span></span><span class="tm koslot">${t}</span><span class="rkline" style="visibility:hidden"><span class="w">FIFA</span>#0</span></div>`;
     const own=ownersRanked(t);
@@ -1115,9 +1117,11 @@ function renderKnockouts(){
     ? `<div class="sc"><span class="${k.hs>k.as?'winner':''}">${k.hs}</span><span class="d">–</span><span class="${k.as>k.hs?'winner':''}">${k.as}</span></div>`
     : `<div class="sc"><span class="ko">${k.time||'v'}</span></div>`;
   const card=k=>`<div class="score fixture"><div class="gp">${k.date||''}</div>${koSide(k.h,'home')}${koMid(k)}${koSide(k.a,'away')}${k.v?`<span class="loc">${k.v}</span>`:''}</div>`;
+  const list=KNOCKOUTS.filter(koMatch);
+  if(!list.length){ host.innerHTML=''; return; }
   let html='<div class="ko-title">Knockout stage</div><div class="ko-note">All times UK (BST). Teams are confirmed as the tournament progresses.</div>';
   let cur=''; let open=false;
-  KNOCKOUTS.forEach(k=>{ if(k.r!==cur){ if(open) html+='</div></div>'; cur=k.r; const n=KNOCKOUTS.filter(x=>x.r===k.r).length; html+=`<div class="matchday"><div class="md-head"><span class="md-date">${k.r}</span><span class="md-meta">${n} ${n===1?'tie':'ties'}</span>${k.span?`<span class="md-pill ko-span">${k.span}</span>`:''}</div><div class="scores">`; open=true; } html+=card(k); });
+  list.forEach(k=>{ if(k.r!==cur){ if(open) html+='</div></div>'; cur=k.r; const n=list.filter(x=>x.r===k.r).length; html+=`<div class="matchday"><div class="md-head"><span class="md-date">${k.r}</span><span class="md-meta">${n} ${n===1?'tie':'ties'}</span>${k.span?`<span class="md-pill ko-span">${k.span}</span>`:''}</div><div class="scores">`; open=true; } html+=card(k); });
   if(open) html+='</div></div>';
   host.innerHTML='<div class="ko-sec">'+html+'</div>';
 }
