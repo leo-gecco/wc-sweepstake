@@ -300,7 +300,9 @@ Template (drop any empty section):
 
 # DO NOT
 - Do not change the ALLOC draw, the sideBets list, or any rendering/logic. You may only touch:
-  `recentScores` (add rows), `fixtures` (remove played games), `lastUpdated`, and `whatsapp/{date}.txt`.
+  `recentScores` (add rows), `fixtures` (remove played games), `KNOCKOUTS` (fill in `h`/`a` team names and,
+  when a tie is full-time, `hs`/`as` — never touch `id`/`r`/`date`/`time`/`venue`/`span`), `lastUpdated`,
+  and `whatsapp/{date}.txt`.
 - Do not write more than one `whatsapp/{date}.txt` per UK day (the MESSAGE GATE enforces this).
 - Do not add OR partially update a match that is not FULL-TIME (live, half-time, or scheduled). Wait until
   the summary status is final ("post"/completed) — see ONLY-WHEN-FINISHED above.
@@ -356,5 +358,4 @@ Two things caused trouble in manual testing; both are handled by the routine, no
 - **Right date, automatically.** The routine derives yesterday/today (UTC) from its schedule — you never
   type a date. It fetches a 2-day window and dedupes, so late-finishing games and timezone edges are
   caught on the next run.
-- **Right data, via the summary endpoint.** The scoreboard finds the fixtures; the summary endpoint gives
-  the real completed stats (see DATA SOURCE). This is the fix for "the game looked unp
+- **Right data, via the summary endpoint.** The scor
