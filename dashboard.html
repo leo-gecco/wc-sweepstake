@@ -710,6 +710,21 @@ ALLOC.forEach(([nm,teams])=>teams.forEach(([t,g,r])=>{ TEAM_RANK[t.toLowerCase()
 TEAM_RANK["usa"] = TEAM_RANK["united states"];
 function rankOfTeam(team){ return TEAM_RANK[(team||"").toLowerCase()]; }
 function fifaLine(team){ const r=rankOfTeam(team); if(r==null) return ''; const c=r<=10?'rk-el':r>=65?'rk-mn':'rk-md'; return `<span class="rkline ${c}"><span class="w">FIFA</span>#${r}</span>`; }
+const VENUE_FULL = {
+  "ARLINGTON, USA":"ARLINGTON, TEXAS, USA",
+  "ATLANTA, USA":"ATLANTA, GEORGIA, USA",
+  "EAST RUTHERFORD, USA":"EAST RUTHERFORD, NEW JERSEY, USA",
+  "FOXBOROUGH, USA":"FOXBOROUGH, MASSACHUSETTS, USA",
+  "HOUSTON, USA":"HOUSTON, TEXAS, USA",
+  "INGLEWOOD, USA":"INGLEWOOD, CALIFORNIA, USA",
+  "KANSAS CITY, USA":"KANSAS CITY, MISSOURI, USA",
+  "MIAMI GARDENS, USA":"MIAMI GARDENS, FLORIDA, USA",
+  "PHILADELPHIA, USA":"PHILADELPHIA, PENNSYLVANIA, USA",
+  "SANTA CLARA, USA":"SANTA CLARA, CALIFORNIA, USA",
+  "SEATTLE, USA":"SEATTLE, WASHINGTON, USA",
+  "GUADALUPE, MEXICO":"GUADALUPE, MONTERREY, MEXICO"
+};
+function venueLabel(v){ return (v && VENUE_FULL[v]) || v || ''; }
 function ownersOf(team){ return TEAM_OWNERS[(team||"").toLowerCase()] || []; }
 function ownerOf(team){ const o=ownersOf(team); return o.length? o[0] : null; }
 function ownLabel(team){ const o=ownersOf(team); return o.length? o.join(" & ") : ""; }
@@ -969,7 +984,7 @@ if(DATA.recentScores.length){
             <div class="home ${hWin?'winner':drw?'draw':''}">${hOwn?`<span class="own">${hOwn}</span>`:''}<span class="tm">${flagOf(s.home)}${s.home}</span>${fifaLine(s.home)}</div>
             <div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">–</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div>
             <div class="away ${aWin?'winner':drw?'draw':''}">${aOwn?`<span class="own">${aOwn}</span>`:''}<span class="tm">${flagOf(s.away)}${s.away}</span>${fifaLine(s.away)}</div>
-            ${s.venue?`<span class="loc">${s.venue}</span>`:''}
+            ${s.venue?`<span class="loc">${venueLabel(s.venue)}</span>`:''}
             ${evStrip}
           </div>`;
         }).join("")}
@@ -998,7 +1013,7 @@ if(fh){
               <div class="home">${hOwn?`<span class="own">${hOwn}</span>`:''}<span class="tm">${flagOf(f.home)}${f.home}</span>${fifaLine(f.home)}</div>
               <div class="sc"><span class="ko">${f.time||'v'}</span></div>
               <div class="away">${aOwn?`<span class="own">${aOwn}</span>`:''}<span class="tm">${flagOf(f.away)}${f.away}</span>${fifaLine(f.away)}</div>
-              ${f.venue?`<span class="loc">${f.venue}</span>`:''}
+              ${f.venue?`<span class="loc">${venueLabel(f.venue)}</span>`:''}
             </div>`;
   };
   const playedCard = (s)=>{
@@ -1020,14 +1035,14 @@ if(fh){
               <div class="home ${hWin?'winner':drw?'draw':''}">${hOwn?`<span class="own">${hOwn}</span>`:''}<span class="tm">${flagOf(s.home)}${s.home}</span>${fifaLine(s.home)}</div>
               <div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">\u2013</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div>
               <div class="away ${aWin?'winner':drw?'draw':''}">${aOwn?`<span class="own">${aOwn}</span>`:''}<span class="tm">${flagOf(s.away)}${s.away}</span>${fifaLine(s.away)}</div>
-              ${s.venue?`<span class="loc">${s.venue}</span>`:''}
+              ${s.venue?`<span class="loc">${venueLabel(s.venue)}</span>`:''}
               ${strip}
             </div>`;
   };
   const fixMatches = (o,q)=>{
     if(!q) return true; q=q.toLowerCase().trim();
     const owners=[...ownersOf(o.home),...ownersOf(o.away)].join(' ').toLowerCase();
-    const hay=[o.home,o.away,groupLabel(o.group),o.group,owners,o.date].join(' ').toLowerCase();
+    const hay=[o.home,o.away,groupLabel(o.group),o.group,owners,o.date,venueLabel(o.venue)].join(' ').toLowerCase();
     return q.split(/\s+/).every(tok=>hay.includes(tok));
   };
   let includePlayed = false;
@@ -1107,7 +1122,7 @@ function renderKnockouts(q){
   const host=document.getElementById("knockoutsHost"); if(!host) return;
   q=(q||'').toLowerCase().trim();
   const isSlot=t=>/^(Winner|Runner-up|Loser|3rd)\b/.test(t);
-  const koMatch=k=>{ if(!q) return true; const owners=[...(isSlot(k.h)?[]:ownersOf(k.h)), ...(isSlot(k.a)?[]:ownersOf(k.a))].join(' '); const hay=[k.h,k.a,k.r,k.v,k.date,owners].join(' ').toLowerCase(); return q.split(/\s+/).every(tok=>hay.includes(tok)); };
+  const koMatch=k=>{ if(!q) return true; const owners=[...(isSlot(k.h)?[]:ownersOf(k.h)), ...(isSlot(k.a)?[]:ownersOf(k.a))].join(' '); const hay=[k.h,k.a,k.r,venueLabel(k.v),k.date,owners].join(' ').toLowerCase(); return q.split(/\s+/).every(tok=>hay.includes(tok)); };
   const koSide=(t,cls)=>{
     if(isSlot(t)) return `<div class="${cls}"><span class="own"><span class="combopill" style="visibility:hidden">x<span class="r">#0</span></span></span><span class="tm koslot">${t}</span><span class="rkline" style="visibility:hidden"><span class="w">FIFA</span>#0</span></div>`;
     const own=ownersRanked(t);
@@ -1116,7 +1131,7 @@ function renderKnockouts(q){
   const koMid=k=> (k.hs!=null&&k.as!=null)
     ? `<div class="sc"><span class="${k.hs>k.as?'winner':''}">${k.hs}</span><span class="d">–</span><span class="${k.as>k.hs?'winner':''}">${k.as}</span></div>`
     : `<div class="sc"><span class="ko">${k.time||'v'}</span></div>`;
-  const card=k=>`<div class="score fixture"><div class="gp">${k.date||''}</div>${koSide(k.h,'home')}${koMid(k)}${koSide(k.a,'away')}${k.v?`<span class="loc">${k.v}</span>`:''}</div>`;
+  const card=k=>`<div class="score fixture"><div class="gp">${k.date||''}</div>${koSide(k.h,'home')}${koMid(k)}${koSide(k.a,'away')}${k.v?`<span class="loc">${venueLabel(k.v)}</span>`:''}</div>`;
   const list=KNOCKOUTS.filter(koMatch);
   if(!list.length){ host.innerHTML=''; return; }
   let html='<div class="ko-title">Knockout stage</div><div class="ko-note">All times UK (BST). Teams are confirmed as the tournament progresses.</div>';
