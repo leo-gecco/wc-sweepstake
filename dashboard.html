@@ -345,6 +345,16 @@
   #fixturesHost .score.fixture .home, #fixturesHost .score.fixture .away{padding-bottom:0}
   #fixturesHost .score.fixture .gp{margin-top:0; margin-bottom:1px}
   #fixturesHost .score.fixture .loc{margin-top:7px}
+  /* knockout cards reuse the group-stage fixture layout exactly */
+  #knockoutsHost .score .home, #knockoutsHost .score .away{gap:0; padding-bottom:0; justify-self:center}
+  #knockoutsHost .score .own{line-height:1; margin-bottom:8px; align-self:flex-start}
+  #knockoutsHost .score .tm{line-height:1.05; margin-bottom:8px}
+  #knockoutsHost .score .rkline{margin-bottom:0; align-self:flex-end}
+  #knockoutsHost .score.fixture .gp{margin-top:0; margin-bottom:1px}
+  #knockoutsHost .score.fixture .loc{margin-top:7px}
+  #knockoutsHost .score{align-content:start}
+  #knockoutsHost .score .tm.koslot{color:var(--muted); font-weight:800}
+  .md-pill.ko-span{background:rgba(242,193,78,.12); color:var(--gold); border-color:rgba(242,193,78,.3)}
   /* played-game cards inside fixtures search share the Latest-Scores footer alignment */
   #fixturesHost .score{align-content:start}
   #fixturesHost .events{min-height:20px}
@@ -1096,13 +1106,19 @@ const KNOCKOUTS = [
 function renderKnockouts(){
   const host=document.getElementById("knockoutsHost"); if(!host) return;
   const isSlot=t=>/^(Winner|Runner-up|Loser|3rd)\b/.test(t);
-  const side=t=>{ if(isSlot(t)){ const m=t.match(/^(Winner|Runner-up|Loser|3rd)\s+(.*)$/); return `<div class="slot">${m?`${m[1]}<span class="sub">${m[2]}</span>`:t}</div>`; } return `<div class="slot team"><span class="tm">${flagOf(t)}${t}</span></div>`; };
-  const mid=k=> (k.hs!=null&&k.as!=null) ? `<div class="mid"><span class="ko-sc">${k.hs}\u2013${k.as}</span><span class="vs">FT</span></div>` : `<div class="mid">${k.time}<span class="vs">BST</span></div>`;
-  const card=k=>`<div class="koc"><div class="date">${k.date}</div>${side(k.h)}${mid(k)}${side(k.a)}<div class="loc">${k.v}</div></div>`;
+  const koSide=(t,cls)=>{
+    if(isSlot(t)) return `<div class="${cls}"><span class="own"><span class="combopill" style="visibility:hidden">x<span class="r">#0</span></span></span><span class="tm koslot">${t}</span><span class="rkline" style="visibility:hidden"><span class="w">FIFA</span>#0</span></div>`;
+    const own=ownersRanked(t);
+    return `<div class="${cls}">${own?`<span class="own">${own}</span>`:''}<span class="tm">${flagOf(t)}${t}</span>${fifaLine(t)}</div>`;
+  };
+  const koMid=k=> (k.hs!=null&&k.as!=null)
+    ? `<div class="sc"><span class="${k.hs>k.as?'winner':''}">${k.hs}</span><span class="d">\u2013</span><span class="${k.as>k.hs?'winner':''}">${k.as}</span></div>`
+    : `<div class="sc"><span class="ko">${k.time||'v'}</span></div>`;
+  const card=k=>`<div class="score fixture"><div class="gp">${k.date||''}</div>${koSide(k.h,'home')}${koMid(k)}${koSide(k.a,'away')}${k.v?`<span class="loc">${k.v}</span>`:''}</div>`;
   let html='<div class="ko-title">Knockout stage</div><div class="ko-note">All times UK (BST). Teams are confirmed as the tournament progresses.</div>';
   let cur=''; let open=false;
-  KNOCKOUTS.forEach(k=>{ if(k.r!==cur){ if(open) html+='</div>'; cur=k.r; html+=`<div class="ko-round"><h3>${k.r}</h3><div class="ln"></div><span class="span">${k.span||''}</span></div><div class="scores">`; open=true; } html+=card(k); });
-  if(open) html+='</div>';
+  KNOCKOUTS.forEach(k=>{ if(k.r!==cur){ if(open) html+='</div></div>'; cur=k.r; const n=KNOCKOUTS.filter(x=>x.r===k.r).length; html+=`<div class="matchday"><div class="md-head"><span class="md-date">${k.r}</span><span class="md-meta">${n} ${n===1?'tie':'ties'}</span>${k.span?`<span class="md-pill ko-span">${k.span}</span>`:''}</div><div class="scores">`; open=true; } html+=card(k); });
+  if(open) html+='</div></div>';
   host.innerHTML='<div class="ko-sec">'+html+'</div>';
 }
 renderKnockouts();
@@ -1457,38 +1473,4 @@ function renderLbRank(){
         <div class="v">£${(r.v%1?+r.v.toFixed(1):r.v)}</div>
       </div>`;
     }).join("")}
-    ${(function(){ const champ=(DATA.champion||"").trim(); const champOwners=champ?ownersOf(champ):[]; const pt=POT_SERIES[i]||0; return `<div class="lb-row potrow"><div class="pos">\u{1F3C6}</div><div><div class="nm">Champion's Bonus</div><div class="bets">${champ&&champOwners.length? champ+" won — to "+champOwners.join(" & ") : "held for the tournament winner's owner"}</div></div><div class="v">£${pt}</div></div>`; })()}`;
-}
-
-document.getElementById("lbShowAll").addEventListener("click",()=>{
-  if(lbChart) lbChart.data.datasets.forEach((d,i)=>lbChart.show(i));
-});
-document.getElementById("lbHideAll").addEventListener("click",()=>{
-  if(lbChart) lbChart.data.datasets.forEach((d,i)=>lbChart.hide(i));
-});
-
-document.querySelectorAll(".tab").forEach(t=>{
-  t.addEventListener("click",()=>{
-    if(t.dataset.tab==="lb"){
-      setTimeout(()=>{ makeChart(); renderLbRank(); }, 30);
-    }
-  });
-});
-
-/* Light / dark mode toggle */
-const themeBtn = document.getElementById("themeBtn");
-function applyTheme(mode){
-  document.documentElement.classList.toggle("light", mode==="light");
-  themeBtn.setAttribute("aria-checked", mode==="light");
-  try{ localStorage.setItem("wcSweepTheme", mode); }catch(e){}
-  if(lbChart) makeChart();   // rebuild chart so its colours match the theme
-}
-let savedTheme = "dark";
-try{ savedTheme = localStorage.getItem("wcSweepTheme") || "dark"; }catch(e){}
-applyTheme(savedTheme);
-themeBtn.addEventListener("click",()=>{
-  applyTheme(document.documentElement.classList.contains("light") ? "dark" : "light");
-});
-</script>
-</body>
-</html>
+    ${(function(){ const champ=(DATA.champion||"").trim(); const champOwners=champ?ownersOf(champ):[]; const pt=POT_SERIES[i]||0; return `<div class="lb-row potrow"><div class="pos">\u{1F3C6}</div><div><div class="nm">Champion's Bonus</div><div class="bets">${champ&&champOwners.length? champ+" won — to "+champOwners.join(" & ") : "held
