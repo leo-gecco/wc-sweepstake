@@ -157,9 +157,12 @@ wait for the group stage (or any round) to fully finish: ESPN fills each tie's c
 feeders resolve, so a tie fed by a completed group shows real teams while other groups are still playing. Fill
 those in straight away and leave the rest as slot labels.
 - For each entry, fetch `summary?event={id}` (or that date's scoreboard) and read the two competitors.
-- A competitor is REAL once its name does NOT start with: Group / Winner / Runner-up / Loser / 3rd /
-  Round of / Quarterfinal / Semifinal (ESPN's placeholders read like "Round of 16 1 Winner", "Quarterfinal 3
-  Winner", "Semifinal 1 Loser" — all caught by this rule). When real, set the entry's `h` (and/or `a`) to the
+- A competitor is REAL once its name does NOT start with any placeholder prefix: Group / Winner / Runner-up /
+  Loser / 3rd / Third Place / Round of / Quarterfinal / Semifinal — AND does not contain "Group " anywhere
+  (belt-and-braces). ESPN's real placeholders read like "Round of 16 1 Winner", "Quarterfinal 3 Winner",
+  "Semifinal 1 Loser", and crucially the R32 third-place slots read "Third Place Group C/E/F/H/I" (NOT
+  "3rd ..."), so the "Third Place" prefix and the "contains Group" guard are BOTH required — without them you
+  will wrongly write "Third Place Group ..." in as a team. When real, set the entry's `h` (and/or `a`) to the
   NORMALISED team name (same normalisation map above). Leave a side as its slot label while still undecided.
 - If the tie is FULL-TIME, also set integer `hs`/`as` on the entry; the card then shows flags + score.
 - NEVER change `id`, `r`, `date`, `time`, `venue` or `span`. Knockout games do NOT feed the side bets
@@ -354,10 +357,4 @@ Two things caused trouble in manual testing; both are handled by the routine, no
   type a date. It fetches a 2-day window and dedupes, so late-finishing games and timezone edges are
   caught on the next run.
 - **Right data, via the summary endpoint.** The scoreboard finds the fixtures; the summary endpoint gives
-  the real completed stats (see DATA SOURCE). This is the fix for "the game looked unplayed."
-
-**No setup change is needed** — same repo, schedule, and permissions. Only the prompt changed (the
-two-step scoreboard→summary flow). Re-paste the updated prompt if you already created the routine.
-
-**How to test it (before the World Cup starts):**
-1. Temporarily change the league slug in the prompt from `fifa.wo
+  the real completed stats (see DATA SOURCE). This is the fix for "the game looked unp
