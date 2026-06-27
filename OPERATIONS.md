@@ -61,7 +61,9 @@ You are the daily updater for a live World Cup 2026 sweepstake dashboard. Each r
 # STOP CONDITIONS
 - Only act on matches dated 2026-06-11 to 2026-07-19 (UTC).
 - If today is outside that window: do nothing, report "Outside tournament window."
-- If no new completed matches are found: do nothing, report "No new matches."
+- If no new completed matches are found: skip the board update, but STILL run the KNOCKOUT BRACKET refresh
+  (step 2h) first — ESPN can reveal a tie's teams on a run that adds no new result row. Only if that also
+  changes nothing, do nothing and report "No new matches."
 
 # DATA SOURCE — ESPN public API (no key, structured JSON). TWO STEPS.
 - The World Cup league slug is fifa.world. (Warm-up friendlies are under fifa.friendly — a different slug.)
@@ -150,11 +152,15 @@ L: England, Croatia, Ghana, Panama
 # KNOCKOUT STAGE (the `const KNOCKOUTS = [ ... ]` array in dashboard.html)
 The 32 knockout ties (Round of 32 -> Final) are pre-loaded with their `id` (ESPN game id), `r` (round),
 `date`, `time`, `venue`, and slot labels `h`/`a` such as "Winner A", "Runner-up B", "3rd C/E/F/H/I",
-"Winner R32-1". As teams are decided, populate them from ESPN:
+"Winner R32-1". Populate them from ESPN PROGRESSIVELY — tie by tie, each side as soon as it is known. Do NOT
+wait for the group stage (or any round) to fully finish: ESPN fills each tie's competitors the moment its own
+feeders resolve, so a tie fed by a completed group shows real teams while other groups are still playing. Fill
+those in straight away and leave the rest as slot labels.
 - For each entry, fetch `summary?event={id}` (or that date's scoreboard) and read the two competitors.
 - A competitor is REAL once its name does NOT start with: Group / Winner / Runner-up / Loser / 3rd /
-  Round of / Quarterfinal / Semifinal. When real, set the entry's `h` (and/or `a`) to the NORMALISED team
-  name (same normalisation map above). Leave a side as its slot label while still undecided.
+  Round of / Quarterfinal / Semifinal (ESPN's placeholders read like "Round of 16 1 Winner", "Quarterfinal 3
+  Winner", "Semifinal 1 Loser" — all caught by this rule). When real, set the entry's `h` (and/or `a`) to the
+  NORMALISED team name (same normalisation map above). Leave a side as its slot label while still undecided.
 - If the tie is FULL-TIME, also set integer `hs`/`as` on the entry; the card then shows flags + score.
 - NEVER change `id`, `r`, `date`, `time`, `venue` or `span`. Knockout games do NOT feed the side bets
   (those stay group-stage only) — this is display-only bracket data.
@@ -173,9 +179,13 @@ The 32 knockout ties (Round of 32 -> Final) are pre-loaded with their `id` (ESPN
    g. If anything changed, commit dashboard.html to `main` per PUSH METHOD above, message like
       "Board update: {UK datetime}". (If there were no new matches, nothing changed — skip the commit and
       continue to step 3.)
-   h. KNOCKOUT BRACKET: once the group stage is over — and again after each knockout round — refresh the
-      `KNOCKOUTS` array (see "# KNOCKOUT STAGE" below): fill the real team names, and FT scores, into the
-      slots whose feeders are now decided. Include any changes in the same board-update commit.
+   h. KNOCKOUT BRACKET (runs EVERY run — do NOT wait for the group stage or a round to finish): refresh the
+      `KNOCKOUTS` array (see "# KNOCKOUT STAGE" below). For every entry, read its ESPN competitors and fill in
+      each side the MOMENT ESPN gives a REAL team name, even if other ties (or other groups) are still
+      undecided. ESPN resolves ties piecemeal — a tie fed by a finished group fills in while later groups are
+      still playing — so populate tie-by-tie as the names appear; do not hold the whole bracket back. Also set
+      FT `hs`/`as` once a knockout tie is full-time. Commit any change in the same board-update commit, or in
+      its own "Bracket update: {UK datetime}" commit if nothing else changed this run.
 
 3. MESSAGE GATE — the WhatsApp digest goes out ONCE A WEEK, on FRIDAY only. Write it this run
    only if ALL of:
@@ -350,18 +360,4 @@ Two things caused trouble in manual testing; both are handled by the routine, no
 two-step scoreboard→summary flow). Re-paste the updated prompt if you already created the routine.
 
 **How to test it (before the World Cup starts):**
-1. Temporarily change the league slug in the prompt from `fifa.world` to `fifa.friendly` and point it at a
-   day with finished friendlies (e.g. 2026-06-10). Trigger the routine manually.
-2. Confirm the run: (a) it listed the day's games, (b) it opened the summary per game and pulled real
-   stats, (c) it wrote rows + updated lastUpdated, (d) it committed to `main` and the live site changed,
-   (e) it produced a sensible WhatsApp draft with metrics. Friendly teams won't be in your ALLOC draw, so
-   they'll show as "manual review" flags — that's expected and proves the name-matching guard works.
-3. Run it a SECOND time on the same date — it should add nothing (idempotency working).
-4. Revert the slug to `fifa.world`. On 11 June, do one more manual run as the real first-day check.
-
-If steps 2-3 pass on a friendly date, the live World Cup runs will behave the same.
-
-## Alternative (no AI, deterministic)
-If you'd rather not spend tokens per run, the same job can be done by a **GitHub Actions** cron workflow
-running a small Node script (fetch ESPN → parse → update the file → commit). It can run more frequently
-and costs nothing, bu
+1. Temporarily change the league slug in the prompt from `fifa.wo
