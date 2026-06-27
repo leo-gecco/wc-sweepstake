@@ -1112,7 +1112,7 @@ function renderKnockouts(){
     return `<div class="${cls}">${own?`<span class="own">${own}</span>`:''}<span class="tm">${flagOf(t)}${t}</span>${fifaLine(t)}</div>`;
   };
   const koMid=k=> (k.hs!=null&&k.as!=null)
-    ? `<div class="sc"><span class="${k.hs>k.as?'winner':''}">${k.hs}</span><span class="d">\u2013</span><span class="${k.as>k.hs?'winner':''}">${k.as}</span></div>`
+    ? `<div class="sc"><span class="${k.hs>k.as?'winner':''}">${k.hs}</span><span class="d">–</span><span class="${k.as>k.hs?'winner':''}">${k.as}</span></div>`
     : `<div class="sc"><span class="ko">${k.time||'v'}</span></div>`;
   const card=k=>`<div class="score fixture"><div class="gp">${k.date||''}</div>${koSide(k.h,'home')}${koMid(k)}${koSide(k.a,'away')}${k.v?`<span class="loc">${k.v}</span>`:''}</div>`;
   let html='<div class="ko-title">Knockout stage</div><div class="ko-note">All times UK (BST). Teams are confirmed as the tournament progresses.</div>';
@@ -1473,4 +1473,38 @@ function renderLbRank(){
         <div class="v">£${(r.v%1?+r.v.toFixed(1):r.v)}</div>
       </div>`;
     }).join("")}
-    ${(function(){ const champ=(DATA.champion||"").trim(); const champOwners=champ?ownersOf(champ):[]; const pt=POT_SERIES[i]||0; return `<div class="lb-row potrow"><div class="pos">\u{1F3C6}</div><div><div class="nm">Champion's Bonus</div><div class="bets">${champ&&champOwners.length? champ+" won — to "+champOwners.join(" & ") : "held
+    ${(function(){ const champ=(DATA.champion||"").trim(); const champOwners=champ?ownersOf(champ):[]; const pt=POT_SERIES[i]||0; return `<div class="lb-row potrow"><div class="pos">\u{1F3C6}</div><div><div class="nm">Champion's Bonus</div><div class="bets">${champ&&champOwners.length? champ+" won — to "+champOwners.join(" & ") : "held for the tournament winner's owner"}</div></div><div class="v">£${pt}</div></div>`; })()}`;
+}
+
+document.getElementById("lbShowAll").addEventListener("click",()=>{
+  if(lbChart) lbChart.data.datasets.forEach((d,i)=>lbChart.show(i));
+});
+document.getElementById("lbHideAll").addEventListener("click",()=>{
+  if(lbChart) lbChart.data.datasets.forEach((d,i)=>lbChart.hide(i));
+});
+
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    if(t.dataset.tab==="lb"){
+      setTimeout(()=>{ makeChart(); renderLbRank(); }, 30);
+    }
+  });
+});
+
+/* Light / dark mode toggle */
+const themeBtn = document.getElementById("themeBtn");
+function applyTheme(mode){
+  document.documentElement.classList.toggle("light", mode==="light");
+  themeBtn.setAttribute("aria-checked", mode==="light");
+  try{ localStorage.setItem("wcSweepTheme", mode); }catch(e){}
+  if(lbChart) makeChart();   // rebuild chart so its colours match the theme
+}
+let savedTheme = "dark";
+try{ savedTheme = localStorage.getItem("wcSweepTheme") || "dark"; }catch(e){}
+applyTheme(savedTheme);
+themeBtn.addEventListener("click",()=>{
+  applyTheme(document.documentElement.classList.contains("light") ? "dark" : "light");
+});
+</script>
+</body>
+</html>
