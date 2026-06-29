@@ -164,7 +164,12 @@ those in straight away and leave the rest as slot labels.
   "3rd ..."), so the "Third Place" prefix and the "contains Group" guard are BOTH required — without them you
   will wrongly write "Third Place Group ..." in as a team. When real, set the entry's `h` (and/or `a`) to the
   NORMALISED team name (same normalisation map above). Leave a side as its slot label while still undecided.
-- If the tie is FULL-TIME, also set integer `hs`/`as` on the entry; the card then shows flags + score.
+- If the tie is FULL-TIME, also set on the entry: integer `hs`/`as` (card shows flags + score); the card
+  events `yh`/`ya` (yellows), `rh`/`ra` (reds), `oh`/`oa` (own goals), `ph`/`pa` (penalties conceded by the
+  OTHER team) — extracted exactly like a group row; and `adv:"h"` or `adv:"a"` for the side that ADVANCED.
+  Set `adv` from ESPN's competitor `advance` flag (NOT from the score): a tie level after extra time is
+  decided on penalties, so `hs`/`as` alone can read as a draw — `advance:true` is the authoritative winner.
+  `adv` is what the Draw + Tracker use to mark eliminated teams, so it is required on every finished tie.
 - NEVER change `id`, `r`, `date`, `time`, `venue` or `span`. Knockout games do NOT feed the side bets
   (those stay group-stage only) — this is display-only bracket data.
 
@@ -301,7 +306,8 @@ Template (drop any empty section):
 # DO NOT
 - Do not change the ALLOC draw, the sideBets list, or any rendering/logic. You may only touch:
   `recentScores` (add rows), `fixtures` (remove played games), `KNOCKOUTS` (fill in `h`/`a` team names and,
-  when a tie is full-time, `hs`/`as` — never touch `id`/`r`/`date`/`time`/`venue`/`span`), `lastUpdated`,
+  when a tie is full-time, `hs`/`as`, the card events `yh`/`ya`/`rh`/`ra`/`oh`/`oa`/`ph`/`pa`, and `adv`
+  — never touch `id`/`r`/`date`/`time`/`venue`/`span`), `lastUpdated`,
   and `whatsapp/{date}.txt`.
 - Do not write more than one `whatsapp/{date}.txt` per UK day (the MESSAGE GATE enforces this).
 - Do not add OR partially update a match that is not FULL-TIME (live, half-time, or scheduled). Wait until
