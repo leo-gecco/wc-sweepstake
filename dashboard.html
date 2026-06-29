@@ -1062,7 +1062,7 @@ if(fh){
   let includePlayed = false;
   function renderFixtures(){
     const q = fixQ ? fixQ.value : '';
-    { const kh=document.getElementById("knockoutsHost"); if(kh) kh.style.display = ""; } if(window.__koReady) renderKnockouts(q);
+    { const kh=document.getElementById("knockoutsHost"); if(kh) kh.style.display = ""; } if(window.__koReady) renderKnockouts(q, includePlayed);
     if(fixClr) fixClr.style.display = q ? 'block' : 'none';
     let pool = upcoming.map(f=>({o:f, played:false}));
     if(includePlayed) pool = pool.concat(DATA.recentScores.map(s=>({o:s, played:true})));
@@ -1150,11 +1150,11 @@ function computeTeamStatus(){
 const TEAM_STATUS=computeTeamStatus();
 const STATUS_ACTIVE=Object.values(TEAM_STATUS).some(v=>v!=="in");
 function koStatusClass(t){ const v=TEAM_STATUS[t]; return (v&&v!=="in")?(" st-"+v):""; }
-function renderKnockouts(q){
+function renderKnockouts(q, includePlayed){
   const host=document.getElementById("knockoutsHost"); if(!host) return;
   q=(q||'').toLowerCase().trim();
   const isSlot=t=>/^(Winner|Runner-up|Loser|3rd)\b/.test(t);
-  const koMatch=k=>{ if(!q) return true; const owners=[...(isSlot(k.h)?[]:ownersOf(k.h)), ...(isSlot(k.a)?[]:ownersOf(k.a))].join(' '); const hay=[k.h,k.a,k.r,venueLabel(k.v),k.date,owners].join(' ').toLowerCase(); return q.split(/\s+/).every(tok=>hay.includes(tok)); };
+  const koMatch=k=>{ if(!includePlayed && k.hs!=null && k.as!=null) return false; if(!q) return true; const owners=[...(isSlot(k.h)?[]:ownersOf(k.h)), ...(isSlot(k.a)?[]:ownersOf(k.a))].join(' '); const hay=[k.h,k.a,k.r,venueLabel(k.v),k.date,owners].join(' ').toLowerCase(); return q.split(/\s+/).every(tok=>hay.includes(tok)); };
   const koSide=(t,cls,wcls)=>{
     if(isSlot(t)) return `<div class="${cls}"><span class="own"><span class="combopill" style="visibility:hidden">x<span class="r">#0</span></span></span><span class="tm koslot">${t}</span><span class="rkline" style="visibility:hidden"><span class="w">FIFA</span>#0</span></div>`;
     const own=ownersRanked(t);
