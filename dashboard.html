@@ -197,7 +197,7 @@
   .empty{background:var(--panel); border:1px dashed var(--line); border-radius:14px; padding:28px; text-align:center; color:var(--muted)}
   .empty b{color:var(--ink)}
   .grid18{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
-  .pcard{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px 16px}
+  .pcard{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:14px 16px; overflow:hidden}
   .pcard .pn{font-family:"Archivo Black"; font-size:15px; margin-bottom:10px; display:flex; align-items:center; gap:8px}
   .pcard .pn .cnt{font-family:"Hanken Grotesk"; font-size:11px; color:var(--muted); font-weight:700;
     border:1px solid var(--line); border-radius:6px; padding:2px 6px}
@@ -209,15 +209,16 @@
   .team .nm{flex:1}
   .team .rk{font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums}
   .team .rk.elite{color:var(--gold)} .team .rk.minnow{color:var(--red)}
-  .team.st-out,.team.st-gold,.team.st-silver,.team.st-bronze{border-radius:8px; margin:2px -8px; padding:6px 8px}
-  .team.st-out{background:rgba(255,92,92,.13); border:1px solid rgba(255,92,92,.42)}
+  .team.st-out,.team.st-gold,.team.st-silver,.team.st-bronze{margin:0 -16px; padding:5px 16px; border-top-color:transparent}
+  .team.st-out{background:rgba(255,92,92,.13)} .team.st-out + .team.st-out{border-top:1px solid rgba(255,92,92,.22)}
   .team.st-out .nm{color:#ff9d9d} .team.st-out .rk{color:#d98a8a}
-  .team.st-gold{background:rgba(242,193,78,.15); border:1px solid rgba(242,193,78,.55)}
-  .team.st-gold .nm{color:#f4cd6a}
-  .team.st-silver{background:rgba(201,210,218,.13); border:1px solid rgba(201,210,218,.45)}
-  .team.st-silver .nm{color:#d3dbe2}
-  .team.st-bronze{background:rgba(205,127,50,.15); border:1px solid rgba(205,127,50,.5)}
-  .team.st-bronze .nm{color:#e0a064}
+  .team.st-gold{background:rgba(242,193,78,.15)} .team.st-gold .nm{color:#f4cd6a}
+  .team.st-silver{background:rgba(201,210,218,.13)} .team.st-silver .nm{color:#d3dbe2}
+  .team.st-bronze{background:rgba(205,127,50,.15)} .team.st-bronze .nm{color:#e0a064}
+  html.light .team.st-out{background:rgba(220,59,59,.10)} html.light .team.st-out .nm{color:#c0392b} html.light .team.st-out .rk{color:#c0392b}
+  html.light .team.st-gold{background:rgba(176,125,18,.12)} html.light .team.st-gold .nm{color:#9c6c10}
+  html.light .team.st-silver{background:rgba(120,135,148,.13)} html.light .team.st-silver .nm{color:#56636e}
+  html.light .team.st-bronze{background:rgba(156,90,31,.12)} html.light .team.st-bronze .nm{color:#9c5a1f}
   .pcard .pn .pn-rk{margin-left:auto; font-family:"Hanken Grotesk",sans-serif; font-size:9.5px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:var(--muted)}
   .tabs{display:flex; gap:8px; margin-top:24px; border-bottom:1px solid var(--line); padding-bottom:0; overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; -webkit-overflow-scrolling:touch}
   .tabs::-webkit-scrollbar{display:none}
@@ -256,10 +257,10 @@
     display:inline-block; text-align:center}
   .trk-owner{color:var(--gold); font-weight:700; font-size:13.5px}
   .trk-owner.none{color:var(--muted); opacity:.5}
-  #trkBody tr.st-out td{background:rgba(255,92,92,.10)} #trkBody tr.st-out td:first-child{box-shadow:inset 3px 0 0 #ff5c5c} #trkBody tr.st-out .trk-team{color:#ff9d9d}
-  #trkBody tr.st-gold td{background:rgba(242,193,78,.13)} #trkBody tr.st-gold td:first-child{box-shadow:inset 3px 0 0 #f2c14e} #trkBody tr.st-gold .trk-team{color:#f4cd6a}
-  #trkBody tr.st-silver td{background:rgba(201,210,218,.12)} #trkBody tr.st-silver td:first-child{box-shadow:inset 3px 0 0 #c9d2da} #trkBody tr.st-silver .trk-team{color:#d3dbe2}
-  #trkBody tr.st-bronze td{background:rgba(205,127,50,.13)} #trkBody tr.st-bronze td:first-child{box-shadow:inset 3px 0 0 #cd7f32} #trkBody tr.st-bronze .trk-team{color:#e0a064}
+  #trkBody tr.st-out td:not(.lead){background:rgba(255,92,92,.10)} #trkBody tr.st-out td:first-child{box-shadow:inset 3px 0 0 #ff5c5c} #trkBody tr.st-out .trk-team{color:#ff9d9d}
+  #trkBody tr.st-gold td:not(.lead){background:rgba(242,193,78,.13)} #trkBody tr.st-gold td:first-child{box-shadow:inset 3px 0 0 #f2c14e} #trkBody tr.st-gold .trk-team{color:#f4cd6a}
+  #trkBody tr.st-silver td:not(.lead){background:rgba(201,210,218,.12)} #trkBody tr.st-silver td:first-child{box-shadow:inset 3px 0 0 #c9d2da} #trkBody tr.st-silver .trk-team{color:#d3dbe2}
+  #trkBody tr.st-bronze td:not(.lead){background:rgba(205,127,50,.13)} #trkBody tr.st-bronze td:first-child{box-shadow:inset 3px 0 0 #cd7f32} #trkBody tr.st-bronze .trk-team{color:#e0a064}
   .trk-num{text-align:center; font-variant-numeric:tabular-nums; font-weight:700}
   .trk-num.zero{color:var(--muted); opacity:.4}
   .trk-num.lead{background:rgba(19,217,122,.18); color:var(--green); border-radius:6px; position:relative}
@@ -1202,7 +1203,7 @@ ps.innerHTML = `
 
 document.getElementById("punters").innerHTML = ALLOC.map(([name,teams])=>`
   <div class="pcard">
-    <div class="pn">${name}<span class="cnt">${teams.length} teams${STATUS_ACTIVE?` \u00b7 ${teams.filter(x=>TEAM_STATUS[x[0]]!=="out").length} in`:``}</span><span class="pn-rk">FIFA rank</span></div>
+    <div class="pn">${name}<span class="cnt">${teams.length} teams</span><span class="pn-rk">FIFA rank</span></div>
     ${teams.map(([t,g,r])=>`
       <div class="team${koStatusClass(t)}">
         <span class="grp">${g}</span>
