@@ -164,14 +164,21 @@ those in straight away and leave the rest as slot labels.
   "3rd ..."), so the "Third Place" prefix and the "contains Group" guard are BOTH required — without them you
   will wrongly write "Third Place Group ..." in as a team. When real, set the entry's `h` (and/or `a`) to the
   NORMALISED team name (same normalisation map above). Leave a side as its slot label while still undecided.
-- If the tie is FULL-TIME, also set on the entry: integer `hs`/`as` (card shows flags + score); the card
-  events `yh`/`ya` (yellows), `rh`/`ra` (reds), `oh`/`oa` (own goals), `ph`/`pa` (penalties conceded by the
-  OTHER team) — extracted exactly like a group row; and `adv:"h"` or `adv:"a"` for the side that ADVANCED.
-  Set `adv` from ESPN's competitor `advance` flag (NOT from the score): a tie level after extra time is
-  decided on penalties, so `hs`/`as` alone can read as a draw — `advance:true` is the authoritative winner.
-  `adv` is what the Draw + Tracker use to mark eliminated teams, so it is required on every finished tie.
-- NEVER change `id`, `r`, `date`, `time`, `venue` or `span`. Knockout games do NOT feed the side bets
-  (those stay group-stage only) — this is display-only bracket data.
+- If the tie is FULL-TIME, extract the FULL stat set exactly like a group row and set it on the entry:
+  `hs`/`as`, `yh`/`ya`, `rh`/`ra`, `oh`/`oa`, `ph`/`pa`, `ch`/`ca`, `foh`/`foa`, `poh`/`poa`, `shh`/`sha`,
+  `hgh`/`hga`, `sgh`/`sga`, and `fg` (and `lw`/`cb` when they occur) — SAME fields and meaning as a group
+  result row. Knockout games NOW FEED THE SIDE BETS (the dashboard folds every finished knockout tie into
+  the same totals as group games), so the full stat set is required, not just cards.
+- Also set `adv:"h"` or `adv:"a"` for the side that ADVANCED, read from ESPN's competitor `advance` flag
+  (NOT from the score): a tie level after extra time is decided on penalties, so `hs`/`as` alone can read as
+  a draw — `advance:true` is the authoritative winner. `adv` drives the winner highlight and the Draw/Tracker
+  eliminated marking, so it is required on every finished tie.
+- If the tie was decided on a PENALTY SHOOTOUT, also set `psh`/`psa` = each side's shootout score (ESPN
+  competitor `shootoutScore`). Keep `hs`/`as` as the 90+ET score; the card shows the score then a small
+  "Pens X-Y" pill. Shootout goals do NOT count as goals/penalties for the side bets (only `hs`/`as` and the
+  in-play stats do).
+- NEVER change `id`, `r`, `date`, `time`, `venue` or `span`. (The bracket layout is fixed; you only fill in
+  teams, scores, the stat set, `adv`, and pens.)
 
 # PROCEDURE (board refreshes on the schedule above; WhatsApp digest on Fri at 08:15)
 1. Read dashboard.html; find `recentScores: [` and `fixtures: [`.
@@ -305,9 +312,9 @@ Template (drop any empty section):
 
 # DO NOT
 - Do not change the ALLOC draw, the sideBets list, or any rendering/logic. You may only touch:
-  `recentScores` (add rows), `fixtures` (remove played games), `KNOCKOUTS` (fill in `h`/`a` team names and,
-  when a tie is full-time, `hs`/`as`, the card events `yh`/`ya`/`rh`/`ra`/`oh`/`oa`/`ph`/`pa`, and `adv`
-  — never touch `id`/`r`/`date`/`time`/`venue`/`span`), `lastUpdated`,
+  `recentScores` (add rows), `fixtures` (remove played games), `KNOCKOUTS` (fill in `h`/`a` team names and, when a tie is full-time, the full stat set
+  `hs`/`as`/`yh`/`ya`/`rh`/`ra`/`oh`/`oa`/`ph`/`pa`/`ch`/`ca`/`foh`/`foa`/`poh`/`poa`/`shh`/`sha`/`hgh`/`hga`/`sgh`/`sga`,
+  plus `fg`/`lw`/`cb` as they occur, `adv`, and `psh`/`psa` for shootouts — never touch `id`/`r`/`date`/`time`/`venue`/`span`), `lastUpdated`,
   and `whatsapp/{date}.txt`.
 - Do not write more than one `whatsapp/{date}.txt` per UK day (the MESSAGE GATE enforces this).
 - Do not add OR partially update a match that is not FULL-TIME (live, half-time, or scheduled). Wait until
