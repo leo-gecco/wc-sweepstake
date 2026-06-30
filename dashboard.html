@@ -1106,7 +1106,7 @@ if(fh){
     const q = fixQ ? fixQ.value : '';
     const showKO = (fixFilter==='all' || fixFilter==='knockout');
     const koHost=document.getElementById("knockoutsHost"); if(koHost) koHost.style.display = showKO ? "" : "none";
-    if(showKO && window.__koReady) renderKnockouts(q, true);
+    if(showKO && window.__koReady) renderKnockouts(q, fixFilter==='knockout');
     if(fixClr) fixClr.style.display = q ? 'block' : 'none';
     const results = (fixFilter==='results');
     if(!(fixFilter==='all'||fixFilter==='group'||results)){ fh.innerHTML=''; if(fixCount) fixCount.textContent=''; return; }
