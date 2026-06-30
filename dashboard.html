@@ -1032,9 +1032,9 @@ if(DATA.recentScores.length){
           const evStrip = (hEv.length||aEv.length)? `<div class="events"><span class="evside">${hEv.join("")}</span><span class="evside ar">${aEv.join("")}</span></div>` : `<div class="events ev-empty"></div>`;
           return `
           <div class="score">
-            <div class="gp">${s.group? (/^group/i.test(s.group)?s.group:'Group '+s.group) : ''}</div>
+            <div class="gp">${s.group? (s.ko? s.group : (/^group/i.test(s.group)?s.group:'Group '+s.group)) : ''}</div>
             <div class="home ${hWin?'winner':drw?'draw':''}">${hOwn?`<span class="own">${hOwn}</span>`:''}<span class="tm">${flagOf(s.home)}${s.home}</span>${fifaLine(s.home)}</div>
-            <div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">–</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div>
+            ${s.psh!=null&&s.psa!=null ? `<div class="komid"><div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">–</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div><div class="kopen">Pens ${s.psh}<span class="dd">–</span><span class="${s.psa>s.psh?'pw':''}">${s.psa}</span></div></div>` : `<div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">–</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div>`}
             <div class="away ${aWin?'winner':drw?'draw':''}">${aOwn?`<span class="own">${aOwn}</span>`:''}<span class="tm">${flagOf(s.away)}${s.away}</span>${fifaLine(s.away)}</div>
             ${s.venue?`<span class="loc">${venueLabel(s.venue)}</span>`:''}
             ${evStrip}
