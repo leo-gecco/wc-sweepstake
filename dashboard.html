@@ -387,6 +387,10 @@
   .ptoggle.on .track{background:rgba(19,217,122,.25); border-color:var(--green-dim)}
   .ptoggle.on .knob{left:20px; background:var(--green)}
   .ptoggle.on{color:var(--ink)}
+  .fixpills{display:flex; gap:8px; flex-wrap:wrap}
+  .fpill{font-size:12.5px; font-weight:800; letter-spacing:.3px; padding:7px 14px; border-radius:999px; background:transparent; color:var(--muted); border:1px solid var(--line); cursor:pointer; user-select:none}
+  .fpill:hover{border-color:var(--green-dim)}
+  .fpill.on{color:var(--green); border-color:var(--green); background:rgba(19,217,122,.08)}
   .rk-el{color:var(--gold)} .rk-mn{color:var(--red)} .rk-md{color:var(--muted)}
   /* consistent results-card alignment regardless of YC/RC/PEN/OG: top-pack content, reserve a footer, divider only when events exist */
   #scoresHost .score{align-content:start}
@@ -485,7 +489,7 @@
   <div id="view-fix" class="view">
     <section class="sec" style="margin-top:30px">
       <div class="sec-h"><h2>Group-Stage Fixtures</h2><div class="ln"></div><div class="tag" id="fixTag">All times UK (BST)</div></div>
-      <div class="fixbar"><div class="fixsearch"><div class="box"><span class="ico">&#9906;</span><input id="fixQ" type="text" placeholder="Search team, group or owner&hellip;" autocomplete="off"><button class="clr" id="fixClr" type="button" aria-label="Clear">&times;</button></div></div><div class="ptoggle" id="fixPlayed" role="button" tabindex="0" aria-pressed="false"><span class="track"><span class="knob"></span></span><span>Include played games</span></div><span class="count" id="fixCount"></span></div>
+      <div class="fixbar"><div class="fixsearch"><div class="box"><span class="ico">&#9906;</span><input id="fixQ" type="text" placeholder="Search team, group or owner&hellip;" autocomplete="off"><button class="clr" id="fixClr" type="button" aria-label="Clear">&times;</button></div></div><div class="fixpills" id="fixPills"><span class="fpill on" data-f="all">All</span><span class="fpill" data-f="group">Group stage</span><span class="fpill" data-f="knockout">Knockout</span><span class="fpill" data-f="results">Recent results</span></div><span class="count" id="fixCount"></span></div>
       <div id="fixturesHost"></div>
       <div id="knockoutsHost"></div>
     </section>
@@ -1070,7 +1074,7 @@ if(fh){
   };
   const playedCard = (s)=>{
     const hOwn=ownersRanked(s.home),aOwn=ownersRanked(s.away);
-    const hWin=s.hs>s.as,aWin=s.as>s.hs,drw=s.hs===s.as;
+    const hWin=s.adv?s.adv==="h":s.hs>s.as,aWin=s.adv?s.adv==="a":s.as>s.hs,drw=!s.adv&&s.hs===s.as;
     const hEv=[],aEv=[];
     if(s.yh)hEv.push(`<span class="ev yc">${s.yh} YC</span>`);
     if(s.rh)hEv.push(`<span class="ev rc">${s.rh} RC</span>`);
@@ -1083,9 +1087,9 @@ if(fh){
     const strip=(hEv.length||aEv.length)?`<div class="events"><span class="evside">${hEv.join("")}</span><span class="evside ar">${aEv.join("")}</span></div>`:`<div class="events ev-empty"></div>`;
     return `
             <div class="score played">
-              <div class="gp">${groupLabel(s.group)}</div>
+              <div class="gp">${s.ko? s.group : groupLabel(s.group)}</div>
               <div class="home ${hWin?'winner':drw?'draw':''}">${hOwn?`<span class="own">${hOwn}</span>`:''}<span class="tm">${flagOf(s.home)}${s.home}</span>${fifaLine(s.home)}</div>
-              <div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">\u2013</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div>
+              ${s.psh!=null&&s.psa!=null ? `<div class="komid"><div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">\u2013</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div><div class="kopen">Pens ${s.psh}<span class="dd">\u2013</span><span class="${s.psa>s.psh?'pw':''}">${s.psa}</span></div></div>` : `<div class="sc"><span class="${hWin?'winner':drw?'draw':''}">${s.hs}</span><span class="d">\u2013</span><span class="${aWin?'winner':drw?'draw':''}">${s.as}</span></div>`}
               <div class="away ${aWin?'winner':drw?'draw':''}">${aOwn?`<span class="own">${aOwn}</span>`:''}<span class="tm">${flagOf(s.away)}${s.away}</span>${fifaLine(s.away)}</div>
               ${s.venue?`<span class="loc">${venueLabel(s.venue)}</span>`:''}
               ${strip}
@@ -1097,24 +1101,27 @@ if(fh){
     const hay=[o.home,o.away,groupLabel(o.group),o.group,owners,o.date,venueLabel(o.venue)].join(' ').toLowerCase();
     return q.split(/\s+/).every(tok=>hay.includes(tok));
   };
-  let includePlayed = false;
+  let fixFilter = 'all';
   function renderFixtures(){
     const q = fixQ ? fixQ.value : '';
-    { const kh=document.getElementById("knockoutsHost"); if(kh) kh.style.display = ""; } if(window.__koReady) renderKnockouts(q, includePlayed);
+    const showKO = (fixFilter==='all' || fixFilter==='knockout');
+    const koHost=document.getElementById("knockoutsHost"); if(koHost) koHost.style.display = showKO ? "" : "none";
+    if(showKO && window.__koReady) renderKnockouts(q, true);
     if(fixClr) fixClr.style.display = q ? 'block' : 'none';
-    let pool = upcoming.map(f=>({o:f, played:false}));
-    if(includePlayed) pool = pool.concat(DATA.recentScores.filter(s=>!s.ko).map(s=>({o:s, played:true})));
-    if(!pool.length){ fh.innerHTML = `<div class="empty">All group-stage games have been played.</div>`; if(fixCount) fixCount.textContent=''; return; }
+    const results = (fixFilter==='results');
+    if(!(fixFilter==='all'||fixFilter==='group'||results)){ fh.innerHTML=''; if(fixCount) fixCount.textContent=''; return; }
+    let pool = results ? DATA.recentScores.map(s=>({o:s, played:true})) : upcoming.map(f=>({o:f, played:false}));
+    if(!pool.length){ fh.innerHTML = (fixFilter==='all')?'':`<div class="empty">${results?'No results yet.':'All group-stage games have been played.'}</div>`; if(fixCount) fixCount.textContent=''; return; }
     const list = pool.filter(x=>fixMatches(x.o,q));
-    if(fixCount) fixCount.textContent = q ? `${list.length} of ${pool.length}` : (includePlayed?`${pool.length} games`:`${pool.length} fixtures`);
+    if(fixCount) fixCount.textContent = q ? `${list.length} of ${pool.length}` : `${pool.length} ${results?'results':'fixtures'}`;
     if(!list.length){ fh.innerHTML = `<div class="noresult">No games match &ldquo;<b>${q.replace(/</g,'&lt;')}</b>&rdquo;.</div>`; return; }
     const byF = []; const seenF = {};
     list.forEach(x=>{ const k=x.o.date||"TBC"; if(!(k in seenF)){ seenF[k]=byF.length; byF.push({date:k,list:[]}); } byF[seenF[k]].list.push(x); });
     byF.forEach(md=>md.list.sort((a,b)=>(a.o.time||"").localeCompare(b.o.time||"")));
-    byF.sort((a,b)=>dateKey(a.date)-dateKey(b.date));
+    byF.sort((a,b)=> results ? dateKey(b.date)-dateKey(a.date) : dateKey(a.date)-dateKey(b.date));
     fh.innerHTML = byF.map((md,i)=>{
       const allPlayed = md.list.every(x=>x.played);
-      const pill = allPlayed ? '<span class="md-pill ft">Full time</span>' : (i===0 && !q && !includePlayed ? '<span class="md-pill up">Next up</span>' : '');
+      const pill = allPlayed ? '<span class="md-pill ft">Full time</span>' : (i===0 && !q && !results ? '<span class="md-pill up">Next up</span>' : '');
       return `
       <div class="matchday">
         <div class="md-head">
@@ -1131,7 +1138,8 @@ if(fh){
   window.addEventListener("resize", positionFixtureExtras);
   if(fixQ) fixQ.addEventListener("input", renderFixtures);
   if(fixClr) fixClr.addEventListener("click", ()=>{ fixQ.value=''; renderFixtures(); fixQ.focus(); });
-  if(fixPlayed) fixPlayed.addEventListener("click", ()=>{ includePlayed=!includePlayed; fixPlayed.classList.toggle("on",includePlayed); fixPlayed.setAttribute("aria-pressed", includePlayed?"true":"false"); renderFixtures(); });
+  const fixPills=document.getElementById("fixPills");
+  if(fixPills) fixPills.addEventListener("click", (e)=>{ const b=e.target.closest(".fpill"); if(!b) return; fixFilter=b.dataset.f; fixPills.querySelectorAll(".fpill").forEach(x=>x.classList.toggle("on", x===b)); renderFixtures(); });
   renderFixtures();
   const ft=document.getElementById("fixTag"); if(ft) ft.textContent=`${upcoming.length} fixtures · all times UK (BST)`;
 }
