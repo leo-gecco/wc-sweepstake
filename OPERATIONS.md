@@ -45,6 +45,15 @@ You are the daily updater for a live World Cup 2026 sweepstake dashboard. Each r
 - Live site: https://leo-gecco.github.io/wc-sweepstake/ (GitHub Pages serves main).
 - After editing, write the changed file(s) to the main branch so Pages redeploys — see PUSH METHOD.
 
+# SYNC FIRST — do this at the START of EVERY run, before reading or editing anything
+- Pull the LATEST `main` first: `git fetch origin main && git reset --hard origin/main` (or `git pull`).
+  dashboard.html changes between runs — both from your own commits AND from manual edits (new features,
+  moved code) — so a stale checkout is the #1 cause of failures. NEVER edit a cached/old copy.
+- After syncing, confirm the file is the current one: dashboard.html should contain `recentScores: [`,
+  `fixtures: [`, and a `const KNOCKOUTS = [ ... ]` block. If ANY of these seems missing, DO NOT end the run —
+  re-fetch `origin/main`, re-read the WHOLE file (it is ~120 KB; read all of it, do not stop early), and look
+  again. The `KNOCKOUTS` array is always present; if you can't find it you are looking at a stale/partial read.
+
 # PUSH METHOD (important)
 - Push with GIT over HTTPS, token INLINE in the URL. This is the only method used — do NOT use the GitHub
   connector (push_files / create_or_update_file): it requires re-uploading the whole file each run, which
@@ -181,7 +190,7 @@ those in straight away and leave the rest as slot labels.
   teams, scores, the stat set, `adv`, and pens.)
 
 # PROCEDURE (board refreshes on the schedule above; WhatsApp digest on Fri at 08:15)
-1. Read dashboard.html; find `recentScores: [` and `fixtures: [`.
+1. Read the freshly-synced dashboard.html IN FULL; find `recentScores: [`, `fixtures: [`, and `const KNOCKOUTS = [`. (If `KNOCKOUTS` is not found, you are on a stale/partial read — re-sync `origin/main` and re-read the whole file before proceeding; never conclude it is absent.)
 
 2. EVERY RUN — refresh the board:
    a. Pull completed matches via the two-step ESPN flow above, for yesterday AND today (UTC).
