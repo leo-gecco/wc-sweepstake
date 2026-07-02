@@ -1381,6 +1381,9 @@ function lowWinPossSlice(slice){ let v=101; slice.forEach(s=>{ if(s.hs>s.as){ co
 function topPossessionSlice(slice){ let v=0; slice.forEach(s=>{ if((s.poh||0)>v) v=s.poh; if((s.poa||0)>v) v=s.poa; }); if(v===0) return []; const out=[]; slice.forEach(s=>{ if(s.poh===v) out.push(s.home); if(s.poa===v) out.push(s.away); }); return [...new Set(out)]; }
 
 const DATES = [...new Set(DATA.recentScores.map(s=>s.date))].reverse();
+const MONTHS_FULL = {Jan:"January",Feb:"February",Mar:"March",Apr:"April",May:"May",Jun:"June",Jul:"July",Aug:"August",Sep:"September",Oct:"October",Nov:"November",Dec:"December"};
+function fmtDateLabel(d){ const m=/^(\d{1,2})\s+([A-Za-z]{3})/.exec(d||""); return m ? `${m[1]} ${MONTHS_FULL[m[2]]||m[2]}` : (d||"").replace(/\s+\d{4}$/,""); }
+const DATE_LABELS = DATES.map(fmtDateLabel);
 const SERIES = {}; PUNTERS.forEach(p=>SERIES[p]=[]);
 const POT_SERIES = [];
 const BETS_AT_CUT = {}; PUNTERS.forEach(p=>BETS_AT_CUT[p]=[]);
@@ -1489,7 +1492,7 @@ function makeChart(){
   if(lbChart) lbChart.destroy();
   lbChart = new Chart(ctx,{
     type:"line",
-    data:{ labels: DATES, datasets },
+    data:{ labels: DATE_LABELS, datasets },
     options:{
       responsive:true, maintainAspectRatio:false,
       interaction:{ mode:"nearest", intersect:false },
@@ -1546,7 +1549,7 @@ function renderLbRank(){
   const rows = PUNTERS.map(p=>({p, v:SERIES[p][i], bets:BETS_AT_CUT[p][i].length, rank:RANK_SERIES[p][i]}))
     .sort((a,b)=>b.v-a.v || a.p.localeCompare(b.p));
   document.getElementById("lbRank").innerHTML = `
-    <h3>Current standings <span class="meta">as of ${DATES[i]}</span></h3>
+    <h3>Current standings <span class="meta">as of ${fmtDateLabel(DATES[i])}</span></h3>
     ${rows.map((r,idx)=>{
       const cls = idx===0?"gold":idx===1?"silver":idx===2?"bronze":"";
       return `<div class="lb-row ${cls}">
