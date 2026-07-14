@@ -599,7 +599,7 @@
    - recentScores: prepend each day's new batch at the top
    ============================================================ */
 const DATA = {
-  lastUpdated: "14 Jul 2026, 22:16 BST",
+  lastUpdated: "15 Jul 2026, 00:18 BST",
   pot: 200,
   champion: "",
   mainPrizes: [],
@@ -820,8 +820,8 @@ const KNOCKOUTS = [
  {id:760513, r:"Quarter-finals",date:"12 Jul",time:"02:00",h:"Argentina",hs:3,a:"Switzerland",as:1,yh:3,ya:2,rh:0,ra:1,oh:0,oa:0,ph:0,pa:0,ch:8,ca:2,foh:14,foa:18,poh:59,poa:41,shh:22,sha:11,hgh:1,hga:0,sgh:1,sga:0,fg:{m:10,s:576,t:"Argentina"},lw:{m:112,s:6701,t:"Argentina"},adv:"h",v:"KANSAS CITY, USA"},
  {id:760514, r:"Semi-finals",span:"14 \u2013 15 Jul",date:"14 Jul",time:"20:00",h:"France",hs:0,a:"Spain",as:2,yh:2,ya:1,rh:0,ra:0,oh:0,oa:0,ph:1,pa:0,ch:7,ca:1,foh:11,foa:12,poh:49,poa:51,shh:10,sha:10,hgh:0,hga:0,sgh:0,sga:0,fg:{m:22,s:1312,t:"Spain"},adv:"a",v:"ARLINGTON, USA"},
  {id:760515, r:"Semi-finals",date:"15 Jul",time:"20:00",h:"England",a:"Argentina",v:"ATLANTA, USA"},
- {id:760516, r:"Third-place play-off",span:"18 Jul",date:"18 Jul",time:"22:00",h:"Loser SF-1",a:"Loser SF-2",v:"MIAMI GARDENS, USA"},
- {id:760517, r:"Final",span:"19 Jul",date:"19 Jul",time:"20:00",h:"Winner SF-1",a:"Winner SF-2",v:"EAST RUTHERFORD, USA"},
+ {id:760516, r:"Third-place play-off",span:"18 Jul",date:"18 Jul",time:"22:00",h:"France",a:"Loser SF-2",v:"MIAMI GARDENS, USA"},
+ {id:760517, r:"Final",span:"19 Jul",date:"19 Jul",time:"20:00",h:"Spain",a:"Winner SF-2",v:"EAST RUTHERFORD, USA"},
 ];
 KNOCKOUTS.forEach(k=>{ if(k.hs!=null && k.as!=null) DATA.recentScores.unshift({ko:true,home:k.h,away:k.a,group:k.r,date:k.date,venue:k.v,hs:k.hs,as:k.as,yh:k.yh||0,ya:k.ya||0,rh:k.rh||0,ra:k.ra||0,oh:k.oh||0,oa:k.oa||0,ph:k.ph||0,pa:k.pa||0,ch:k.ch||0,ca:k.ca||0,foh:k.foh||0,foa:k.foa||0,poh:k.poh||0,poa:k.poa||0,shh:k.shh||0,sha:k.sha||0,hgh:k.hgh||0,hga:k.hga||0,sgh:k.sgh||0,sga:k.sga||0,fg:k.fg,lw:k.lw,cb:k.cb,psh:k.psh,psa:k.psa,adv:k.adv}); });
 const teamAgg = {};
